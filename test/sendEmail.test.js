@@ -8,7 +8,6 @@ chai.use(chaiHttp);
 chai.should();
 const User = models.user;
 
-
 describe('Email Verification Link', () => {
   let verifyLinkToken;
   before(async () => {

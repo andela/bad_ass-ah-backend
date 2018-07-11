@@ -20,6 +20,7 @@ const UserModel = (sequelize, DataTypes) => {
     isAdmin: { type: DataTypes.BOOLEAN },
     isActivated: { type: DataTypes.BOOLEAN }
   }, {});
+
   return User;
 };
 
