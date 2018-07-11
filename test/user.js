@@ -2,7 +2,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
 import {
-  signup1, signup3, signup4, login1, login2, login3
+  signup1, signup3, signup4, login1, login2, login3, googleInValidToken, googleValidToken
 } from '../testingdata/user.json';
 import models from '../models/index';
 
@@ -13,6 +13,7 @@ const User = models.user;
 describe('User ', () => {
   before(async () => {
     await User.destroy({ where: { email: signup1.email } });
+    await User.destroy({ where: { email: 'pacifiqueclement@gmail.com' } });
   });
   it('Should create user and return status of 201', (done) => {
     chai.request(app)
@@ -87,11 +88,13 @@ describe('User ', () => {
   });
 
   // user login
+
   it('should login user', (done) => {
     chai.request(app)
       .post('/api/users/login')
       .set('Content-Type', 'application/json')
       .send(login1)
+      .send(googleValidToken)
       .end((err, res) => {
         if (err) {
           done(err);
@@ -101,7 +104,6 @@ describe('User ', () => {
         res.body.should.have.property('status').eql(200);
         res.body.should.have.property('token');
         res.body.should.have.property('user');
-        res.body.user.should.be.a('object');
         done();
       });
   });
@@ -123,7 +125,7 @@ describe('User ', () => {
       });
   });
 
-  it('Should return status of 400', (done) => {
+  it('Should return status of 500', (done) => {
     chai.request(app)
       .post('/api/users/login')
       .set('Content-Type', 'application/json')
@@ -132,8 +134,58 @@ describe('User ', () => {
         if (err) {
           done(err);
         }
-        res.should.have.status(400);
+        res.should.have.status(500);
         res.body.should.have.property('error');
+        done();
+      });
+  });
+
+  it('Should signup user via google', (done) => {
+    chai.request(app)
+      .post('/api/users/login/google')
+      .set('Content-Type', 'application/json')
+      .send(googleValidToken)
+      .end((err, res) => {
+        if (err) {
+          done(err);
+        }
+        res.should.have.status(200);
+        res.body.should.be.a('object');
+        res.body.should.have.property('status').eql(200);
+        res.body.should.have.property('token');
+        res.body.should.have.property('user');
+        done();
+      });
+  });
+
+  it('Should login user via google', (done) => {
+    chai.request(app)
+      .post('/api/users/login/google')
+      .set('Content-Type', 'application/json')
+      .send(googleValidToken)
+      .end((err, res) => {
+        if (err) {
+          done(err);
+        }
+        res.should.have.status(200);
+        res.body.should.be.a('object');
+        res.body.should.have.property('status').eql(200);
+        res.body.should.have.property('token');
+        res.body.should.have.property('user');
+        done();
+      });
+  });
+
+  it('Should return 401 if the token is not valid', (done) => {
+    chai.request(app)
+      .post('/api/users/login/google')
+      .set('Content-Type', 'application/json')
+      .send(googleInValidToken)
+      .end((err, res) => {
+        if (err) {
+          done(err);
+        }
+        res.should.have.status(401);
         done();
       });
   });

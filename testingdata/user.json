@@ -33,6 +33,13 @@
     "password": "test@123"
    },
    "login3": {
-    "email": "grammer@db.com"
-   }
+    "email": "blaise@gmail.com"
+   },
+   "googleValidToken": {
+       "access_token": "ya29.GlvhBkssYdkM5bASLbbI05C0jjz-Gqq1SfSDms9r7LpcjZRBsjY2eAleNd8VyTjt5_1je9jVuxTyl_ziubxn1jUjQaJ6CPzXFCz8JaPfON-FKCM6Suhsc0nSsnJO"
+    },
+    "googleInvalidToken": {
+        "access_token": "ya29.GlvhBpzY2hl2ShgOMrpkni8obGgwyX0mr85Oendf2kmblu3BrRNTmYK2DVQiPciVOBFkLvR57YE90qDyffgJOqgzV68zutO3-Y9QDKooAPuxPvwsbsWM36wwVPHT"
+     }
+
 }

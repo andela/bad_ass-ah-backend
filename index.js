@@ -1,5 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import passport from 'passport';
+import googlePassport from './middlewares/passport-google';
+
 import router from './routes/index';
 
 const app = express();
@@ -10,7 +13,11 @@ app.set('port', port);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// @router configuration
+// @passport
+app.use(passport.initialize());
+googlePassport(passport);
+
+// @router configuration --gracian
 app.use(router);
 
 app.use((req, res) => {

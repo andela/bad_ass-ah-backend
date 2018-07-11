@@ -72,6 +72,26 @@ class UserController {
         res.status(500).json({ error });
       });
   }
+
+  /**
+ * Login User via google.
+ * @param {Object} req The request object.
+ * @param {Object} res The response object.
+ * @returns {Object} The response after registering the user.
+ */
+  googleLogin(req, res) {
+    const user = {
+      username: req.user.username,
+      email: req.user.email,
+    };
+    const payload = {
+      id: req.user.id,
+      email: req.user.email
+    };
+    // @creating jwt token
+    const token = jwt.sign(payload, secretKey, expirationTime);
+    return res.status(200).json({ status: 200, token: `${token}`, user });
+  }
 }
 
 export default new UserController();
