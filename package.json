@@ -4,7 +4,9 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node --require babel-register index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "NODE_ENV=development nodemon --require babel-register index.js"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
@@ -23,8 +25,16 @@
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "pg": "^7.9.0",
+    "pg-hstore": "^2.3.2",
     "request": "^2.87.0",
+    "sequelize": "^5.1.0",
     "slug": "^0.9.1",
     "underscore": "^1.9.1"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0",
+    "nodemon": "^1.18.10"
   }
 }
