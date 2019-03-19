@@ -4,6 +4,7 @@ import passport from 'passport';
 import googlePassport from './middlewares/passport-google';
 
 import router from './routes/index';
+import passportAuth from './middlewares/passport-facebook';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -16,10 +17,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // @passport
 app.use(passport.initialize());
 googlePassport(passport);
-
+passportAuth(passport);
 // @router configuration --gracian
 app.use(router);
-
 app.use((req, res) => {
   res.status(404).send({
     status: 404,

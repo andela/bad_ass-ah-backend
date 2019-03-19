@@ -1,45 +1,53 @@
 {
-    "signup1": {
-        "username": "copain",
-        "email": "blaise@gmail.com",
-        "password": "1Kig1L@20"
-    },
-    "signup2": {
-        "email": "json@gmail.com",
-        "username": "john",
-        "password": "1Kig1L@20"
-    },
-    "signup3": {
-        "username": "copain",
-        "email": "rebaseking@gmail.com",
-        "password": "1Kig1L@20"
-    },
-    "signup4": {
-        "email": "kaleb@gmail.com",
-        "password": "1Kig1L@20"
-    },
-   "testMailer": {
-       "username": "badass",
-       "email": "badass.andela.test@gmail.com",
-       "password": "1Kig1L@20"
-   },
-
-   "login1": {
+  "signup1": {
+    "username": "copain",
     "email": "blaise@gmail.com",
     "password": "1Kig1L@20"
-   },
-   "login2": {
+  },
+  "signup2": {
+    "email": "json@gmail.com",
+    "username": "john",
+    "password": "1Kig1L@20"
+  },
+  "signup3": {
+    "username": "copain",
+    "email": "rebaseking@gmail.com",
+    "password": "1Kig1L@20"
+  },
+  "signup4": {
+    "email": "kaleb@gmail.com",
+    "password": "1Kig1L@20"
+  },
+  "testMailer": {
+    "username": "badass",
+    "email": "badass.andela.test@gmail.com",
+    "password": "1Kig1L@20"
+  },
+
+  "login1": {
+    "email": "blaise@gmail.com",
+    "password": "1Kig1L@20"
+  },
+  "login2": {
     "email": "paccy10@db.com",
     "password": "test@123"
-   },
-   "login3": {
+  },
+  "login3": {
     "email": "blaise@gmail.com"
-   },
-   "googleValidToken": {
-       "access_token": "ya29.GlvhBkssYdkM5bASLbbI05C0jjz-Gqq1SfSDms9r7LpcjZRBsjY2eAleNd8VyTjt5_1je9jVuxTyl_ziubxn1jUjQaJ6CPzXFCz8JaPfON-FKCM6Suhsc0nSsnJO"
-    },
-    "googleInvalidToken": {
-        "access_token": "ya29.GlvhBpzY2hl2ShgOMrpkni8obGgwyX0mr85Oendf2kmblu3BrRNTmYK2DVQiPciVOBFkLvR57YE90qDyffgJOqgzV68zutO3-Y9QDKooAPuxPvwsbsWM36wwVPHT"
-     }
-
+  },
+  "googleValidToken": {
+    "access_token": "ya29.GlvhBj5MCImakD3i7uIcJ2BIS4y7tBPrHNylQYCyFOTJwuM0ep9rbAuQAXbAgaHjojKDDL4zwv0yU8B98j6Evie_z0Y1GugavP4IAAP4uft7zMYLZIfFBdDfk_E8"
+  },
+  "googleInvalidToken": {
+    "access_token": "ya29.GlvhBpzY2hl2ShgOMrpkni8obGgwyX0mr85Oendf2kmblu3BrRNTmYK2DVQiPciVOBFkLvR57YE90qDyffgJOqgzV68zutO3-Y9QDKooAPuxPvwsbsWM36wwVPHT"
+  },
+  "expiredToken": {
+    "access_token": ""
+  },
+  "validToken": {
+    "access_token": "EAAgbksnPT5IBAGXPMDZCIYZBwZCmVbFpwy9ffGore2NImb7AjLGACLIzsMkp8VrirutCSjaoAEFm1ZCn1oT2s5AJWRdiUuaOaHa260lXUIvnNVo7k3V7qeNmR6RmZAfBU5ZAhqf8J2kzzv1BQoPlgJYZBl3CQ4mLHR44hmVbnN26QZDZD"
+  },
+  "invalidToken": {
+    "access_token": "EAAgbksnPT5IBAGXPMDZCIYZBwZCmVbFpwy9ffGore2NImb7AjLGACLIzsMkp8VrirutCSjaoAEFm1ZCn1oT2s5AJWRdiUuaOaHa260lXUIvnNVo7k3V7qeNmR6RmZAfBU5ZAhqf8J"
+  }
 }

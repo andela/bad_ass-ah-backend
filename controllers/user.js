@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 import models from '../models/index';
 import sendEmail from '../helpers/sendEmail/callMailer';
+import generateToken from '../helpers/token';
 
 dotenv.config();
 const User = models.user;
@@ -55,7 +56,6 @@ class UserController {
       email: req.body.email,
       password: req.body.password
     };
-
     return User.findOne({ where: { email: user.email } })
       .then((foundUser) => {
         if (foundUser && bcrypt.compareSync(user.password, foundUser.password)) {
@@ -91,6 +91,20 @@ class UserController {
     // @creating jwt token
     const token = jwt.sign(payload, secretKey, expirationTime);
     return res.status(200).json({ status: 200, token: `${token}`, user });
+  }
+
+  /**
+  * @param {Object} req -requesting from user
+  * @param {Object} res - responding from user
+  * @returns {Object} Response with json data
+  */
+  socialLogin(req, res) {
+    const payload = {
+      id: req.user.id,
+      email: req.user.email
+    };
+    const { generate } = generateToken(payload);
+    return res.status(200).json({ status: 200, user: `welcome: ${req.user.username}`, token: generate });
   }
 }
 
