@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/andela/bad_ass-ah-backend.svg?branch=develop)](https://travis-ci.org/andela/bad_ass-ah-backend)
+
 Authors Haven - A Social platform for the creative at heart.
 =======
 
