@@ -1,5 +1,15 @@
-const router = require("express").Router();
+import express from 'express';
+import dotenv from 'dotenv';
+import morgan from 'morgan';
 
-router.use("/api", require("./api"));
+//@api
 
-module.exports = router;
+
+//@ initialize app
+
+const app = express();
+
+//@ add package configurations
+
+
+export default app;
