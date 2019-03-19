@@ -12,7 +12,7 @@ module.exports = {
       unique: true
     },
     email: {
-      allowNull: false,
+      allowNull: true,
       type: Sequelize.STRING,
       unique: true
     },
