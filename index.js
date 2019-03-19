@@ -1,12 +1,18 @@
-import http from 'http';
-import app from './routes/index';
+import express from 'express';
 
+const app = express();
 const port = process.env.PORT || 3000;
+app.set('port', port);
+app.use((req, res) => {
+  res.status(404).send({
+    status: 404,
+    error: 'resource not found',
+  });
+});
 
-app.set('poort', port);
 
-const server = http.createServer(app);
+app.listen(port, () => {
+  console.log(`Server started successfully on ${port}`);
+});
 
-server.listen(port, () =>{
-    console.log(`Server started successfully on ${port}`);
-})
+export default app;
