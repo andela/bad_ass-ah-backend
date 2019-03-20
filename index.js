@@ -8,7 +8,9 @@ const fs = require("fs"),
     cors = require("cors"),
     passport = require("passport"),
     errorhandler = require("errorhandler"),
-    mongoose = require("mongoose");
+    mongoose = require("mongoose"),
+    swaggerUI=require("swagger-ui-express"),
+    swaggerDocument=require("./config/swagger.json");
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -38,16 +40,20 @@ if (!isProduction) {
     app.use(errorhandler());
 }
 
-if (isProduction) {
-    mongoose.connect(process.env.MONGODB_URI);
-} else {
-    mongoose.connect("mongodb://localhost/conduit");
-    mongoose.set("debug", true);
-}
+// if (isProduction) {
+//     mongoose.connect(process.env.MONGODB_URI);
+// } else {
+//     mongoose.connect("mongodb://localhost/conduit");
+//     mongoose.set("debug", true);
+// }
 
 require("./models/User");
 
 app.use(require("./routes"));
+
+//@swager
+app.use("/api-docs",swaggerUI.serve);
+app.get("/api-docs",swaggerUI.setup(swaggerDocument));
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

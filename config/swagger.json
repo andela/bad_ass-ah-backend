@@ -1,0 +1,199 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "v1",
+    "title" : "Authors Heaven",
+    "description" : "A Social platform for the creative at heart. Create a community of like minded authors to foster inspiration and innovation by leveraging the modern web.",
+    "license" : {
+      "name" : "MIT",
+      "url" : "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host" : "badass.io",
+  "basePath" : "/api/v1",
+  "schemes" : [ "http", "https" ],
+  "paths" : {
+    "/users/login" : {
+      "post" : {
+        "summary" : "create new users",
+        "description" : "this endpoint let users to create their account",
+        "responses" : {
+          "200" : {
+            "description" : "successfully response",
+            "schema" : {
+              "properties" : {
+                "user" : {
+                  "properties" : {
+                    "email" : {
+                      "type" : "string",
+                      "example" : "jake@jake.jake"
+                    },
+                    "password" : {
+                      "type" : "string",
+                      "example" : "jakejake"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users" : {
+      "post" : {
+        "summary" : "user registration",
+        "description" : "this endpoint allow user to create account",
+        "responses" : {
+          "201" : {
+            "description" : "successfully response",
+            "schema" : {
+              "properties" : {
+                "user" : {
+                  "properties" : {
+                    "username" : {
+                      "type" : "string",
+                      "example" : "Jakob"
+                    },
+                    "email" : {
+                      "type" : "string",
+                      "example" : "jake@jake.jake"
+                    },
+                    "password" : {
+                      "type" : "string",
+                      "example" : "jakob"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user" : {
+      "get" : {
+        "summary" : "current user",
+        "description" : "this endpoint get current user",
+        "responses" : {
+          "200" : {
+            "description" : "successfull response",
+            "schema" : {
+              "properties" : {
+                "user" : {
+                  "properties" : {
+                    "username" : {
+                      "type" : "string",
+                      "example" : "Jakob"
+                    },
+                    "email" : {
+                      "type" : "string",
+                      "example" : "jake@jake.com"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/update" : {
+      "put" : {
+        "summary" : "update user",
+        "description" : "this endpoint allows user to update his profile",
+        "responses" : {
+          "201" : {
+            "description" : "successfull updated",
+            "schema" : {
+              "properties" : {
+                "user" : {
+                  "properties" : {
+                    "email" : {
+                      "type" : "string",
+                      "example" : "jake@jake.com"
+                    },
+                    "bio" : {
+                      "type" : "string",
+                      "example" : "I like skatebord"
+                    },
+                    "image" : {
+                      "type" : "string",
+                      "example" : "https://i.stack.imgur.com/xHWG8.jpg"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profiles/:username" : {
+      "get" : {
+        "summary" : "Get user profile by username handle",
+        "description" : "this endpoint allows others to find user by using username handle",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "properties" : {
+                "user" : {
+                  "properties" : {
+                    "username" : {
+                      "type" : "string",
+                      "example" : "Jakob"
+                    },
+                    "image" : {
+                      "type" : "string",
+                      "example" : "https://somewhere.com/image.png"
+                    },
+                    "bio" : {
+                      "type" : "string",
+                      "example" : "bio"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles" : {
+      "post" : {
+        "summary" : "creating articles",
+        "description" : "this endpoint help users to create articles",
+        "responses" : {
+          "200" : {
+            "description" : "successfully created",
+            "schema" : {
+              "properties" : {
+                "article" : {
+                  "properties" : {
+                    "title" : {
+                      "type" : "string",
+                      "example" : "How to train your dragon"
+                    },
+                    "description" : {
+                      "type" : "string",
+                      "example" : "Ever wonder how?"
+                    },
+                    "body" : {
+                      "type" : "string",
+                      "example" : "you have to believe"
+                    },
+                    "tagList" : {
+                      "type" : "array",
+                      "example" : [ "reactjs", "angularjs", "dragons" ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
