@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node --require babel-register index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "NODE_ENV=development nodemon --require babel-register index.js"
+    "dev": "NODE_ENV=development nodemon --require babel-register index.js",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
@@ -43,6 +44,8 @@
     "underscore": "^1.9.1",
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
-    "nodemon": "^1.18.10"
+    "nodemon": "^1.18.10",
+    "coveralls": "^3.0.3",
+    "nyc": "^13.3.0"
   }
 }
