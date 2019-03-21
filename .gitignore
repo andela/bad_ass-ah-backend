@@ -37,6 +37,9 @@ node_modules
 # Contains configuration data
 .env
 
+#package-lock
+package-lock.json
+
 
 
 
