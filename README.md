@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 [![Build Status](https://travis-ci.org/andela/bad_ass-ah-backend.svg?branch=develop)](https://travis-ci.org/andela/bad_ass-ah-backend)
 [![Coverage Status](https://coveralls.io/repos/github/andela/bad_ass-ah-backend/badge.svg?branch=develop)](https://coveralls.io/github/andela/bad_ass-ah-backend?branch=develop)
 =======
