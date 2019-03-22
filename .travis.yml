@@ -1,10 +1,8 @@
 language: node_js
-node_js: node
-cache:
-  directories:
-    - node_modules
+node_js:
+  - "stable"              
 script:
-  - npm install 
+  - npm install
   - npm test
 after_success:
   - npm run coverage
