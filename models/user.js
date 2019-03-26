@@ -11,7 +11,13 @@ module.exports=(sequelize,DataTypes)=>{
      },
      password:{
         type:DataTypes.STRING
-     }
+     },
+     bio:{
+        type:DataTypes.STRING
+      },
+      image:{
+        type:DataTypes.STRING
+      }
  },{});
   return User;
 }
