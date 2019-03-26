@@ -1,14 +1,12 @@
+
 import express from 'express';
-import dotenv from 'dotenv';
-import morgan from 'morgan';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../config/swagger.json';
+import users from './api/users';
 
-// @api
-// @ initialize app
 const app = express();
-
-// @ add package configurations
+// @router configuration
+app.use('/api/users', users);
 // @swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
