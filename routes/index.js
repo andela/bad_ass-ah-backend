@@ -6,3 +6,4 @@ const app = express.Router();
 app.use("/api/v1",user);
 
 export default app;
+
