@@ -30,13 +30,12 @@
     "request": "^2.87.0",
     "swagger-ui-express": "^4.0.2",
     "underscore": "^1.9.1",
-    "sequelize": "^5.1.0"
-
+    "sequelize": "^5.1.0",
+    "babel-register": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "body-parser": "^1.18.3"
   },
   "devDependencies": {
-    "babel-preset-env": "^1.7.0",
-    "babel-register": "^6.26.0",
-    "body-parser": "^1.18.3",
     "chai": "^4.2.0",
     "chai-http": "^4.2.1",
     "coveralls": "^3.0.3",
