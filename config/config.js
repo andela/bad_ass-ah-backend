@@ -1,9 +1,6 @@
 import dotenv from 'dotenv';
 
 dotenv.config();
-
-const fs = require('fs');
-
 module.exports = {
   development: {
     username: process.env.USERNAME_DEV,
