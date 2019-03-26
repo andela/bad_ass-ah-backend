@@ -2,7 +2,7 @@
     "swagger" : "2.0",
     "info" : {
       "version" : "v1",
-      "title" : "Authors Heaven",
+      "title" : "Authors Haven",
       "description" : "A Social platform for the creative at heart. Create a community of like minded authors to foster inspiration and innovation by leveraging the modern web.",
       "license" : {
         "name" : "MIT",

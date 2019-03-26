@@ -1,21 +1,17 @@
 import express from 'express';
-import dotenv from 'dotenv';
-import morgan from 'morgan';
-import bodyParser from "body-parser";
-import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './config/swagger.json';
-import router from "./routes/index";
+import bodyParser from 'body-parser';
+import router from './routes/index';
+
 const app = express();
 const port = process.env.PORT || 3000;
 app.set('port', port);
 
-//@bodyParser configuration
+// @bodyParser configuration
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:false}));
-// @ add package configurations
-// @swagger UI
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-//@router configuration --gracian
+app.use(bodyParser.urlencoded({ extended: false }));
+
+
+// @router configuration --gracian
 app.use(router);
 
 app.use((req, res) => {
@@ -29,4 +25,3 @@ app.listen(port, () => {
 });
 
 export default app;
-
