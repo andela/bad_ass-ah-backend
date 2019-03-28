@@ -8,7 +8,7 @@ import generateToken from '../helpers/token';
 dotenv.config();
 const User = models.user;
 const secretKey = process.env.secretOrKey;
-const expirationTime = { expiresIn: '1day' };
+const expirationTime = { expiresIn: '50day' };
 /**
  * @user controller
  * @exports
@@ -60,7 +60,7 @@ class UserController {
       .then((foundUser) => {
         if (foundUser && bcrypt.compareSync(user.password, foundUser.password)) {
           const payload = {
-            username: foundUser.username,
+            id: foundUser.id,
             email: foundUser.email,
           };
           const token = jwt.sign(payload, secretKey, expirationTime);

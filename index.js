@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import passport from 'passport';
 import googlePassport from './middlewares/passport-google';
-
+import passportJwt from './middlewares/passport-jwt';
 import router from './routes/index';
 import passportAuth from './middlewares/passport-facebook';
 
@@ -18,6 +18,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 googlePassport(passport);
 passportAuth(passport);
+passportJwt(passport);
+
 // @router configuration --gracian
 app.use(router);
 app.use((req, res) => {
