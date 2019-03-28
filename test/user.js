@@ -11,6 +11,7 @@ chai.should();
 const User = models.user;
 
 describe('User ', () => {
+  let verifyLinkToken;
   before(async () => {
     await User.destroy({ where: { email: signup1.email } });
   });
@@ -23,13 +24,13 @@ describe('User ', () => {
         if (err) {
           done(err);
         }
+        verifyLinkToken = res.body.token;
         res.should.have.status(201);
         res.body.should.have.property('token');
-        res.body.should.have.property('user');
+        res.body.should.have.property('username');
         done();
       });
   });
-
   it('Should return status of 400', (done) => {
     chai.request(app)
       .post('/api/users')
@@ -87,5 +88,60 @@ describe('User ', () => {
         res.should.have.property('error');
         done();
       });
+  });
+  describe('Email Verification Link', () => {
+    describe('POST/ Send verification link', () => {
+      const data = {
+        token: 'fake token'
+      };
+      it('Should return error valid token is required', (done) => {
+        chai.request(app)
+          .post('/api/users/send-verification-link')
+          .send(data)
+          .end((err, res) => {
+            if (err) done(err);
+            res.should.have.status(400);
+            res.body.should.be.an('object');
+            done();
+          });
+      });
+      // it('Should send verification link', (done) => {
+      //   data.token = verifyLinkToken;
+      //   chai.request(app)
+      //     .post('/api/users/send-verification-link')
+      //     .send(data)
+      //     .end((err, res) => {
+      //       if (err) done(err);
+      //       res.should.have.status(200);
+      //       res.body.should.be.an('object');
+      //       res.body.should.have.property();
+      //       done();
+      //     });
+      // });
+    });
+    describe('GET/ Activate User Account', () => {
+      it('Should activate user account', (done) => {
+        chai.request(app)
+          .get(`/api/users/verify/${verifyLinkToken}`)
+          .end((err, res) => {
+            if (err) done(err);
+            res.should.have.status(200);
+            res.body.should.be.an('object');
+            res.body.should.have.property('isActivated').equal(true);
+            done();
+          });
+      });
+      it('Should return error token is expired or invalid', (done) => {
+        chai.request(app)
+          .get('/api/users/verify/FakeTokenOrInvalid')
+          .end((err, res) => {
+            if (err) done(err);
+            res.should.have.status(400);
+            res.body.should.be.an('object');
+            res.body.should.have.property('error');
+            done();
+          });
+      });
+    });
   });
 });

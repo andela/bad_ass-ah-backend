@@ -6,33 +6,39 @@ import models from '../models/index';
 dotenv.config();
 const User = models.user;
 /**
-  * @param {class} --UserController
-  */
+ * @user controller
+ * @exports
+ * @class
+ */
 class UserController {
   /**
-   *
-   * @param {Object} req -requestesting from user
-   * @param {Object} res -responding from user
-   * @returns {Object} Response with status of 201
+   * Sign up a new user
+   * @param {Object} req - Requests from a user
+   * @param {Object} res - Response to the user
+   * @returns {Object} Response
    */
-  signup(req, res) {
+  static async signup(req, res) {  
     const newUser = {
       username: req.body.username,
       email: req.body.email,
       password: bcrypt.hashSync(req.body.password, 10)
     };
-    User.create(newUser)
-      .then((user) => {
-        const payload = {
-          id: user.id,
-          name: user.username
-        };
-        // @creating jwt token
-        const token = jwt.sign(payload, process.env.secretOrKey, { expiresIn: '1day' });
-        return res.status(201).json({ status: 201, token: `Bearer ${token}`, user });
-      })
-      .catch(error => res.status(500).json({ error }));
+    try {
+      const { dataValues: user } = await User.create(newUser);
+      const payload = { id: user.id, username: user.username, email: user.email };
+      const token = jwt.sign(payload, process.env.secretOrKey, { expiresIn: '1day' });
+      return res.status(201).json({
+        email: user.email,
+        token,
+        username: user.username,
+        bio: user.bio,
+        image: user.image
+      });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+    
   }
 }
 
-export default new UserController();
+export default UserController;

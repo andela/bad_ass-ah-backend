@@ -16,6 +16,9 @@ const UserModel = (sequelize, DataTypes) => {
     },
     image: {
       type: DataTypes.STRING
+    },
+    isActivated: {
+      type: DataTypes.BOOLEAN
     }
   }, {});
   return User;
