@@ -3,12 +3,15 @@ import chaiHttp from 'chai-http';
 import app from '../index';
 import {
   signup1,
+  // eslint-disable-next-line no-unused-vars
   signup3,
   signup4,
+  // eslint-disable-next-line no-unused-vars
   login1,
   login2,
   login3,
   googleInValidToken,
+  // eslint-disable-next-line no-unused-vars
   googleValidToken,
   expiredToken,
   invalidToken
@@ -215,6 +218,7 @@ describe('User ', () => {
       .send(validToken)
       .end((err, res) => {
         if (err) done(err);
+        console.log('signup erorrrrrrr', err);
         res.should.have.status(200);
         res.body.should.have.property('user');
         res.body.should.have.property('token');
@@ -229,6 +233,7 @@ describe('User ', () => {
       .send(validToken)
       .end((err, res) => {
         if (err) done(err);
+        console.log('loginnnnnnnn', err);
         res.should.have.status(200);
         res.body.should.have.property('user');
         res.body.should.have.property('token');

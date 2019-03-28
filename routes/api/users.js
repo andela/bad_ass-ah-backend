@@ -18,7 +18,8 @@ router.post('/send-verification-link', VerifyLink.sendEmail);
 router.get('/verify/:token', VerifyLink.activate);
 router.post('/login', User.login);
 
-router.post('/', check, User.signup);
+router.post('/password', User.checkEmail);
+router.put('/password', User.resetPassword);
 
 router.post('/login/google', passport.authenticate('googleToken', { session: false }), User.googleLogin);
 

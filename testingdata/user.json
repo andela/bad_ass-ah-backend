@@ -49,5 +49,10 @@
   },
   "invalidToken": {
     "access_token": "EAAgbksnPT5IBAGXPMDZCIYZBwZCmVbFpwy9ffGore2NImb7AjLGACLIzsMkp8VrirutCSjaoAEFm1ZCn1oT2s5AJWRdiUuaOaHa260lXUIvnNVo7k3V7qeNmR6RmZAfBU5ZAhqf8J"
+  },
+  "signup6": {
+    "username": "test",
+    "email": "test123@gmail.com",
+    "password": "1Kig1L@20"
   }
 }
