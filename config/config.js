@@ -22,5 +22,10 @@ module.exports = {
     database: process.env.DB_PRODUCTION,
     host: process.env.DB_HOSTNAME,
     dialect: 'postgres'
-  }
+  },
+  email: {
+    user: process.env.SENDER_EMAIL,
+    pass: process.env.SENDER_PASS
+  },
+  secretOrKey: process.env.secretOrKey
 };

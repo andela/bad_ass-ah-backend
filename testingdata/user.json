@@ -1,21 +1,25 @@
 {
-    "signup1":{
-       "username":"gram",
-       "email":"grammer@db.com",
-       "password":"test@123"
-   },
-   "signup2":{
-       "username":"john",
-       "password":"test@123"
-   },
-   "signup3":{
-       "username":"gram",
-       "email":"jim@gmail.com",
-       "password":"test@123"
-   },
-   "signup4":{
-       "email":"kaleb@gmail.com",
-       "password":"test@123"
+    "signup1": {
+        "username": "gram",
+        "email": "grammer@db.com",
+        "password": "test@123"
+    },
+    "signup2": {
+        "username": "john",
+        "password": "test@123"
+    },
+    "signup3": {
+        "username": "gram",
+        "email": "jim@gmail.com",
+        "password": "test@123"
+    },
+    "signup4": {
+        "email": "kaleb@gmail.com",
+        "password": "test@123"
+    },
+   "testMailer": {
+       "username": "badass",
+       "email": "badass.andela.test@gmail.com",
+       "password": "@badass123A"
    }
 }
-

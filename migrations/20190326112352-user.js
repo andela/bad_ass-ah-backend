@@ -1,4 +1,4 @@
-module.exports= {
+module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.createTable('users', {
     id: {
       type: Sequelize.INTEGER,
@@ -27,6 +27,16 @@ module.exports= {
     image: {
       allowNull: true,
       type: Sequelize.STRING
+    },
+    isAdmin: {
+      allowNull: false,
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
+    },
+    isActivated: {
+      allowNull: false,
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
     },
     createdAt: {
       allowNull: false,
