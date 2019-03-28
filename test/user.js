@@ -11,6 +11,7 @@ chai.should();
 const User = models.user;
 
 describe('User ', () => {
+  let verifyLinkToken;
   before(async () => {
     await User.destroy({ where: { email: signup1.email } });
   });
