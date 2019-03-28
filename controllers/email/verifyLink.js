@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import models from '../../models/index';
+// eslint-disable-next-line import/named
 import { secretOrkey } from '../../config/config';
 import sendEmail from '../../helpers/sendEmail/callMailer';
 

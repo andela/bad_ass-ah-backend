@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import models from '../models/index';
 import sendEmail from '../helpers/sendEmail/callMailer';
 import generateToken from '../helpers/token';
+import VerifyLink from './email/verifyLink';
 
 dotenv.config();
 const User = models.user;
@@ -46,7 +47,7 @@ class UserController {
   }
 
   /**
-   *
+   * user login
    * @param {Object} req -requestesting from user
    * @param {Object} res -responding from user
    * @returns {Object} Response with status of 201
@@ -105,6 +106,64 @@ class UserController {
     };
     const { generate } = generateToken(payload);
     return res.status(200).json({ status: 200, user: `welcome: ${req.user.username}`, token: generate });
+  }
+
+  /**
+ * Checks if the email exists.
+ * @param {object} req request
+ * @param {object} res response.
+ * @returns {object} response.
+ */
+  checkEmail(req, res) {
+    const user = {
+      email: req.body.email,
+    };
+    return User.findOne({ where: { email: user.email } })
+      .then((foundUser) => {
+        if (foundUser) {
+          const payload = {
+            email: foundUser.email,
+          };
+          const token = jwt.sign(payload, secretKey, expirationTime);
+          req.body.token = token;
+          VerifyLink.sendEmail(req, res);
+        } else {
+          res.status(404).json({ status: 404, error: 'This email is not in our database' });
+        }
+      }).catch((error) => {
+        res.status(500).json({ error });
+      });
+  }
+
+  /**
+* Resets password.
+* @param {object} req request.
+* @param {object} res response.
+* @returns {object} response.
+*/
+  async resetPassword(req, res) {
+    const password = bcrypt.hashSync(req.body.password, 10);
+    const { token } = req.body;
+    const decoded = jwt.decode(token, secretKey);
+    try {
+      if (decoded) {
+        const checkUpdate = await User.update({
+          password,
+        }, {
+          where: { email: decoded.email }
+        });
+        if (checkUpdate.length >= 1) {
+          return res.status(200).json({ message: 'Congratulations! Your password was reset', });
+        }
+        return res.status(400).json({ error: 'Oops! something is wrong, try again', });
+      }
+      return res.status(401).json({ error: 'Invalid token' });
+    } catch (error) {
+      res.status(400).send({
+        status: 400,
+        error: error.message
+      });
+    }
   }
 }
 

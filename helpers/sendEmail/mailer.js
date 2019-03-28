@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
+// eslint-disable-next-line import/named
 import { email } from '../../config/config';
 import emailTemplates from './emailTemplates';
-
 /**
  * Class module to send email
  * @exports
@@ -20,13 +20,14 @@ class Mailer {
   }
 
   /**
-   * Add button link to the verification email template
-   * @param {string} token - token
-   * @returns {Promise} resolved or reject
-   */
-  addTokenToEmail(token) {
+ * Adds a token.
+ * @param {string} token token
+ * @param {string} template email.
+ * @returns {promises} reject or resolve.
+ */
+  addTokenToEmail(token, template = 'verification') {
     return new Promise(async (resolve, reject) => {
-      const mailOptions = emailTemplates.verification;
+      const mailOptions = emailTemplates[template];
       mailOptions.from = this.senderEmail;
       mailOptions.to = this.userEmail;
       const addToken = mailOptions.html.replace('$', token);
@@ -64,5 +65,4 @@ class Mailer {
     });
   }
 }
-
 export default Mailer;
