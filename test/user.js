@@ -20,16 +20,13 @@ describe('User ', () => {
       .set('Content-Type', 'application/json')
       .send(signup1)
       .end((err, res) => {
-        if (err) {
-          done(err);
-        }
+        if (err) done(err);
         res.should.have.status(201);
         res.body.should.have.property('token');
-        res.body.should.have.property('user');
+        res.body.should.have.property('username');
         done();
       });
-  });
-
+  }).timeout(20000);
   it('Should return status of 400', (done) => {
     chai.request(app)
       .post('/api/users')

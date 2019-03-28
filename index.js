@@ -5,11 +5,12 @@ import router from './routes/index';
 const app = express();
 const port = process.env.PORT || 3000;
 app.set('port', port);
+
 // @bodyParser configuration
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// @router configuration --gracian
+// @router configuration
 app.use(router);
 
 app.use((req, res) => {
