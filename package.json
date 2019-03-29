@@ -4,11 +4,11 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "start": "node --require babel-register index.js",
-    "migrate": "node_modules/.bin/sequelize db:migrate:undo:all && node_modules/.bin/sequelize db:migrate",
+    "start": "node  --require babel-register index.js",
+    "migrate": "node_modules/.bin/sequelize db:migrate:undo && node_modules/.bin/sequelize db:migrate",
     "test": "NODE_ENV=test nyc --reporter=html --reporter=text --timeout=1500 mocha   --require babel-register test/* --exit",
     "dev": "NODE_ENV=development nodemon --require babel-register index.js",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "coverage": "nyc report --reporter=text-lcov | coveralls" 
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
