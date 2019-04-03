@@ -42,7 +42,7 @@ describe('User ', () => {
         done();
       });
   });
-  it('Should return status of 500', (done) => {
+  it('Should return status of 400', (done) => {
     chai.request(app)
       .post('/api/users')
       .set('Content-Type', 'application/json')
@@ -51,7 +51,7 @@ describe('User ', () => {
         if (err) {
           done(err);
         }
-        res.should.have.status(500);
+        res.should.have.status(400);
         res.should.have.property('error');
         done();
       });
