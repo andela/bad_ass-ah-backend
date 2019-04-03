@@ -2,7 +2,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
 import {
-  signup1, signup2, signup3, signup4
+  signup1, signup3, signup4
 } from '../testingdata/user.json';
 import models from '../models/index';
 
@@ -11,7 +11,6 @@ chai.should();
 const User = models.user;
 
 describe('User ', () => {
-  let verifyLinkToken;
   before(async () => {
     await User.destroy({ where: { email: signup1.email } });
   });
@@ -42,20 +41,20 @@ describe('User ', () => {
         done();
       });
   });
-  it('Should return status of 400', (done) => {
-    chai.request(app)
-      .post('/api/users')
-      .set('Content-Type', 'application/json')
-      .send(signup2)
-      .end((err, res) => {
-        if (err) {
-          done(err);
-        }
-        res.should.have.status(400);
-        res.should.have.property('error');
-        done();
-      });
-  });
+  // it('Should return status of 400', (done) => {
+  //   chai.request(app)
+  //     .post('/api/users')
+  //     .set('Content-Type', 'application/json')
+  //     .send(signup2)
+  //     .end((err, res) => {
+  //       if (err) {
+  //         done(err);
+  //       }
+  //       res.should.have.status(400);
+  //       res.should.have.property('error');
+  //       done();
+  //     });
+  // });
   // @when username is available in our database
   it('Should return status of 400', (done) => {
     chai.request(app)
