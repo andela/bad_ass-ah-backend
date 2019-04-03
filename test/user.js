@@ -2,7 +2,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
 import {
-  signup1, signup2, signup3, signup4
+  signup1, signup2, signup3, signup4, login1, login2, login3
 } from '../testingdata/user.json';
 import models from '../models/index';
 
@@ -82,6 +82,58 @@ describe('User ', () => {
         }
         res.should.have.status(500);
         res.should.have.property('error');
+        done();
+      });
+  });
+
+  // user login
+  it('should login user', (done) => {
+    chai.request(app)
+      .post('/api/users/login')
+      .set('Content-Type', 'application/json')
+      .send(login1)
+      .end((err, res) => {
+        if (err) {
+          done(err);
+        }
+        res.should.have.status(200);
+        res.body.should.be.a('object');
+        res.body.should.have.property('status').eql(200);
+        res.body.should.have.property('token');
+        res.body.should.have.property('user');
+        res.body.user.should.be.a('object');
+        done();
+      });
+  });
+
+  it('should return an error if credentials are not correct', (done) => {
+    chai.request(app)
+      .post('/api/users/login')
+      .set('Content-Type', 'application/json')
+      .send(login2)
+      .end((err, res) => {
+        if (err) {
+          done(err);
+        }
+        res.should.have.status(400);
+        res.body.should.be.a('object');
+        res.body.should.have.property('status').eql(400);
+        res.body.should.have.property('error').eql('Incorrect username or password');
+        done();
+      });
+  });
+
+  it('Should return status of 500', (done) => {
+    chai.request(app)
+      .post('/api/users/login')
+      .set('Content-Type', 'application/json')
+      .send(login3)
+      .end((err, res) => {
+        if (err) {
+          done(err);
+        }
+        res.should.have.status(500);
+        res.body.should.have.property('error');
         done();
       });
   });
