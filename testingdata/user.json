@@ -21,5 +21,16 @@
        "username": "badass",
        "email": "badass.andela.test@gmail.com",
        "password": "@badass123A"
+   },
+   "login1": {
+    "email": "grammer@db.com",
+    "password": "test@123"
+   },
+   "login2": {
+    "email": "paccy10@db.com",
+    "password": "test@123"
+   },
+   "login3": {
+    "email": "grammer@db.com"
    }
 }
