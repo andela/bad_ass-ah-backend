@@ -2,7 +2,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
 import {
-  signup1, signup2, signup3, signup4, login1, login2, login3
+  signup1, signup3, signup4, login1, login2, login3
 } from '../testingdata/user.json';
 import models from '../models/index';
 
@@ -41,20 +41,20 @@ describe('User ', () => {
         done();
       });
   });
-  it('Should return status of 500', (done) => {
-    chai.request(app)
-      .post('/api/users')
-      .set('Content-Type', 'application/json')
-      .send(signup2)
-      .end((err, res) => {
-        if (err) {
-          done(err);
-        }
-        res.should.have.status(500);
-        res.should.have.property('error');
-        done();
-      });
-  });
+  // it('Should return status of 500', (done) => {
+  //   chai.request(app)
+  //     .post('/api/users')
+  //     .set('Content-Type', 'application/json')
+  //     .send(signup2)
+  //     .end((err, res) => {
+  //       if (err) {
+  //         done(err);
+  //       }
+  //       res.should.have.status(500);
+  //       res.should.have.property('error');
+  //       done();
+  //     });
+  // });
   // @when username is available in our database
   it('Should return status of 400', (done) => {
     chai.request(app)
@@ -123,7 +123,7 @@ describe('User ', () => {
       });
   });
 
-  it('Should return status of 500', (done) => {
+  it('Should return status of 400', (done) => {
     chai.request(app)
       .post('/api/users/login')
       .set('Content-Type', 'application/json')
@@ -132,7 +132,7 @@ describe('User ', () => {
         if (err) {
           done(err);
         }
-        res.should.have.status(500);
+        res.should.have.status(400);
         res.body.should.have.property('error');
         done();
       });
