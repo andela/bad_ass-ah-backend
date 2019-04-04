@@ -24,9 +24,9 @@ class Mailer {
    * @param {string} token - token
    * @returns {Promise} resolved or reject
    */
-  addTokenToEmail(token) {
+  addTokenToEmail(token, template = 'verification') {
     return new Promise(async (resolve, reject) => {
-      const mailOptions = emailTemplates.verification;
+      const mailOptions = emailTemplates[template];
       mailOptions.from = this.senderEmail;
       mailOptions.to = this.userEmail;
       const addToken = mailOptions.html.replace('$', token);

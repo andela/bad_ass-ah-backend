@@ -9,7 +9,7 @@ import Mailer from './mailer';
 const sendEmail = (userEmail, token) => new Promise(async (resolve, reject) => {
   try {
     const mailer = new Mailer(userEmail);
-    const response = mailer.addTokenToEmail(token);
+    const response = mailer.addTokenToEmail(token, 'resetPassword');
     resolve(response);
   } catch (error) {
     reject(new Error(`Email failed: ${error.message}`));
