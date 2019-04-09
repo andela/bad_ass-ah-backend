@@ -36,7 +36,7 @@
     "email": "blaise@gmail.com"
   },
   "googleValidToken": {
-    "access_token": "ya29.GlzoBuq70OI_wiiwoaNegVvY2f8nMZKFGNByHR0J82NlfEVtKMH-162-Zh0ze79l6YuPCClnNPUTWfhl5Bw2D6AWBcJQmK0U76IP9_B8Oih2JNPbaN4xR16g8rjadw"
+    "access_token": "ya29.GlvpBn0ao436fOKSqVaOYwJI8gbWHANJFCbXpCLobaP1QvMH-C1LhvsxHQQ5X-RU8HAvk7ZpeHvxYFIxiFqDJkJtj01Yi5HP5c7XSHfTVGn8Nop4kOtoQsBSPrKC"
   },
   "googleInvalidToken": {
     "access_token": "ya29.GlvhBpzY2hl2ShgOMrpkni8obGgwyX0mr85Oendf2kmblu3BrRNTmYK2DVQiPciVOBFkLvR57YE90qDyffgJOqgzV68zutO3-Y9QDKooAPuxPvwsbsWM36wwVPHT"
@@ -54,5 +54,10 @@
     "username": "test",
     "email": "test123@gmail.com",
     "password": "1Kig1L@20"
+  },
+  "profile1": {
+    "username": "copainFab",
+    "bio": "I am a badass software developer at Andela",
+    "image": ""
   }
 }
