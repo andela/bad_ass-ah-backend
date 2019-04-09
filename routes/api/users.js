@@ -6,6 +6,7 @@ import User from '../../controllers/user';
 import check from '../../middlewares/user';
 import VerifyLink from '../../controllers/email/verifyLink';
 import validateUser from '../../helpers/validate';
+import multer from '../../middlewares/multerConfiguration';
 
 
 const router = express.Router();
@@ -24,5 +25,8 @@ router.post('/password', User.checkEmail);
 router.put('/password', User.resetPassword);
 
 router.post('/login/google', passport.authenticate('googleToken', { session: false }), User.googleLogin);
+
+router.get('/:id/profile', auth, User.getProfile);
+router.put('/profile', auth, multer, User.updateProfile);
 
 export default router;
