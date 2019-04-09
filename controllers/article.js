@@ -17,7 +17,7 @@ class ArticleController {
       title: req.body.title,
       body: req.body.body,
       taglist: (req.body.tag ? req.body.tag.split(',') : null),
-      author: parseInt(req.user.id, 11),
+      author: req.user.id,
       image: (req.file ? req.file.url : null)
     };
     // @save articles
@@ -38,6 +38,54 @@ class ArticleController {
     Article.findAll()
       .then(articles => res.status(200).json({ status: 200, articles }))
       .catch(error => res.status(500).json({ error }));
+  }
+
+  /**
+   *
+   * @param {Object} req
+   * @param {Object} res  updated article
+   * @returns {Object} return updated article
+   */
+  static updateArticle(req, res) {
+    // @updating articles
+    Article.update({
+      title: req.body.title,
+      body: req.body.body,
+      taglist: (req.body.tag ? req.body.tag.split(',') : req.findArticle.taglist),
+      image: (req.file ? req.file.url : null)
+    }, { where: { article_id: req.params.articleId }, returning: true })
+      .then(article => res.status(200).json({ status: 200, message: 'article updated successfully.', article: article[1] }))
+      .catch(error => res.status(500).json({ error: `Something wrong please try again later.${error}` }));
+  }
+
+  /**
+   *
+   * @param {Object} req
+   * @param {Object} res  delete article
+   * @returns {Object} return message and status
+   */
+  static async deleteArticle(req, res) {
+    Article.destroy({ where: { article_id: req.params.articleId } })
+      .then(() => res.status(200).json({ status: 200, message: 'article deleted successfully.' }))
+      .catch(error => res.status(500).json({ error: `Something wrong please try again later. ${error}` }));
+  }
+
+  /**
+   *
+   * @param {Object} req
+   * @param {Object} res  view single article
+   * @returns {Object} return article
+   */
+  static singleArticle(req, res) {
+    Article.findByPk(req.params.articleId)
+      .then((article) => {
+        if (!article) {
+          return res.status(404).json({ error: 'Sorry the requested resource could not be found.' });
+        }
+        // @return article
+        return res.status(200).json({ status: 200, article });
+      })
+      .catch(error => res.status(500).json({ error: `Something wrong please try again later. ${error}` }));
   }
 }
 

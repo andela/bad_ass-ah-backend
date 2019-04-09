@@ -53,23 +53,7 @@ describe('User ', () => {
         if (err) {
           done(err);
         }
-        res.should.have.status(400);
-        res.should.have.property('error');
-        done();
-      });
-  });
-  // @when_its_time_its_time username is available in our database
-  it('Should return status of 400', (done) => {
-    chai
-      .request(app)
-      .post('/api/users')
-      .set('Content-Type', 'application/json')
-      .send(signup3)
-      .end((err, res) => {
-        if (err) {
-          done(err);
-        }
-        res.should.have.status(400);
+        res.should.have.status(409);
         res.should.have.property('error');
         done();
       });

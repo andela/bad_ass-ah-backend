@@ -9,7 +9,8 @@
     "migrate": "node_modules/.bin/sequelize db:migrate:undo:all && node_modules/.bin/sequelize db:migrate",
     "test": "NODE_ENV=test nyc --reporter=html --reporter=text --timeout=1500 mocha --require babel-register test/* --exit",
     "dev": "NODE_ENV=development nodemon --require babel-register index.js",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "migrateTest":"node_modules/.bin/sequelize db:migrate:undo:all --env test && node_modules/.bin/sequelize db:migrate --env test"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",

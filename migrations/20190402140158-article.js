@@ -23,7 +23,11 @@ const articleMigration = {
       },
       author: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'users',
+          key: 'id'
+        }
       },
       image: {
         type: Sequelize.STRING,
