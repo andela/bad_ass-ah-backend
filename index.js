@@ -1,5 +1,4 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import passport from 'passport';
 import googlePassport from './middlewares/passport-google';
 import passportJwt from './middlewares/passport-jwt';
@@ -8,12 +7,10 @@ import passportAuth from './middlewares/passport-facebook';
 
 const app = express();
 const port = process.env.PORT || 3000;
-app.set('port', port);
 
 // @bodyParser configuration
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 // @passport
 app.use(passport.initialize());
 googlePassport(passport);
