@@ -3,27 +3,22 @@ import chaiHttp from 'chai-http';
 import app from '../index';
 import {
   signup1,
-  // eslint-disable-next-line no-unused-vars
-  signup3,
   signup4,
-  // eslint-disable-next-line no-unused-vars
   login1,
   login2,
   login3,
   googleInValidToken,
   googleValidToken,
   expiredToken,
-  invalidToken
+  invalidToken,
+  validToken,
 } from '../testingdata/user.json';
 import models from '../models/index';
 
-const validToken = {
-  access_token:
-    'EAAgbksnPT5IBAI2f478gPi5HZC9iAvldAtZCKhDPXaZCt0cTEr9kuDbETW1wZCDF17alOnG7qdKZB14O4rr2zg6gtkuU6Q14G9idx1JOZAHcFgtQam72PoBzvjgyyl1BxgiFGMHOwVGVPi23QilFQ1z2hUJCYCHyBYT6qfsfCmFwZDZD'
-};
 chai.use(chaiHttp);
 chai.should();
 const User = models.user;
+let token;
 
 describe('User ', () => {
   before(async () => {
@@ -45,7 +40,7 @@ describe('User ', () => {
         done();
       });
   }).timeout(20000);
-  it('Should return status of 400', (done) => {
+  it('Should return status of 409', (done) => {
     chai
       .request(app)
       .post('/api/users')
@@ -60,6 +55,7 @@ describe('User ', () => {
         done();
       });
   });
+
   // @when_its_time_its_time username is not assigned from req.body
   it('Should return status of 500', (done) => {
     chai
@@ -79,25 +75,26 @@ describe('User ', () => {
 
   // user login
 
-  // it('should login user', (done) => {
-  //   chai
-  //     .request(app)
-  //     .post('/api/users/login')
-  //     .set('Content-Type', 'application/json')
-  //     .send(login1)
-  //     .send(googleValidToken)
-  //     .end((err, res) => {
-  //       if (err) {
-  //         done(err);
-  //       }
-  //       res.should.have.status(200);
-  //       res.body.should.be.a('object');
-  //       res.body.should.have.property('status').eql(200);
-  //       res.body.should.have.property('token');
-  //       res.body.should.have.property('user');
-  //       done();
-  //     });
-  // });
+  it('should login user', (done) => {
+    chai
+      .request(app)
+      .post('/api/users/login')
+      .set('Content-Type', 'application/json')
+      .send(login1)
+      .send(googleValidToken)
+      .end((err, res) => {
+        if (err) {
+          done(err);
+        }
+        token = `Bearer ${res.body.token}`;
+        res.should.have.status(200);
+        res.body.should.be.a('object');
+        res.body.should.have.property('status').eql(200);
+        res.body.should.have.property('token');
+        res.body.should.have.property('user');
+        done();
+      });
+  });
 
   it('should return an error if credentials are not correct', (done) => {
     chai
@@ -112,9 +109,7 @@ describe('User ', () => {
         res.should.have.status(400);
         res.body.should.be.a('object');
         res.body.should.have.property('status').eql(400);
-        res.body.should.have
-          .property('error')
-          .eql('Incorrect username or password');
+        res.body.should.have.property('error').eql('Incorrect username or password');
         done();
       });
   });
@@ -234,6 +229,23 @@ describe('User ', () => {
         res.should.have.status(200);
         res.body.should.have.property('user');
         res.body.should.have.property('token');
+        done();
+      });
+  });
+
+  // Get all users
+  it('Should get all users ', (done) => {
+    chai.request(app)
+      .get('/api/users')
+      .set('Content-Type', 'application/json')
+      .set('Authorization', token)
+      .end((error, res) => {
+        if (error) {
+          done(error);
+        }
+        res.should.have.status(200);
+        res.body.should.have.property('status');
+        res.body.should.have.property('users');
         done();
       });
   });

@@ -77,9 +77,7 @@ class UserController {
           res.status(400).json({ status: 400, error: 'Incorrect username or password' });
         }
       }).catch((error) => {
-        res.status(500).json({
-          error
-        });
+        res.status(500).json({ error: error.message });
       });
   }
 
@@ -174,12 +172,26 @@ class UserController {
         if (checkUpdate.length >= 1) {
           return res.status(200).json({ message: 'Congratulations! Your password was reset', });
         }
-        return res.status(400).json({ error: 'Oops! something is wrong, try again', });
       }
       return res.status(401).json({ error: 'Invalid token' });
     } catch (error) {
       res.status(400).send({ status: 400, error: error.message });
     }
+  }
+
+  /**
+ * Get all users.
+ * @param {Object} req The request object.
+ * @param {Object} res The response object.
+ * @returns {Object} The response.
+ */
+  getAllUsers(req, res) {
+    User.findAll({ attributes: ['username', 'email', 'bio', 'image'] })
+      .then((users) => {
+        res.status(200).json({ status: 200, users });
+      }).catch((error) => {
+        res.status(500).json({ error: error.message });
+      });
   }
 }
 

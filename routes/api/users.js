@@ -9,10 +9,12 @@ import validateUser from '../../helpers/validate';
 
 
 const router = express.Router();
+const auth = passport.authenticate('jwt', { session: false });
 
 // @POST
 // @description creating user
 router.post('/', validateUser, check, User.signup);
+router.get('/', auth, User.getAllUsers);
 
 router.post('/send-verification-link', VerifyLink.sendEmail);
 router.get('/verify/:token', VerifyLink.activate);
