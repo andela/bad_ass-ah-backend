@@ -13,6 +13,10 @@ const UserModel = (sequelize, DataTypes) => {
       foreignKey: 'author',
       allowNull: false
     });
+    User.hasMany(models.comments, {
+      foreignKey: 'author',
+      allowNull: false
+    });
   };
   return User;
 };
