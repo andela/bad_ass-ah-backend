@@ -16,6 +16,10 @@ const articleModel = (Sequelize, DataTypes) => {
     image: { type: DataTypes.STRING, allowNull: true }
   }, {});
   Article.associate = (models) => {
+    Article.hasMany(models.comments, {
+      foreignKey: 'articleId',
+      allowNull: false
+    });
     Article.belongsTo(models.user, { as: 'authorfkey', foreignKey: 'author' });
   };
   return Article;
