@@ -17,7 +17,7 @@ class CommentController {
     // @comment
     const newComment = {
       body: req.body.content,
-      articleId: req.params.idArticle,
+      articleId: req.params.articleId,
       author: req.user.id
     };
     // @save comments
@@ -25,7 +25,6 @@ class CommentController {
       .then((comment) => {
         res.status(201).json({ status: 201, comment });
       });
-    // .catch(error => res.status(500).json({ error: error.message }));
   }
 
   /**
@@ -35,13 +34,10 @@ class CommentController {
  * @returns {Object} - will return all comment related to an article
  */
   static getAllComment(req, res) {
-    Comment.findAll({ where: { articleId: req.params.idArticle } })
+    Comment.findAll({ where: { articleId: req.params.articleId } })
       .then((allComment) => {
         res.status(200).json({ status: 200, allComment });
       });
-    // .catch((error) => {
-    //   res.status(500).json({ error: error.message });
-    // });
   }
 
   /**
@@ -56,9 +52,6 @@ class CommentController {
       .then((comment) => {
         res.status(200).json({ status: 200, comment: comment[1] });
       });
-    // .catch((error) => {
-    //   res.status(500).json({ status: 500, error: error.message });
-    // });
   }
 
   /**
@@ -72,9 +65,6 @@ class CommentController {
       .then(() => {
         res.status(200).json({ status: 200, message: 'Comment deleted successfully' });
       });
-    // .catch((error) => {
-    //   res.status(500).json({ status: 500, error: error.message });
-    // });
   }
 }
 

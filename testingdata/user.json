@@ -23,7 +23,11 @@
     "email": "badass.andela.test@gmail.com",
     "password": "1Kig1L@20"
   },
-
+  "unverifiedUser": {
+    "username": "unverified",
+    "email": "unverified.email.test@gmail.com",
+    "password": "U1n2v3e4r5i@"
+  },
   "login1": {
     "email": "blaise@gmail.com",
     "password": "1Kig1L@20"
@@ -36,7 +40,7 @@
     "email": "blaise@gmail.com"
   },
   "googleValidToken": {
-    "access_token": "ya29.GlvpBn0ao436fOKSqVaOYwJI8gbWHANJFCbXpCLobaP1QvMH-C1LhvsxHQQ5X-RU8HAvk7ZpeHvxYFIxiFqDJkJtj01Yi5HP5c7XSHfTVGn8Nop4kOtoQsBSPrKC"
+    "access_token": "ya29.GlvpBnXYdrCRtsIchnu6i01ejs_52UwfyI6wztxXe-Fyu15M4kPOBS3V-sXYGIX89tLRKluMgGIZG_3AhO8rfHbSzs0JcHDhcuukpVdJTbopyWn7dnJ0ao2ZS1Vr"
   },
   "googleInvalidToken": {
     "access_token": "ya29.GlvhBpzY2hl2ShgOMrpkni8obGgwyX0mr85Oendf2kmblu3BrRNTmYK2DVQiPciVOBFkLvR57YE90qDyffgJOqgzV68zutO3-Y9QDKooAPuxPvwsbsWM36wwVPHT"

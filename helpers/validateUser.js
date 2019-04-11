@@ -44,7 +44,7 @@ class Validate {
    */
   static isInteger(intNumber, intNumberFor) {
     const regInteger = /^[0-9]{1,}?$/;
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       if (regInteger.test(intNumber)) {
         resolve(true);
       } else {

@@ -4,16 +4,12 @@ import Article from '../../controllers/article';
 import Comment from '../../controllers/comment';
 import multer from '../../middlewares/multerConfiguration';
 import { checkingArticle } from '../../middlewares/article';
-<<<<<<< HEAD
 import validateComment from '../../helpers/validateComment';
-import checkArticle from '../../middlewares/checkArticle';
 import checkComment from '../../middlewares/checkComment';
-
-=======
 import Rate from '../../controllers/rate';
 import UserAccount from '../../middlewares/userAccount';
 import checkArticle from '../../middlewares/checkArticle';
->>>>>>> Feature(rate article): rate a particular article
+import asyncHandler from '../../helpers/errors/asyncHandler';
 
 const router = express.Router();
 const auth = passport.authenticate('jwt', { session: false });
@@ -21,9 +17,9 @@ const auth = passport.authenticate('jwt', { session: false });
 // @Desc create article
 router.post('/', auth, multer, Article.create);
 // @Method a given user can comment an article
-router.post('/:idArticle/comments/', auth, checkArticle, validateComment, Comment.create);
+router.post('/:articleId/comments/', auth, asyncHandler(checkArticle), validateComment, Comment.create);
 // @Method get all comments related to a signle article
-router.get('/:idArticle/comments/', auth, checkArticle, Comment.getAllComment);
+router.get('/:articleId/comments/', auth, asyncHandler(checkArticle), Comment.getAllComment);
 // @Method update a given comment
 router.put('/:idArticle/comments/:commentId', auth, checkComment, Comment.updateComment);
 // @Mehtod delete a given comment
@@ -41,6 +37,7 @@ router.put('/:articleId', auth, checkingArticle, multer, Article.updateArticle);
 // @desc deleting articles
 router.delete('/:articleId', auth, checkingArticle, Article.deleteArticle);
 
-router.post('/:articleId/rate', auth, UserAccount.isUserAccountActivated, checkArticle, Rate.rateArticle);
+router.post('/:articleId/rate', auth, asyncHandler(UserAccount.isUserAccountActivated), asyncHandler(checkArticle), asyncHandler(Rate.rateArticle));
+router.get('/:articleId/rate', asyncHandler(checkArticle), asyncHandler(Rate.getArticleRate));
 
 export default router;
