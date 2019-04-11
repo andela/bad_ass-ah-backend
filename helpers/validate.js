@@ -18,7 +18,7 @@ const userValidate = (req, res, next) => {
     return validate('Please provide email', res);
   }
   if (!Validate.email(req.body.email)) {
-    validate('Please provide a valid email', res);
+    return validate('Please provide a valid email', res);
   }
   if (!Validate.password(req.body.password)) {
     return validate('Your password should be alphanumeric and have at least 8 character long', res);

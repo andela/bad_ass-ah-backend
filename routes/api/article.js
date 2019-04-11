@@ -2,7 +2,7 @@ import express from 'express';
 import passport from 'passport';
 import Article from '../../controllers/article';
 import multer from '../../middlewares/multerConfiguration';
-import checkingArticle from '../../middlewares/article';
+import { checkingArticle } from '../../middlewares/article';
 
 const router = express.Router();
 const auth = passport.authenticate('jwt', { session: false });

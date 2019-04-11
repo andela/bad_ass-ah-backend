@@ -2,7 +2,10 @@ import models from '../models/index';
 
 const Article = models.article;
 
-const check = async (req, res, next) => {
+/* @middleware which find if article is exist and
+check if user is allowed to update or delete article
+*/
+export const checkingArticle = async (req, res, next) => {
   try {
     const findArticle = await Article.findByPk(req.params.articleId);
     if (!findArticle) {
@@ -18,5 +21,16 @@ const check = async (req, res, next) => {
     return res.status(500).json({ error: 'Something wrong please try again later.' });
   }
 };
-
-export default check;
+/* @middleware which find if article is exist only
+*/
+export const findArticleExist = async (req, res, next) => {
+  try {
+    const findArticle = await Article.findByPk(req.params.articleId);
+    if (!findArticle) {
+      return res.status(404).json({ error: 'sorry the requested article could not be found.' });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({ error: 'Something wrong please try again later.' });
+  }
+};

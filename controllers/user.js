@@ -4,12 +4,13 @@ import dotenv from 'dotenv';
 import models from '../models/index';
 import sendEmail from '../helpers/sendEmail/callMailer';
 import generateToken from '../helpers/token';
-import VerifyLink from './email/verifyLink';
 
 dotenv.config();
 const User = models.user;
 const secretKey = process.env.secretOrKey;
-const expirationTime = { expiresIn: '50day' };
+const expirationTime = {
+  expiresIn: '50day'
+};
 /**
  * @user controller
  * @exports
@@ -42,7 +43,9 @@ class UserController {
         emailResponse: response
       });
     } catch (error) {
-      return res.status(500).json({ error: error.message });
+      return res.status(500).json({
+        error: error.message
+      });
     }
   }
 
@@ -65,21 +68,27 @@ class UserController {
             email: foundUser.email,
           };
           const token = jwt.sign(payload, secretKey, expirationTime);
-          res.status(200).json({ status: 200, token, user: payload });
+          res.status(200).json({
+            status: 200,
+            token,
+            user: payload
+          });
         } else {
           res.status(400).json({ status: 400, error: 'Incorrect username or password' });
         }
       }).catch((error) => {
-        res.status(500).json({ error });
+        res.status(500).json({
+          error
+        });
       });
   }
 
   /**
- * Login User via google.
- * @param {Object} req The request object.
- * @param {Object} res The response object.
- * @returns {Object} The response after registering the user.
- */
+   * Login User via google.
+   * @param {Object} req The request object.
+   * @param {Object} res The response object.
+   * @returns {Object} The response after registering the user.
+   */
   googleLogin(req, res) {
     const user = {
       username: req.user.username,
@@ -95,62 +104,72 @@ class UserController {
   }
 
   /**
-  * @param {Object} req -requesting from user
-  * @param {Object} res - responding from user
-  * @returns {Object} Response with json data
-  */
+   * @param {Object} req -requesting from user
+   * @param {Object} res - responding from user
+   * @returns {Object} Response with json data
+   */
   socialLogin(req, res) {
     const payload = {
       id: req.user.id,
       email: req.user.email
     };
-    const { generate } = generateToken(payload);
+    const {
+      generate
+    } = generateToken(payload);
     return res.status(200).json({ status: 200, user: `welcome: ${req.user.username}`, token: generate });
   }
 
   /**
- * Checks if the email exists.
- * @param {object} req request
- * @param {object} res response.
- * @returns {object} response.
- */
+   * Checks if the email exists.
+   * @param {object} req request
+   * @param {object} res response.
+   * @returns {object} response.
+   */
   checkEmail(req, res) {
     const user = {
       email: req.body.email,
     };
-    return User.findOne({ where: { email: user.email } })
-      .then((foundUser) => {
+    return User.findOne({
+      where: {
+        email: user.email
+      }
+    })
+      .then(async (foundUser) => {
         if (foundUser) {
           const payload = {
             email: foundUser.email,
           };
           const token = jwt.sign(payload, secretKey, expirationTime);
           req.body.token = token;
-          VerifyLink.sendEmail(req, res);
+          req.body.template = 'resetPassword';
+          const response = await sendEmail(user.email, token, 'resetPassword');
+          res.status(200).send({ status: 200, response });
         } else {
           res.status(404).json({ status: 404, error: 'This email is not in our database' });
         }
-      }).catch((error) => {
-        res.status(500).json({ error });
-      });
+      }).catch((error) => { res.status(500).json({ error }); });
   }
 
   /**
-* Resets password.
-* @param {object} req request.
-* @param {object} res response.
-* @returns {object} response.
-*/
+   * Resets password.
+   * @param {object} req request.
+   * @param {object} res response.
+   * @returns {object} response.
+   */
   async resetPassword(req, res) {
     const password = bcrypt.hashSync(req.body.password, 10);
-    const { token } = req.body;
+    const {
+      token
+    } = req.body;
     const decoded = jwt.decode(token, secretKey);
     try {
       if (decoded) {
         const checkUpdate = await User.update({
           password,
         }, {
-          where: { email: decoded.email }
+          where: {
+            email: decoded.email
+          }
         });
         if (checkUpdate.length >= 1) {
           return res.status(200).json({ message: 'Congratulations! Your password was reset', });
@@ -159,10 +178,7 @@ class UserController {
       }
       return res.status(401).json({ error: 'Invalid token' });
     } catch (error) {
-      res.status(400).send({
-        status: 400,
-        error: error.message
-      });
+      res.status(400).send({ status: 400, error: error.message });
     }
   }
 }

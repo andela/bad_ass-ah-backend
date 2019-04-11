@@ -19,11 +19,11 @@ class VerifyLink {
    * @returns {Object} Response
    */
   static async sendEmail(req, res) {
-    const { token } = req.body;
+    const { token, template } = req.body;
     const decoded = jwt.decode(token, secretOrkey);
     try {
       if (decoded) {
-        const response = await sendEmail(decoded.email, token);
+        const response = await sendEmail(decoded.email, token, template);
         res.status(200).send({
           status: 200,
           response
