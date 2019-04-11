@@ -15,6 +15,9 @@ const UserModel = (sequelize, DataTypes) => {
     });
     User.hasMany(models.comments, {
       foreignKey: 'author',
+    });
+    User.hasMany(models.rate, {
+      foreignKey: 'userId',
       allowNull: false
     });
   };

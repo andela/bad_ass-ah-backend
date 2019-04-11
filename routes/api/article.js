@@ -4,10 +4,16 @@ import Article from '../../controllers/article';
 import Comment from '../../controllers/comment';
 import multer from '../../middlewares/multerConfiguration';
 import { checkingArticle } from '../../middlewares/article';
+<<<<<<< HEAD
 import validateComment from '../../helpers/validateComment';
 import checkArticle from '../../middlewares/checkArticle';
 import checkComment from '../../middlewares/checkComment';
 
+=======
+import Rate from '../../controllers/rate';
+import UserAccount from '../../middlewares/userAccount';
+import checkArticle from '../../middlewares/checkArticle';
+>>>>>>> Feature(rate article): rate a particular article
 
 const router = express.Router();
 const auth = passport.authenticate('jwt', { session: false });
@@ -34,5 +40,7 @@ router.put('/:articleId', auth, checkingArticle, multer, Article.updateArticle);
 // @Method Delete
 // @desc deleting articles
 router.delete('/:articleId', auth, checkingArticle, Article.deleteArticle);
+
+router.post('/:articleId/rate', auth, UserAccount.isUserAccountActivated, checkArticle, Rate.rateArticle);
 
 export default router;

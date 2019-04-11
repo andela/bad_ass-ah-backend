@@ -21,6 +21,7 @@ const articleModel = (Sequelize, DataTypes) => {
       allowNull: false
     });
     Article.belongsTo(models.user, { as: 'authorfkey', foreignKey: 'author' });
+    Article.hasMany(models.rate, { foreignKey: 'articleId' });
   };
   return Article;
 };

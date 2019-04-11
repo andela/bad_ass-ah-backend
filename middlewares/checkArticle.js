@@ -1,20 +1,36 @@
 import models from '../models/index';
-
+import validate from '../helpers/validateUser';
+import httpError from '../helpers/errors/httpError';
 
 const Article = models.article;
 
-const check = async (req, res, next) => {
+/**
+ * Check Article
+ * @param {object} req - Request made by the user
+ * @param {object} res - Object that capture response
+ * @param {callback} next - allow other functionalities to run
+ * @returns {object} response
+ */
+const checkArticle = async (req, res, next) => {
+  const { articleId } = req.params;
   try {
-    const findArticle = await Article.findByPk(req.params.idArticle);
-    if (!findArticle) {
-      return res.status(404).json({ status: 404, error: 'sorry the requested article could not be found.' });
+    await validate.isInteger(articleId, 'Article');
+    const article = await Article.findByPk(parseInt(articleId, 10));
+    if (article) {
+      next();
+    } else {
+      const error = new httpError(404, 'Article not found');
+      throw error;
     }
-    // @check if authors are the same
-    req.findArticle = findArticle;
-    next();
-  } catch (error) {
-    return res.status(500).json({ status: 500, error: error.message });
+  } catch (err) {
+    const errStatus = err.statusCode || 500;
+    const errMsg = errStatus === 500 ? 'Something failed: Try again!' : err.message;
+    res.status(errStatus).send({
+      status: errStatus,
+      errors: {
+        body: [errMsg]
+      }
+    });
   }
 };
-
-export default check;
+export default checkArticle;
