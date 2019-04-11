@@ -11,26 +11,16 @@ const Article = models.article;
  * @param {callback} next - allow other functionalities to run
  * @returns {object} response
  */
-const checkArticle = async (req, res, next) => {
+async function checkArticle(req, res, next) {
   const { articleId } = req.params;
-  try {
-    await validate.isInteger(articleId, 'Article');
-    const article = await Article.findByPk(parseInt(articleId, 10));
-    if (article) {
-      next();
-    } else {
-      const error = new httpError(404, 'Article not found');
-      throw error;
-    }
-  } catch (err) {
-    const errStatus = err.statusCode || 500;
-    const errMsg = errStatus === 500 ? 'Something failed: Try again!' : err.message;
-    res.status(errStatus).send({
-      status: errStatus,
-      errors: {
-        body: [errMsg]
-      }
-    });
+  await validate.isInteger(articleId, 'Article');
+  const article = await Article.findByPk(parseInt(articleId, 10));
+  if (article) {
+    req.findArticle = article;
+    next();
+  } else {
+    throw new httpError(404, 'Article not found');
   }
-};
+}
+
 export default checkArticle;

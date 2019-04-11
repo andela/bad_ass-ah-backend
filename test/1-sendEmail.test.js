@@ -2,17 +2,20 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
 import { testMailer } from '../testingdata/user.json';
+import { article1 } from '../testingdata/article.json';
 import models from '../models/index';
 
 chai.use(chaiHttp);
 chai.should();
-const User = models.user;
+const { user, rate, article } = models;
 
 describe('Email Verification Link', () => {
   let verifyLinkToken;
   before(async () => {
     try {
-      await User.destroy({ where: { email: testMailer.email } });
+      await rate.destroy({ where: {}, truncate: true });
+      await article.destroy({ where: { title: article1.title } });
+      await user.destroy({ where: { email: testMailer.email } });
     } catch (error) {
       throw new Error(error);
     }

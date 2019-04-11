@@ -23,7 +23,6 @@ const articleMigration = {
       author: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        OnDelete: 'CASCADE',
         references: {
           model: 'users',
           key: 'id'

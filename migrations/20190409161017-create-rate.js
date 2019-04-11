@@ -9,7 +9,6 @@ const rateMigration = {
     userId: {
       type: Sequelize.INTEGER,
       allowNull: false,
-      OnDelete: 'CASCADE',
       references: {
         model: 'users',
         key: 'id',
@@ -19,7 +18,6 @@ const rateMigration = {
     articleId: {
       type: Sequelize.INTEGER,
       allowNull: false,
-      OnDelete: 'CASCADE',
       references: {
         model: 'articles',
         key: 'article_id',

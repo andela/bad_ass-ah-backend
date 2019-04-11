@@ -17,22 +17,12 @@ class UserAccount {
    * @returns {object} response
    */
   static async isUserAccountActivated(req, res, next) {
-    try {
-      const user = await User.findByPk(req.user.id);
-      if (user.isActivated) {
-        next();
-      } else {
-        throw new httpError(403, 'First, you need to verify your email account');
-      }
-    } catch (err) {
-      const errStatus = err.statusCode || 500;
-      const errMsg = errStatus === 500 ? 'Something failed: Try again!' : err.message;
-      res.status(errStatus).send({
-        status: errStatus,
-        errors: {
-          body: [errMsg]
-        }
-      });
+    // try {
+    const user = await User.findByPk(req.user.id);
+    if (user.isActivated) {
+      next();
+    } else {
+      throw new httpError(403, 'First, you need to verify your email account');
     }
   }
 }

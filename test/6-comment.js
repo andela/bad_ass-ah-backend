@@ -136,7 +136,7 @@ describe('Comment', () => {
         if (err) {
           done(err);
         }
-        res.should.have.status(500);
+        res.should.have.status(400);
         done();
       });
   });
