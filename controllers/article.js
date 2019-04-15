@@ -1,7 +1,9 @@
+/* eslint-disable guard-for-in */
 import models from '../models/index';
 import readingTime from '../helpers/readingTime';
 
 const Article = models.article;
+const Votes = models.vote;
 /**
   * @param {class} --Article controller
   */
@@ -83,6 +85,7 @@ class ArticleController {
    * @returns {Object} return article
    */
   static singleArticle(req, res) {
+    const user = (req.user ? req.user.id : 'nouser');
     Article.findByPk(req.params.articleId)
       .then((article) => {
         if (!article) {
@@ -90,8 +93,32 @@ class ArticleController {
         }
         article.dataValues.readingTime = readingTime(article.title + article.body);
         // @return article
-        return res.status(200).json({ status: 200, article });
-      });
+        Votes.findAll({ where: { article: req.params.articleId } })
+          .then((vote) => {
+            let countLike = 0;
+            let countDisLike = 0;
+            let hasLiked = false;
+            let hasDisliked = false;
+            // eslint-disable-next-line no-restricted-syntax
+            for (const i in vote) {
+              countLike += vote[i].like;
+              countDisLike += vote[i].dislike;
+              if (vote[i].user === user) {
+                hasLiked = vote[i].like;
+                hasDisliked = vote[i].dislike;
+              }
+            }
+            // @return article
+
+            return res.status(200).json({
+              status: 200, article, likes: countLike, dislike: countDisLike, hasLiked, hasDisliked
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch(error => res.status(500).json({ error: `Something wrong please try again later. ${error}` }));
   }
 }
 

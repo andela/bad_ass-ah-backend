@@ -13,6 +13,7 @@ const tagFetch = async (req) => {
     });
   });
   // find in tags
+  // eslint-disable-next-line no-plusplus
   for (let i = 0; i < arr.length; i++) {
     if (arr[i].indexOf(search) !== -1) {
       taglist.push(arr[i]);
