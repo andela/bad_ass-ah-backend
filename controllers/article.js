@@ -1,4 +1,5 @@
 import models from '../models/index';
+import readingTime from '../helpers/readingTime';
 
 const Article = models.article;
 /**
@@ -36,8 +37,13 @@ class ArticleController {
    */
   static getArticle(req, res) {
     Article.findAll()
-      .then(articles => res.status(200).json({ status: 200, articles }))
-      .catch(error => res.status(500).json({ error }));
+      .then((articles) => {
+        const articlesWithReadingTime = articles.map((article) => {
+          article.dataValues.readingTime = readingTime(article.title + article.body);
+          return article;
+        });
+        res.status(200).json({ status: 200, articles: articlesWithReadingTime });
+      }).catch(error => res.status(500).json({ error }));
   }
 
   /**
@@ -82,6 +88,7 @@ class ArticleController {
         if (!article) {
           return res.status(404).json({ error: 'Sorry the requested resource could not be found.' });
         }
+        article.dataValues.readingTime = readingTime(article.title + article.body);
         // @return article
         return res.status(200).json({ status: 200, article });
       })
