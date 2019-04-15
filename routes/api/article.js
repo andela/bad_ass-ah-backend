@@ -28,6 +28,11 @@ import bookmark from '../../controllers/bookmark';
 import Votes from '../../controllers/votes';
 import hasBookmarked from '../../middlewares/hasBookmarked';
 
+import { checkingArticle, findArticleExist } from '../../middlewares/article';
+import Votes from '../../controllers/votes';
+import checkVote from '../../middlewares/votes';
+import isAuth from '../../middlewares/isAuth';
+
 const router = express.Router();
 const auth = passport.authenticate('jwt', {
   session: false
