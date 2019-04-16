@@ -90,7 +90,7 @@ describe('User ', () => {
         if (err) {
           done(err);
         }
-        res.should.have.status(500);
+        res.should.have.status(400);
         res.should.have.property('error');
         done();
       });
