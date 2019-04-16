@@ -6,6 +6,7 @@ import {
   signup1,
   signup3,
   signup4,
+  signup5,
   login1,
   login2,
   login3,
@@ -29,6 +30,7 @@ let token;
 describe('User ', () => {
   before(async () => {
     await User.destroy({ where: { email: signup1.email } });
+    await User.destroy({ where: { email: signup5.email } });
     await User.destroy({ where: { email: 'pacifiqueclement@gmail.com' } });
     await User.destroy({ where: { email: 'jeandedieuam@gmail.com' } });
   });
@@ -46,6 +48,22 @@ describe('User ', () => {
         done();
       });
   }).timeout(20000);
+  // @second user
+  it('Should create user and return status of 201', (done) => {
+    chai
+      .request(app)
+      .post('/api/users')
+      .set('Content-Type', 'application/json')
+      .send(signup5)
+      .end((err, res) => {
+        if (err) done(err);
+        res.should.have.status(201);
+        res.body.should.have.property('token');
+        res.body.should.have.property('username');
+        done();
+      });
+  }).timeout(50000);
+  //
   it('Should return status of 409', (done) => {
     chai
       .request(app)
