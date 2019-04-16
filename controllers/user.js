@@ -135,7 +135,7 @@ class UserController {
       defaults: twitterUser
     });
     const { generate } = generateToken(twitterUser);
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production') {
       return res.status(200).json({ status: 200, Welcome: twitterUser.username, token: generate });
     } return result;
   }
