@@ -40,6 +40,13 @@ const linkedUrl = {
     }
   }
 };
+const gmailUrl = {
+  req: {
+    params: {
+      url: 'gmail'
+    }
+  }
+};
 
 // const url = 'https://twitter.com/intent/tweet?text=https://badass-ah-backend-staging.herokuapp.com/api/articles';
 describe('Article', () => {
@@ -246,6 +253,10 @@ describe('Article', () => {
   });
   it('Should allow the user to share an articles across linkedin channel', async () => {
     const result = await shareArticle.openChannelUrl(linkedUrl.req);
+    result.should.be.a('object');
+  });
+  it('Should allow the user to share an articles across gmail channel', async () => {
+    const result = await shareArticle.openChannelUrl(gmailUrl.req);
     result.should.be.a('object');
   });
   // @search

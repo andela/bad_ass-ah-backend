@@ -19,6 +19,9 @@ class Share {
     } if (req.params.url === 'linkedin') {
       const result = await open('https://www.linkedin.com/sharing/share-offsite/?url=https://badass-ah-backend-staging.herokuapp.com/api/articles');
       return result;
+    } if (req.params.url === 'gmail') {
+      const result = await open('mailto:?subject=artcileTile&body=Authors haven has braught a new way to communicate');
+      return result;
     }
   }
 }
