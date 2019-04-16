@@ -1,4 +1,5 @@
 import express from 'express';
+import session from 'express-session';
 import passport from 'passport';
 import googlePassport from './middlewares/passport-google';
 import passportJwt from './middlewares/passport-jwt';
@@ -11,6 +12,13 @@ const port = process.env.PORT || 3000;
 // @bodyParser configuration
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+// @session configuration for twiitter login
+app.use(session({
+  resave: false,
+  saveUninitialized: true,
+  secret: process.env.secretOrKey
+}));
 // @passport
 app.use(passport.initialize());
 googlePassport(passport);
@@ -25,6 +33,7 @@ app.use((req, res) => {
     error: 'resource not found',
   });
 });
+
 
 app.listen(port, () => {
   console.log(`Server started successfully on ${port}`);

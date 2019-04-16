@@ -15,9 +15,11 @@ import {
   invalidToken,
   validToken,
   profile1,
-  testMailer
+  testMailer,
+  userTwitterSignup
 } from '../testingdata/user.json';
 import models from '../models/index';
+import userController from '../controllers/user';
 
 chai.use(chaiHttp);
 chai.should();
@@ -236,6 +238,10 @@ describe('User ', () => {
         res.body.should.have.property('token');
         done();
       });
+  });
+  it('Should let the user signup with twitter', async () => {
+    const result = await userController.twitterLogin(userTwitterSignup);
+    result[0].dataValues.should.be.a('object');
   });
 
   // Get all users
