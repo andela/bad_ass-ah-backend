@@ -107,6 +107,7 @@ class UserController {
    * @returns {Object} Response with json data
    */
   socialLogin(req, res) {
+    // console.log('this is the twitter user fired up', req.user);
     const payload = {
       id: req.user.id,
       email: req.user.email
@@ -115,6 +116,28 @@ class UserController {
       generate
     } = generateToken(payload);
     return res.status(200).json({ status: 200, user: `welcome: ${req.user.username}`, token: generate });
+  }
+
+  /**
+   *
+   * @param {Object} req
+   * @param {*} res
+   * @returns {Object} Json data
+   */
+  async twitterLogin(req, res) {
+    const twitterUser = {
+      username: req.user.username
+    };
+    const result = await User.findOrCreate({
+      where: {
+        username: twitterUser.username
+      },
+      defaults: twitterUser
+    });
+    const { generate } = generateToken(twitterUser);
+    if (process.env.NODE_ENV === 'development') {
+      return res.status(200).json({ status: 200, Welcome: twitterUser.username, token: generate });
+    } return result;
   }
 
   /**

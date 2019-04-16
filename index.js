@@ -1,9 +1,13 @@
 import express from 'express';
 import passport from 'passport';
+import session from 'express-session';
+import dotenv from 'dotenv';
 import googlePassport from './middlewares/passport-google';
 import passportJwt from './middlewares/passport-jwt';
 import router from './routes/index';
 import passportAuth from './middlewares/passport-facebook';
+
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -11,6 +15,12 @@ const port = process.env.PORT || 3000;
 // @bodyParser configuration
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+//
+app.use(session({
+  resave: false,
+  saveUninitialized: true,
+  secret: process.env.secretOrKey
+}));
 // @passport
 app.use(passport.initialize());
 googlePassport(passport);

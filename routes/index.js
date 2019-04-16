@@ -3,6 +3,7 @@ import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../config/swagger.json';
 import facebookAuth from './api/auth/facebook';
+import twitterAuth from './api/auth/twitter';
 
 import users from './api/users';
 import article from './api/article';
@@ -12,6 +13,7 @@ import article from './api/article';
 const app = express();
 // @router configuration
 app.use('/api/users/auth', facebookAuth);
+app.use('/api/users', twitterAuth);
 app.use('/api/users', users);
 app.use('/api/articles', article);
 // @swagger UI

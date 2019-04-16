@@ -12,9 +12,12 @@ import {
   googleInValidToken,
   googleValidToken,
   expiredToken,
-  invalidToken
+  invalidToken,
+  userTwitterSignup,
+  userTwitterLogin
 } from '../testingdata/user.json';
 import models from '../models/index';
+import userController from '../controllers/user';
 
 const validToken = {
   access_token:
@@ -236,5 +239,9 @@ describe('User ', () => {
         res.body.should.have.property('token');
         done();
       });
+  });
+  it('Should let the user signup with twitter', async () => {
+    const result = await userController.twitterLogin(userTwitterSignup);
+    result[0].dataValues.should.be.a('object');
   });
 });

@@ -36,7 +36,7 @@
     "email": "blaise@gmail.com"
   },
   "googleValidToken": {
-    "access_token": "ya29.GlvpBhvfp0hUOLEAl5s-jtsr_-uFZTw1vJ2MWN1YktMWahllEWE3BPev8xWGHRbwvss1tn2SnbA9KGG6-w_Tin-P0fTk6QwjzbLABuZte_6OAPFyof0JKs-QkhMi"
+    "access_token": "ya29.GlvtBohmzt8WQhfsDQkOY1pYwBJbLksRfyCkGn8soMYT4ZZiJh0bCSBQ9JA1dCd8n9o7wLrMgTJMwvwhZqGkiSRZXKgfsclhkmYZCYoeNSlRMlpCKxGbGfsTXdv8"
   },
   "googleInvalidToken": {
     "access_token": "ya29.GlvhBpzY2hl2ShgOMrpkni8obGgwyX0mr85Oendf2kmblu3BrRNTmYK2DVQiPciVOBFkLvR57YE90qDyffgJOqgzV68zutO3-Y9QDKooAPuxPvwsbsWM36wwVPHT"
@@ -54,5 +54,10 @@
     "username": "test",
     "email": "test123@gmail.com",
     "password": "1Kig1L@20"
+  },
+  "userTwitterSignup": {
+    "user": {
+      "username": "EmaBush"
+    }
   }
 }
