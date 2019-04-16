@@ -32,7 +32,9 @@ class UserController {
     };
     try {
       const { dataValues: user } = await User.create(newUser);
-      const payload = { id: user.id, username: user.username, email: user.email };
+      const payload = {
+        id: user.id, username: user.username, email: user.email, isAdmin: user.isAdmin
+      };
       const token = jwt.sign(payload, secretKey, expirationTime);
       const response = await sendEmail(user.email, token);
       return res.status(201).json({
@@ -44,9 +46,7 @@ class UserController {
         emailResponse: response
       });
     } catch (error) {
-      return res.status(500).json({
-        error: error.message
-      });
+      return res.status(500).json({ error: error.message });
     }
   }
 
@@ -67,6 +67,7 @@ class UserController {
           const payload = {
             id: foundUser.id,
             email: foundUser.email,
+            isAdmin: foundUser.isAdmin
           };
           const token = jwt.sign(payload, secretKey, expirationTime);
           res.status(200).json({
