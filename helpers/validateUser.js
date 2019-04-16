@@ -54,6 +54,7 @@ class Validate {
     });
   }
 
+
   /**
    * Validate user's rating
    * @param {number} rating - User ratings

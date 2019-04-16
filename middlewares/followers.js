@@ -1,5 +1,7 @@
 import Sequelize from 'sequelize';
 import models from '../models/index';
+import validate from '../helpers/validateUser';
+import httpError from '../helpers/errors/httpError';
 
 const Follower = models.follower;
 const User = models.user;
@@ -20,13 +22,11 @@ export const checkFollowedBy = async (req, res, next) => {
 };
 
 export const checkUserId = async (req, res, next) => {
-  await User.findByPk(req.params.userId)
-    .then((user) => {
-      if (!user) {
-        return res.status(404).json({ status: 404, error: 'sorry user not found.' });
-      }
-      req.followedBy = user.username;
-      next();
-    })
-    .catch(error => res.status(500).json({ status: 500, error }));
+  await validate.isInteger(req.params.userId, 'User');
+  const user = await User.findByPk(req.params.userId);
+  if (!user) {
+    throw new httpError(404, 'sorry user not found');
+  }
+  req.followedBy = user.username;
+  next();
 };

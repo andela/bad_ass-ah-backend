@@ -96,8 +96,10 @@ class ArticleController {
     };
     if (user !== undefined) {
       const userVotes = await Votes.findOne({ where: { article: articleId, user }, attributes: ['like', 'dislike'] });
-      votes.hasLiked = userVotes.like;
-      votes.hasDisliked = userVotes.dislike;
+      if (userVotes) {
+        votes.hasLiked = userVotes.like;
+        votes.hasDisliked = userVotes.dislike;
+      }
     }
     const totalReading = await ArticleStats.count({ where: { articleId: req.params.articleId } });
     res.status(200).json({

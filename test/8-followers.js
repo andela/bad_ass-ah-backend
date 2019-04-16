@@ -1,7 +1,7 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
-import { login1, login4 } from '../testingdata/user.json';
+import { testMailer, login4 } from '../testingdata/user.json';
 
 chai.use(chaiHttp);
 chai.should();
@@ -11,7 +11,7 @@ let userId2;
 describe('Followers', () => {
   before(async () => {
     try {
-      const login = await chai.request(app).post('/api/users/login').set('Content-Type', 'application/json').send(login1);
+      const login = await chai.request(app).post('/api/users/login').set('Content-Type', 'application/json').send(testMailer);
       const login2 = await chai.request(app).post('/api/users/login').set('Content-Type', 'application/json').send(login4);
       token = `Bearer ${login.body.token}`;
       userId2 = login.body.user.id;
@@ -23,14 +23,26 @@ describe('Followers', () => {
   // check
   it('Should return status of 404 (follow user)', (done) => {
     chai.request(app)
-      .post('/api/users/follow/100005667')
+      .post('/api/users/follow/5000')
       .set('Authorization', token)
       .set('Content-Type', 'application/json')
       .end((error, res) => {
         if (error) done(error);
         res.should.have.status(404);
         res.body.should.have.property('status');
-        res.body.should.have.property('error');
+        res.body.should.have.property('errors');
+        done();
+      });
+  });
+  it('Should return status of 500 (follow user)', (done) => {
+    chai.request(app)
+      .post('/api/users/follow/50008745648365847465746547564765746547564')
+      .set('Authorization', token)
+      .set('Content-Type', 'application/json')
+      .end((error, res) => {
+        if (error) done(error);
+        res.should.have.status(500);
+        res.body.should.have.property('errors');
         done();
       });
   });
@@ -103,7 +115,7 @@ describe('Followers', () => {
         if (error) done(error);
         res.should.have.status(404);
         res.body.should.have.property('status');
-        res.body.should.have.property('error');
+        res.body.should.have.property('errors');
         done();
       });
   });
@@ -117,7 +129,7 @@ describe('Followers', () => {
         if (error) done(error);
         res.should.have.status(500);
         res.body.should.have.property('status');
-        res.body.should.have.property('error');
+        res.body.should.have.property('errors');
         done();
       });
   });
