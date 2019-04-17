@@ -40,7 +40,7 @@
     "email": "blaise@gmail.com"
   },
   "googleValidToken": {
-    "access_token": "ya29.GlvtBh1zpj-_QCVaZhyOkXLtLDG-s5vawM1FWGnnhtkoV3lMMile89zb-lLNmadfvzWWNbVdPyaRTMlzQin8NliZF2cOo-k6oAVkPCxmEANhgkYTsW14acaFnw0r"
+    "access_token": "ya29.GlvuBkc1EnZyNhOgIRq8eubZoWYlxb5qk8SaPWm2T94Y2ls8ET4i-fmNOer5butRxM2_QbfvcbDp5VNK3QwxyTL3C5eY5hgwEXG7BxGUeBZkrJQMH9HbpKJ0QQ7h"
   },
   "googleInvalidToken": {
     "access_token": "ya29.GlvhBpzY2hl2ShgOMrpkni8obGgwyX0mr85Oendf2kmblu3BrRNTmYK2DVQiPciVOBFkLvR57YE90qDyffgJOqgzV68zutO3-Y9QDKooAPuxPvwsbsWM36wwVPHT"
@@ -63,5 +63,10 @@
     "username": "copainFab",
     "bio": "I am a badass software developer at Andela",
     "image": ""
+  },
+  "userTwitterSignup": {
+    "user": {
+      "username": "EmaBush"
+    }
   }
 }
