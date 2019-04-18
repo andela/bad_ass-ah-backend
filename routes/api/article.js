@@ -10,6 +10,7 @@ import Rate from '../../controllers/rate';
 import UserAccount from '../../middlewares/userAccount';
 import checkArticle from '../../middlewares/checkArticle';
 import asyncHandler from '../../helpers/errors/asyncHandler';
+import shareArticle from '../../helpers/shareArticles';
 
 const router = express.Router();
 const auth = passport.authenticate('jwt', { session: false });
@@ -39,5 +40,7 @@ router.delete('/:articleId', auth, checkingArticle, Article.deleteArticle);
 
 router.post('/:articleId/rate', auth, asyncHandler(UserAccount.isUserAccountActivated), asyncHandler(checkArticle), asyncHandler(Rate.rateArticle));
 router.get('/:articleId/rate', asyncHandler(checkArticle), asyncHandler(Rate.getArticleRate));
+
+router.post('/:articleId/share/:url', auth, shareArticle.openChannelUrl);
 
 export default router;

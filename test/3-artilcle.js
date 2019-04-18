@@ -3,6 +3,7 @@ import chaiHttp from 'chai-http';
 import app from '../index';
 import { article1 } from '../testingdata/article.json';
 import { login1 } from '../testingdata/user.json';
+import shareArticle from '../helpers/shareArticles';
 import models from '../models/index';
 
 chai.use(chaiHttp);
@@ -10,6 +11,29 @@ chai.should();
 const Article = models.article;
 let APItoken;
 let articleId;
+const facebookUrl = {
+  req: {
+    params: {
+      url: 'facebook'
+    }
+  }
+};
+const twitterUrl = {
+  req: {
+    params: {
+      url: 'twitter'
+    }
+  }
+};
+const linkedUrl = {
+  req: {
+    params: {
+      url: 'linkedin'
+    }
+  }
+};
+
+// const url = 'https://twitter.com/intent/tweet?text=https://badass-ah-backend-staging.herokuapp.com/api/articles';
 describe('Article', () => {
   before(async () => {
     try {
@@ -165,5 +189,17 @@ describe('Article', () => {
         res.should.have.status(404);
         done();
       });
+  });
+  it('Should allow the user to share an articles across facebook channel', async () => {
+    const result = await shareArticle.openChannelUrl(facebookUrl.req);
+    result.should.be.a('object');
+  });
+  it('Should allow the user to share an articles across twitter channel', async () => {
+    const result = await shareArticle.openChannelUrl(twitterUrl.req);
+    result.should.be.a('object');
+  });
+  it('Should allow the user to share an articles across linkedin channel', async () => {
+    const result = await shareArticle.openChannelUrl(linkedUrl.req);
+    result.should.be.a('object');
   });
 });
