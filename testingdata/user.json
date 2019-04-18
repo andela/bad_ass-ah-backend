@@ -18,6 +18,11 @@
     "email": "kaleb@gmail.com",
     "password": "1Kig1L@20"
   },
+  "signup5": {
+    "username": "gratian",
+    "email": "gratian@gmail.com",
+    "password": "1Kig1L@20"
+  },
   "testMailer": {
     "username": "badass",
     "email": "badass.andela.test@gmail.com",
@@ -39,8 +44,12 @@
   "login3": {
     "email": "blaise@gmail.com"
   },
+  "login4":{
+    "email": "gratian@gmail.com",
+    "password": "1Kig1L@20"
+  },
   "googleValidToken": {
-    "access_token": "ya29.GlzvBsYBoHEEyCgpoljnA2IBEvb6IvbEvXUFnhGR1aakPOl0l3Kgfv6uuBtSCyRp69HeDpMbbc9pxZy1Lpy1dNUpDnwBzyI4p_WH1I_rKI3QchpiOTqDi42nxHhlOg"
+    "access_token": "ya29.GlvvBqe7M-RLlus5dSVWVvHjTRlsfHrqPfww-d9urRPLj0q18SMMdDcFcW4MeoY6tP0XwOSeKcjW2yzPGgqx7hL7-QgEiKnu40OdXHyPGFBt5CT2LnqKHju7Wko7"
   },
   "googleInvalidToken": {
     "access_token": "ya29.GlvhBpzY2hl2ShgOMrpkni8obGgwyX0mr85Oendf2kmblu3BrRNTmYK2DVQiPciVOBFkLvR57YE90qDyffgJOqgzV68zutO3-Y9QDKooAPuxPvwsbsWM36wwVPHT"

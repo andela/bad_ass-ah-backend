@@ -91,8 +91,7 @@ class ArticleController {
         article.dataValues.readingTime = readingTime(article.title + article.body);
         // @return article
         return res.status(200).json({ status: 200, article });
-      })
-      .catch(error => res.status(500).json({ error: `Something wrong please try again later. ${error}` }));
+      });
   }
 }
 

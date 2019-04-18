@@ -2,14 +2,15 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
 import { article1 } from '../testingdata/article.json';
-import { login1 } from '../testingdata/user.json';
 import shareArticle from '../helpers/shareArticles';
+import { login1, login4 } from '../testingdata/user.json';
 import models from '../models/index';
 
 chai.use(chaiHttp);
 chai.should();
 const Article = models.article;
 let APItoken;
+let APItoken2;
 let articleId;
 const facebookUrl = {
   req: {
@@ -40,6 +41,8 @@ describe('Article', () => {
       await Article.destroy({ where: { title: article1.title } });
       const tokens = await chai.request(app).post('/api/users/login').set('Content-Type', 'application/json').send(login1);
       APItoken = `Bearer ${tokens.body.token}`;
+      const login2 = await chai.request(app).post('/api/users/login').set('Content-Type', 'application/json').send(login4);
+      APItoken2 = `Bearer ${login2.body.token}`;
     } catch (error) {
       console.log(error);
     }
@@ -142,11 +145,30 @@ describe('Article', () => {
         done();
       });
   });
+  // should return status code of 403
+  it('Should return status  code of 403', (done) => {
+    chai.request(app)
+      .put(`/api/articles/${articleId}`)
+      .set('Authorization', APItoken2)
+      .set('Content-Type', 'multipart/form-data')
+      .field('title', article1.title)
+      .field('body', article1.body)
+      .field('tag', article1.tag)
+      .attach('image', '')
+      .end((error, res) => {
+        if (error) {
+          done(error);
+        }
+        res.should.have.status(403);
+        res.body.should.have.property('error');
+        done();
+      });
+  });
   // @should return 404
   // @article not found
   it('Should return status  code of 404', (done) => {
     chai.request(app)
-      .put('/api/articles/500')
+      .put('/api/articles/5007')
       .set('Authorization', APItoken)
       .set('Content-Type', 'multipart/form-data')
       .field('title', article1.title)
@@ -158,6 +180,23 @@ describe('Article', () => {
           done(error);
         }
         res.should.have.status(404);
+        done();
+      });
+  });
+  it('Should return status  code of 500', (done) => {
+    chai.request(app)
+      .put('/api/articles/5007458674867495769456745')
+      .set('Authorization', APItoken)
+      .set('Content-Type', 'multipart/form-data')
+      .field('title', article1.title)
+      .field('body', article1.body)
+      .field('tag', article1.tag)
+      .attach('image', '')
+      .end((error, res) => {
+        if (error) {
+          done(error);
+        }
+        res.should.have.status(500);
         done();
       });
   });
@@ -201,5 +240,35 @@ describe('Article', () => {
   it('Should allow the user to share an articles across linkedin channel', async () => {
     const result = await shareArticle.openChannelUrl(linkedUrl.req);
     result.should.be.a('object');
+  });
+  // @search
+  // should return status of 400
+  it('Should return status code of 400', (done) => {
+    chai.request(app)
+      .post('/api/search/?search=')
+      .set('Content-Type', 'application/json')
+      .end((error, res) => {
+        if (error) {
+          done(error);
+        }
+        res.should.have.status(400);
+        res.body.should.have.property('error');
+        done();
+      });
+  });
+  it('Should return status code of 200', (done) => {
+    chai.request(app)
+      .post('/api/search/?search=a')
+      .set('Content-Type', 'application/json')
+      .end((error, res) => {
+        if (error) {
+          done(error);
+        }
+        res.should.have.status(200);
+        res.body.should.have.property('article');
+        res.body.should.have.property('user');
+        res.body.should.have.property('tags');
+        done();
+      });
   });
 });
