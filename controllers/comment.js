@@ -1,6 +1,8 @@
 import models from '../models/index';
+import Notification from './notification';
 
 const Comment = models.comments;
+const User = models.user;
 /**
  * @param {class} --Comment controller
  */
@@ -21,7 +23,13 @@ class CommentController {
     // @save comments
     Comment.create(newComment)
       .then((comment) => {
-        res.status(201).json({ status: 201, comment });
+        User.findOne({ where: { id: comment.author } })
+          .then(async (user) => {
+            const message = `${user.username} commented on an article you favorite`;
+            await Notification.createFavorite(comment.articleId, message, comment.author);
+            await Notification.sendFavorite(comment.articleId, message, comment.author);
+            res.status(201).json({ status: 201, comment });
+          });
       });
   }
 
@@ -48,8 +56,19 @@ class CommentController {
     Comment.update({ body: req.body.content },
       { where: { id: req.params.commentId }, returning: true })
       .then((comment) => {
-        // @ send to the user the edited comment
-        res.status(200).json({ status: 200, comment: comment[1] });
+        User.findOne({ where: { id: comment[1][0].author } })
+          .then(async (user) => {
+            const message = `${user.username} updated his comment on an article you favorite`;
+            await Notification.createFavorite(
+              comment[1][0].articleId,
+              message, comment[1][0].author
+            );
+            await Notification.sendFavorite(
+              comment[1][0].articleId, message,
+              comment[1][0].author
+            );
+            res.status(200).json({ status: 200, comment: comment[1] });
+          });
       });
   }
 

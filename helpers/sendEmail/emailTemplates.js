@@ -22,4 +22,10 @@ const emailTemplates = {
   }
 };
 
-export default emailTemplates;
+// eslint-disable-next-line arrow-body-style
+const notificationTemplate = (message) => {
+  return `<h1 style="color: #444; margin-left: 20px;">Updates on article you favorite</h1>
+<p style="color: #555; margin-left: 20px; font-size: 14px">${message}</p><br>`;
+};
+
+export default { emailTemplates, notificationTemplate };

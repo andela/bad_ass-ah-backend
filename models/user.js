@@ -6,7 +6,8 @@ const UserModel = (sequelize, DataTypes) => {
     bio: { type: DataTypes.STRING },
     image: { type: DataTypes.STRING },
     isAdmin: { type: DataTypes.BOOLEAN },
-    isActivated: { type: DataTypes.BOOLEAN }
+    isActivated: { type: DataTypes.BOOLEAN },
+    allowNotifications: { type: DataTypes.BOOLEAN }
   }, {});
   User.associate = (models) => {
     User.hasMany(models.article, { foreignKey: 'author', allowNull: false });
@@ -15,6 +16,7 @@ const UserModel = (sequelize, DataTypes) => {
     User.hasMany(models.reportArticle, { foreignKey: 'reporter', allowNull: false });
     User.hasMany(models.articleStats, { foreignKey: 'userId', allowNull: false });
     User.hasMany(models.vote, { foreignKey: 'user', allowNull: false });
+    User.hasMany(models.notification, { foreignKey: 'userId', allowNull: false });
   };
   return User;
 };
