@@ -17,9 +17,11 @@ const articleModel = (Sequelize, DataTypes) => {
   }, {});
   Article.associate = (models) => {
     Article.belongsTo(models.user, { as: 'authorfkey', foreignKey: 'author', onDelete: 'CASCADE' });
-    Article.hasMany(models.rate, { foreignKey: 'articleId', onDelete: 'CASCADE' });
-    Article.hasMany(models.comments, { foreignKey: 'articleId', allowNull: false });
     Article.hasMany(models.reportArticle, { foreignKey: 'articleId', allowNull: false });
+    Article.hasMany(models.comments, { foreignKey: 'articleId', allowNull: false });
+    Article.hasMany(models.rate, { foreignKey: 'articleId', onDelete: 'CASCADE' });
+    Article.hasMany(models.articleStats, { foreignKey: 'articleId', allowNull: false });
+    Article.hasMany(models.vote, { foreignKey: 'article', allowNull: false });
   };
   return Article;
 };

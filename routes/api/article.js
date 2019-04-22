@@ -15,6 +15,7 @@ import reportArticle from '../../controllers/report/reportArticle';
 import { checkingArticle, findArticleExist } from '../../middlewares/article';
 import checkVote from '../../middlewares/votes';
 import isAuth from '../../middlewares/isAuth';
+import articleStats from '../../controllers/stats/articleStats';
 
 import Votes from '../../controllers/votes';
 
@@ -40,7 +41,8 @@ router.post('/:articleId/dislike', auth, findArticleExist, checkVote, Votes.disl
 router.get('/', Article.getArticle);
 // @Method GET
 // @desc get single article
-router.get('/:articleId', isAuth, Article.singleArticle);
+// router.get('/:articleId', isAuth, Article.singleArticle);
+router.get('/:articleId', isAuth, asyncHandler(Article.singleArticle));
 // @Method PUT
 // @Desc update articles
 router.put('/:articleId', auth, checkingArticle, multer, Article.updateArticle);
@@ -48,8 +50,12 @@ router.put('/:articleId', auth, checkingArticle, multer, Article.updateArticle);
 // @desc deleting articles
 router.delete('/:articleId', auth, checkingArticle, Article.deleteArticle);
 
+router.post('/:articleId/record-reading', auth, asyncHandler(UserAccount.isUserAccountActivated), asyncHandler(checkArticle), asyncHandler(articleStats.recordReading));
+
 router.post('/:articleId/rate', auth, asyncHandler(UserAccount.isUserAccountActivated), asyncHandler(checkArticle), asyncHandler(Rate.rateArticle));
+
 router.get('/:articleId/rate', asyncHandler(checkArticle), asyncHandler(Rate.getArticleRate));
+
 router.post('/:articleId/report/type/:reportTypeId', auth, asyncHandler(UserAccount.isUserAccountActivated), asyncHandler(checkArticle), asyncHandler(reportArticle.reportArticle));
 
 router.post('/:articleId/share/:url', auth, shareArticle.openChannelUrl);

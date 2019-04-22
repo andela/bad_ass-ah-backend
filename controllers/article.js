@@ -1,9 +1,8 @@
-/* eslint-disable guard-for-in */
 import models from '../models/index';
 import readingTime from '../helpers/readingTime';
+import httpError from '../helpers/errors/httpError';
 
-const Article = models.article;
-const Votes = models.vote;
+const { article: Article, articleStats: ArticleStats, vote: Votes } = models;
 /**
   * @param {class} --Article controller
   */
@@ -79,46 +78,31 @@ class ArticleController {
   }
 
   /**
-   *
-   * @param {Object} req
-   * @param {Object} res  view single article
+   * Get a single article
+   * @param {Object} req - Request from user
+   * @param {Object} res - view single article
    * @returns {Object} return article
    */
-  static singleArticle(req, res) {
-    const user = (req.user ? req.user.id : 'nouser');
-    Article.findByPk(req.params.articleId)
-      .then((article) => {
-        if (!article) {
-          return res.status(404).json({ error: 'Sorry the requested resource could not be found.' });
-        }
-        article.dataValues.readingTime = readingTime(article.title + article.body);
-        // @return article
-        Votes.findAll({ where: { article: req.params.articleId } })
-          .then((vote) => {
-            let countLike = 0;
-            let countDisLike = 0;
-            let hasLiked = false;
-            let hasDisliked = false;
-            // eslint-disable-next-line no-restricted-syntax
-            for (const i in vote) {
-              countLike += vote[i].like;
-              countDisLike += vote[i].dislike;
-              if (vote[i].user === user) {
-                hasLiked = vote[i].like;
-                hasDisliked = vote[i].dislike;
-              }
-            }
-            // @return article
-
-            return res.status(200).json({
-              status: 200, article, likes: countLike, dislike: countDisLike, hasLiked, hasDisliked
-            });
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      })
-      .catch(error => res.status(500).json({ error: `Something wrong please try again later. ${error}` }));
+  static async singleArticle(req, res) {
+    const user = req.user.id;
+    const { articleId } = req.params;
+    const article = await Article.findByPk(articleId);
+    if (!article) throw new httpError(404, 'Sorry the requested resource could not be found.');
+    article.dataValues.readingTime = readingTime(article.title + article.body);
+    const likes = await Votes.count({ where: { article: articleId, like: true } });
+    const dislikes = await Votes.count({ where: { article: articleId, dislike: true } });
+    const votes = {
+      likes, dislikes, hasLiked: false, hasDisliked: false
+    };
+    if (user !== undefined) {
+      const userVotes = await Votes.findOne({ where: { article: articleId, user }, attributes: ['like', 'dislike'] });
+      votes.hasLiked = userVotes.like;
+      votes.hasDisliked = userVotes.dislike;
+    }
+    const totalReading = await ArticleStats.count({ where: { articleId: req.params.articleId } });
+    res.status(200).json({
+      status: 200, article, totalReading, votes
+    });
   }
 }
 
