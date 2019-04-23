@@ -59,5 +59,6 @@ router.get('/:articleId/rate', asyncHandler(checkArticle), asyncHandler(Rate.get
 router.post('/:articleId/report/type/:reportTypeId', auth, asyncHandler(UserAccount.isUserAccountActivated), asyncHandler(checkArticle), asyncHandler(reportArticle.reportArticle));
 
 router.post('/:articleId/share/:url', auth, shareArticle.openChannelUrl);
+router.get('/:articleId/share/email', auth, Article.shareEmail);
 
 export default router;

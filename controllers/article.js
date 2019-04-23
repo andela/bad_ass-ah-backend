@@ -1,7 +1,9 @@
+import dotenv from 'dotenv';
 import models from '../models/index';
 import readingTime from '../helpers/readingTime';
 import httpError from '../helpers/errors/httpError';
 import Notification from './notification';
+import sendMail from '../helpers/sendEmail/callMailer';
 
 const {
   article: Article,
@@ -9,6 +11,10 @@ const {
   vote: Votes,
   user: User
 } = models;
+
+dotenv.config();
+const { SHARE_WITH } = process.env;
+
 
 /**
  * @param {class} --Article controller
@@ -74,6 +80,17 @@ class ArticleController {
         }
       }))
       .catch(error => res.status(500).json({ error }));
+  }
+
+  /**
+   *
+   * @param {*} req
+   * @param {*} res
+   * @returns {*} - will return an object
+   */
+  static shareEmail(req, res) {
+    sendMail(SHARE_WITH, '', 'shareArticle');
+    res.status(200).json({ status: 200, message: `You have share an article with ${SHARE_WITH}` });
   }
 
   /**
