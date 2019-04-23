@@ -22,28 +22,32 @@ const req = {
 const facebookUrl = {
   req: {
     params: {
-      url: 'facebook'
+      url: 'facebook',
+      articleId: 1
     }
   }
 };
 const twitterUrl = {
   req: {
     params: {
-      url: 'twitter'
+      url: 'twitter',
+      articleId: 1
     }
   }
 };
 const linkedUrl = {
   req: {
     params: {
-      url: 'linkedin'
+      url: 'linkedin',
+      articleId: 1
     }
   }
 };
 const gmailUrl = {
   req: {
     params: {
-      url: 'gmail'
+      url: 'gmail',
+      articleId: 1
     }
   }
 };

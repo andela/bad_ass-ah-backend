@@ -1,4 +1,8 @@
 import open from 'open';
+import dotenv from 'dotenv';
+
+dotenv.config();
+const { SHARING_HOST } = process.env;
 /**
  * @shareArticle
  */
@@ -7,20 +11,21 @@ class Share {
    *
    * @param {Object} req
    * @param {Ojbect} res
-   * @returns {Object} kdjdjd
+   * @returns {Object} -- will return an object
    */
   async openChannelUrl(req) {
+    const completeSahringHost = `${SHARING_HOST}${req.params.articleId}`;
     if (req.params.url === 'twitter') {
-      const result = await open('https://twitter.com/intent/tweet?text=https://badass-ah-backend-staging.herokuapp.com/api/articles');
+      const result = await open(`https://twitter.com/intent/tweet?text=${completeSahringHost}`);
       return result;
     } if (req.params.url === 'facebook') {
-      const result = await open('https://www.facebook.com/sharer/sharer.php?u=https://badass-ah-backend-staging.herokuapp.com/api/articles');
+      const result = await open(`https://www.facebook.com/sharer/sharer.php?u=${completeSahringHost}`);
       return result;
     } if (req.params.url === 'linkedin') {
-      const result = await open('https://www.linkedin.com/sharing/share-offsite/?url=https://badass-ah-backend-staging.herokuapp.com/api/articles');
+      const result = await open(`https://www.linkedin.com/sharing/share-offsite/?url=${completeSahringHost}`);
       return result;
     } if (req.params.url === 'gmail') {
-      const result = await open('mailto:?subject=artcileTile&body=Authors haven has braught a new way to communicate');
+      const result = await open(`mailto:?subject=artcileTile&body=${completeSahringHost}`);
       return result;
     }
   }
