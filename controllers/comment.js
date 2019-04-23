@@ -3,6 +3,7 @@ import Notification from './notification';
 
 const Comment = models.comments;
 const User = models.user;
+const EditedCommentHistory = models.editedcommentshistory;
 /**
  * @param {class} --Comment controller
  */
@@ -20,9 +21,15 @@ class CommentController {
       articleId: req.params.articleId,
       author: req.user.id
     };
-    // @save comments
+    // @save comments and history
     Comment.create(newComment)
       .then((comment) => {
+        const newCommentHistory = {
+          commentId: comment.id,
+          userId: req.user.id,
+          body: req.body.content
+        };
+        EditedCommentHistory.create(newCommentHistory);
         User.findOne({ where: { id: comment.author } })
           .then(async (user) => {
             const message = `${user.username} commented on an article you favorite`;
@@ -41,8 +48,24 @@ class CommentController {
  */
   static getAllComment(req, res) {
     Comment.findAll({ where: { articleId: req.params.articleId } })
-      .then((allComment) => {
-        res.status(200).json({ status: 200, allComment });
+      .then((comment) => {
+        if (comment.length === 0) {
+          return res.status(404).json({ status: 404, error: 'No comment has been posted to that article' });
+        }
+        return res.status(200).json({ status: 200, comment });
+      });
+  }
+
+  /**
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {object} return a json object
+ */
+  static getEditedComment(req, res) {
+    EditedCommentHistory.findAll({ where: { commentId: req.params.commentId } })
+      .then((editedComment) => {
+        res.status(200).json({ status: 200, editedComment });
       });
   }
 
@@ -59,16 +82,21 @@ class CommentController {
         User.findOne({ where: { id: comment[1][0].author } })
           .then(async (user) => {
             const message = `${user.username} updated his comment on an article you favorite`;
-            await Notification.createFavorite(
-              comment[1][0].articleId,
-              message, comment[1][0].author
-            );
-            await Notification.sendFavorite(
-              comment[1][0].articleId, message,
-              comment[1][0].author
-            );
+            await Notification.createFavorite(comment[1][0].articleId,
+              message, comment[1][0].author);
+            await Notification.sendFavorite(comment[1][0].articleId, message, comment[1][0].author);
+            const edited = {
+              commentId: req.params.commentId,
+              userId: req.user.id,
+              body: req.body.content
+            };
+            // @save the comment history
+            EditedCommentHistory.create(edited);
             res.status(200).json({ status: 200, comment: comment[1] });
           });
+      })
+      .catch((error) => {
+        res.status(500).json({ status: 500, message: error.message });
       });
   }
 

@@ -11,7 +11,7 @@ class Share {
    *
    * @param {Object} req
    * @param {Ojbect} res
-   * @returns {Object} -- will return an object
+   * @returns {Object} - will return an object
    */
   async openChannelUrl(req) {
     const completeSahringHost = `${SHARING_HOST}${req.params.articleId}`;

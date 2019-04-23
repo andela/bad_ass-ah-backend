@@ -241,20 +241,6 @@ describe('User ', () => {
         done();
       });
   });
-  it('Should let the user signup with facebook', (done) => {
-    chai
-      .request(app)
-      .post('/api/users/auth/facebook')
-      .set('Content-Type', 'application/json')
-      .send(validToken)
-      .end((err, res) => {
-        if (err) done(err);
-        res.should.have.status(200);
-        res.body.should.have.property('user');
-        res.body.should.have.property('token');
-        done();
-      });
-  });
   it('Should let the user login with facebook', (done) => {
     chai
       .request(app)

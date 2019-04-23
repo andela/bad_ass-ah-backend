@@ -1,29 +1,30 @@
-const commentMigration = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('comments', {
+const commentHistoryMigration = {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('editedcommentshistories', {
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    body: {
-      type: Sequelize.TEXT
-    },
-    articleId: {
+    commentId: {
       type: Sequelize.INTEGER,
       allowNull: false,
       onDelete: 'CASCADE',
       references: {
-        model: 'articles', key: 'article_id'
+        model: 'comments', key: 'id'
       }
     },
-    author: {
+    userId: {
       type: Sequelize.INTEGER,
       allowNull: false,
       onDelete: 'CASCADE',
       references: {
         model: 'users', key: 'id'
       }
+    },
+    body: {
+      type: Sequelize.TEXT,
+      allowNull: false
     },
     createdAt: {
       allowNull: false,
@@ -34,7 +35,7 @@ const commentMigration = {
       type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('comments')
+  down: queryInterface => queryInterface.dropTable('editedcommentshistories')
 };
 
-export default commentMigration;
+export default commentHistoryMigration;

@@ -205,6 +205,31 @@ describe('Comment', () => {
         done();
       });
   });
+  it('Should  return a status of 404 when there is not article posted to the provided articleId', (done) => {
+    const wrongArticleId = 9999999;
+    chai.request(app)
+      .get(`/api/articles/${wrongArticleId}/comments`)
+      .set('Authorization', token)
+      .end((err, res) => {
+        if (err) {
+          done(err);
+        }
+        res.should.have.status(404);
+        done();
+      });
+  });
+  it('Should  let the user get edited comments', (done) => {
+    chai.request(app)
+      .get(`/api/articles/${idArticle}/comments/${idComment}/edited`)
+      .set('Authorization', token)
+      .end((err, res) => {
+        if (err) {
+          done(err);
+        }
+        res.should.have.status(200);
+        done();
+      });
+  });
   it('Should  let the user delete a comment', (done) => {
     validComment = {
       content: 'What makes you special',

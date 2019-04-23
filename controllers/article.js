@@ -3,7 +3,11 @@ import models from '../models/index';
 import readingTime from '../helpers/readingTime';
 import httpError from '../helpers/errors/httpError';
 import Notification from './notification';
-import sendMail from '../helpers/sendEmail/callMailer';
+import shareTemplate from '../helpers/sendEmail/emailTemplates';
+import Mailer from '../helpers/sendEmail/mailer';
+
+const { shareArticleTemplate } = shareTemplate;
+
 
 const {
   article: Article,
@@ -15,7 +19,13 @@ const {
 dotenv.config();
 const { SHARE_WITH } = process.env;
 
-
+const mailOptions = {
+  // eslint-disable-next-line arrow-body-style
+  to: '',
+  from: process.env.SENDER_EMAIL,
+  subject: 'Share an article with',
+  html: ''
+};
 /**
  * @param {class} --Article controller
  */
@@ -89,8 +99,11 @@ class ArticleController {
    * @returns {*} - will return an object
    */
   static shareEmail(req, res) {
-    sendMail(SHARE_WITH, '', 'shareArticle');
-    res.status(200).json({ status: 200, message: `You have share an article with ${SHARE_WITH}` });
+    mailOptions.to = SHARE_WITH;
+    mailOptions.html = shareArticleTemplate(req.params.articleId);
+    const mailer = new Mailer();
+    const sendEmail = mailer.sendEmail(mailOptions);
+    return res.status(200).json({ sendEmail, status: 200, message: `You have share an article with ${SHARE_WITH}` });
   }
 
   /**

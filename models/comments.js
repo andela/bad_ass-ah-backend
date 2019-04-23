@@ -15,6 +15,9 @@ const commentModel = (sequelize, DataTypes) => {
     Comments.belongsTo(models.user, {
       as: 'userfkey', foreignKey: 'author', onDelete: 'CASCADE'
     });
+    Comments.hasMany(models.editedcommentshistory, {
+      foreignKey: 'commentId'
+    });
   };
   return Comments;
 };
