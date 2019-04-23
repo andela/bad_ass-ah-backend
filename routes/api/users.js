@@ -9,6 +9,7 @@ import { checkFollowedBy, checkUserId } from '../../middlewares/followers';
 import VerifyLink from '../../controllers/email/verifyLink';
 import validateUser from '../../helpers/validate';
 import multer from '../../middlewares/multerConfiguration';
+import { passwordValidation } from '../../middlewares/passwordValidate';
 
 
 const router = express.Router();
@@ -24,7 +25,7 @@ router.get('/verify/:token', VerifyLink.activate);
 router.post('/login', User.login);
 
 router.post('/password', User.checkEmail);
-router.put('/password', User.resetPassword);
+router.put('/password', passwordValidation, User.resetPassword);
 
 router.post('/login/google', passport.authenticate('googleToken', { session: false }), User.googleLogin);
 

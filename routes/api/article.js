@@ -13,13 +13,10 @@ import shareArticle from '../../helpers/shareArticles';
 import reportArticle from '../../controllers/report/reportArticle';
 
 import { checkingArticle, findArticleExist } from '../../middlewares/article';
-import Votes from '../../controllers/votes';
 import checkVote from '../../middlewares/votes';
 import isAuth from '../../middlewares/isAuth';
 
-import { checkingArticle, findArticleExist } from '../../middlewares/article';
 import Votes from '../../controllers/votes';
-import checkVote from '../../middlewares/votes';
 
 const router = express.Router();
 const auth = passport.authenticate('jwt', {

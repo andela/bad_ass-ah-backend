@@ -33,11 +33,6 @@ class VotesController {
         message: 'thanks for the support.',
         userId: req.user.id,
         article: req.params.articleId,
-<<<<<<< HEAD
-=======
-        hasLiked: true,
-        hasDisliked: false
->>>>>>>  This is the commit message #2:
       });
     } catch (error) {
       return res.status(500).json({ error: 'something wrong try again later.' });
@@ -70,11 +65,6 @@ class VotesController {
         message: 'You have disliked this article.',
         userId: req.user.id,
         article: req.params.articleId,
-<<<<<<< HEAD
-=======
-        hasLiked: false,
-        hasDisliked: true
->>>>>>>  This is the commit message #2:
       });
     } catch (error) {
       return res.status(500).json({ error: 'something wrong try again later.' });

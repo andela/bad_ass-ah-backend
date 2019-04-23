@@ -55,7 +55,7 @@ describe('/api/users/password', () => {
           });
       });
     });
-    describe('POST/ check is an email exist', () => {
+    describe('POST/ check if an email exist', () => {
       it('should return a message when a password was reset', (done) => {
         chai.request(app)
           .post('/api/users/password')
@@ -68,19 +68,31 @@ describe('/api/users/password', () => {
           });
       }).timeout(20000);
     });
+    describe('POST/ wrong password', () => {
+      it('should return a message when the password is wrong', (done) => {
+        chai.request(app)
+          .put('/api/users/password')
+          .send({ password: 'ggggg' })
+          .end((err, res) => {
+            if (err) done(err);
+            res.should.have.status(400);
+            res.should.be.an('object');
+            done();
+          });
+      }).timeout(20000);
+    });
     describe('PUT/ reset password', () => {
       it('should return a message when a password was reset', (done) => {
         chai.request(app)
           .put('/api/users/password')
           .send({
             token: jwt.sign({ email: newUser.email }, secretKey, { expiresIn: '50d' }),
-            password: '1KigAnd98'
+            password: '@ANde89UH'
           })
           .end((err, res) => {
             if (err) done(err);
             res.should.have.status(200);
             res.should.be.an('object');
-            // console.log(res);
             done();
           });
       });
@@ -89,7 +101,7 @@ describe('/api/users/password', () => {
           .put('/api/users/password')
           .send({
             token: 'haohdaohiue',
-            password: '1KigAnd98'
+            password: '@ANde89UH'
           })
           .end((err, res) => {
             if (err) done(err);
