@@ -8,6 +8,7 @@ import models from '../models/index';
 chai.use(chaiHttp);
 chai.should();
 
+// eslint-disable-next-line no-unused-vars
 const { article, articleHighlights } = models;
 
 describe('Highlight Text', () => {
@@ -40,7 +41,6 @@ describe('Highlight Text', () => {
   after(async () => {
     try {
       await articleHighlights.destroy({ where: {}, truncate: true });
-      // await article.destroy({ where: { title: articleForHighlighting.title } });
     } catch (error) {
       throw new Error(error);
     }

@@ -10,7 +10,9 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // @bodyParser configuration
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({
+  extended: false
+}));
 app.use(express.json());
 
 // @session configuration for twiitter login

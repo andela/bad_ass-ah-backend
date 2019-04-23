@@ -4,5 +4,8 @@
   },
   "validateComment": {
     "content": " "
+  },
+  "comment1": {
+    "content": "this is a comment"
   }
 }

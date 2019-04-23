@@ -27,11 +27,8 @@ import bookmark from '../../controllers/bookmark';
 
 import Votes from '../../controllers/votes';
 import hasBookmarked from '../../middlewares/hasBookmarked';
-
-import { checkingArticle, findArticleExist } from '../../middlewares/article';
-import Votes from '../../controllers/votes';
-import checkVote from '../../middlewares/votes';
-import isAuth from '../../middlewares/isAuth';
+import VoteComment from '../../controllers/commentLikes';
+import likeComment from '../../middlewares/likeComments';
 
 const router = express.Router();
 const auth = passport.authenticate('jwt', {
@@ -61,8 +58,13 @@ router.get('/:idArticle/comments/:commentId/edited', auth, checkComment, Comment
 router.get('/', Article.getArticle);
 // @Method GET
 // @desc get single article
-// router.get('/:articleId', isAuth, Article.singleArticle);
 router.get('/:articleId', isAuth, asyncHandler(hasBookmarked), asyncHandler(Article.singleArticle));
+router.get('/:articleId', isAuth, asyncHandler(Article.singleArticle));
+// @Method GET
+// @desc get single comment
+router.get('/:articleId/comments/:commentId', isAuth, asyncHandler(Comment.singleComment));
+router.post('/comments/:commentId/like', auth, likeComment, VoteComment.commentLikes);
+router.post('/comments/:commentId/dislike', auth, likeComment, VoteComment.commentDislikes);
 // @Method PUT
 // @Desc update articles
 router.put('/:articleId', auth, checkingArticle, multer, Article.updateArticle);
