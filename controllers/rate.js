@@ -42,14 +42,31 @@ class Rate {
  * @return {object} response
  */
   static async getArticleRate(req, res) {
-    const { articleId } = req.params;
+    let page, limit;
+    if (Object.keys(req.query).length === 0) {
+      page = 1; limit = 20;
+    } else if (req.query.limit === undefined) {
+      ({ page } = req.query); limit = 20;
+    } else ({ page, limit } = req.query);
+    const allRatings = await rate.findAll({ where: { articleId: req.params.articleId } });
     const ratings = await rate.findAll({
-      where: { articleId },
+      where: { articleId: req.params.articleId },
       attributes: ['articleId', 'rating', 'updatedAt'],
-      include: [{ model: user, attributes: ['id', 'username', 'bio'] }]
+      include: [{ model: user, attributes: ['id', 'username', 'bio'] }],
+      offset: ((parseInt(page, 10) - 1) * limit),
+      limit
     });
     if (ratings.length === 0) throw new httpError(404, 'Not found: Article has not rated');
-    res.status(200).send({ ratings });
+    res.status(200).send({
+      ratings,
+      meta_data: {
+        currentPage: parseInt(page, 10),
+        previousPage: parseInt(page, 10) > 1 ? parseInt(page, 10) - 1 : null,
+        nextPage: Math.ceil(allRatings.length / limit) > page ? parseInt(page, 10) + 1 : null,
+        totalPages: Math.ceil(allRatings.length / limit),
+        limit: parseInt(limit, 10)
+      }
+    });
   }
 }
 

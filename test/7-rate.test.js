@@ -90,6 +90,33 @@ describe('Article ratings and reading stats', () => {
           done();
         });
     });
+
+    it('Should return all article ratings on a single page', (done) => {
+      chai.request(app)
+        .get(`/api/articles/${articleId}/rate?page=1`)
+        .end((err, res) => {
+          if (err) done(err);
+          res.should.have.status(200);
+          res.body.should.be.an('object');
+          res.body.should.have.property('ratings');
+          res.body.ratings.should.be.an('array');
+          done();
+        });
+    });
+
+    it('Should return all article ratings on a single page with specified limit', (done) => {
+      chai.request(app)
+        .get(`/api/articles/${articleId}/rate?page=1&limit=1`)
+        .end((err, res) => {
+          if (err) done(err);
+          res.should.have.status(200);
+          res.body.should.be.an('object');
+          res.body.should.have.property('ratings');
+          res.body.ratings.should.be.an('array');
+          done();
+        });
+    });
+
     it('Should send article rating for update user rating to an article', (done) => {
       rates.rating = 2;
       chai.request(app)
