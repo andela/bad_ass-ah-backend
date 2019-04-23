@@ -5,7 +5,7 @@ import {
   article1
 } from '../testingdata/article.json';
 import {
-  login1
+  testMailer
 } from '../testingdata/user.json';
 
 let APItoken;
@@ -19,7 +19,7 @@ describe('votes', () => {
       const user = await chai.request(app)
         .post('/api/users/login')
         .set('Content-Type', 'application/json')
-        .send(login1);
+        .send({ email: testMailer.email, password: testMailer.password });
       APItoken = `Bearer ${user.body.token}`;
       const article = await chai.request(app)
         .post('/api/articles')

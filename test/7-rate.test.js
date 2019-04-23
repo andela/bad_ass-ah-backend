@@ -1,14 +1,15 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
-import { testMailer, signup1 } from '../testingdata/user.json';
+import { testMailer, signup5 } from '../testingdata/user.json';
 import { article1 } from '../testingdata/article.json';
 import models from '../models/index';
+import generateToken from '../helpers/token';
 
 chai.use(chaiHttp);
 chai.should();
 
-const { rate, article } = models;
+const { rate, article, user } = models;
 
 describe('Article ratings and reading stats', () => {
   let userToken;
@@ -23,13 +24,13 @@ describe('Article ratings and reading stats', () => {
       userToken = `Bearer ${userLoggedIn.body.token}`;
       await rate.destroy({ where: {}, truncate: true });
       await article.destroy({ where: { title: article1.title } });
-      const unverifiedUserLoggedIn = await chai.request(app)
-        .post('/api/users/login')
-        .set('Content-Type', 'application/json')
-        .send({ email: signup1.email, password: signup1.password });
-      unverifiedUserToken = `Bearer ${unverifiedUserLoggedIn.body.token}`;
 
-      await rate.destroy({ where: {}, truncate: true });
+      const unverifiedUserLoggedIn = await user.findOne({ where: { email: signup5.email } });
+      const { generate } = generateToken({
+        id: unverifiedUserLoggedIn.id,
+        email: unverifiedUserLoggedIn.email
+      });
+      unverifiedUserToken = `Bearer ${generate}`;
     } catch (error) {
       throw new Error(error);
     }

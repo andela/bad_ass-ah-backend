@@ -43,8 +43,8 @@ describe('User ', () => {
       .end((err, res) => {
         if (err) done(err);
         res.should.have.status(201);
-        res.body.should.have.property('token');
-        res.body.should.have.property('username');
+        res.body.registeredUser.should.have.property('token');
+        res.body.registeredUser.should.have.property('username');
         done();
       });
   }).timeout(20000);
@@ -58,8 +58,8 @@ describe('User ', () => {
       .end((err, res) => {
         if (err) done(err);
         res.should.have.status(201);
-        res.body.should.have.property('token');
-        res.body.should.have.property('username');
+        res.body.registeredUser.should.have.property('token');
+        res.body.registeredUser.should.have.property('username');
         done();
       });
   }).timeout(50000);
@@ -97,13 +97,26 @@ describe('User ', () => {
   });
 
   // user login
-
-  it('should login user', (done) => {
+  it('should return error verify email account before login', (done) => {
     chai
       .request(app)
       .post('/api/users/login')
       .set('Content-Type', 'application/json')
       .send(login1)
+      .end((err, res) => {
+        if (err) done(err);
+        res.should.have.status(403);
+        res.body.should.be.an('object');
+        done();
+      });
+  });
+  it('should login user', (done) => {
+    chai
+      .request(app)
+      .post('/api/users/login')
+      .set('Content-Type', 'application/json')
+      .send({ email: testMailer.email, password: testMailer.password })
+      .send(googleValidToken)
       .end((err, res) => {
         if (err) {
           done(err);

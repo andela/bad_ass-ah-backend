@@ -1,17 +1,13 @@
-/* eslint-disable no-unused-vars */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import Sequelize from 'sequelize';
 import app from '../index';
-import models from '../models/index';
 import { validateComment } from '../testingdata/comment.json';
-import { login1, testMailer } from '../testingdata/user.json';
+// import { login1, testMailer } from '../testingdata/user.json';
+import { testMailer } from '../testingdata/user.json';
 
 chai.use(chaiHttp);
 chai.should();
 
-const Comment = models.comments;
-const wrondUserId = 848;
 let validComment;
 let userId;
 let idArticle;
@@ -19,14 +15,18 @@ let idComment;
 
 const invalidToken = 'EAAgbksnPT5IBAI2f478gPi5HZC9iAvldAtZCKhDPXaZCt0cTEr9kuDbETW1wZCDF17alOnG7qdKZB14O4rr2zg6gtkuU6Q14G9idx1JOZAHcFgtQam72PoBzvjgyyl1BxgiFGMHOwVGVPi23QilFQ1z2hUJCYCHyBYT6qfsfCmFwZDZD';
 let token;
-let token2;
+// let token2;
 describe('Comment', () => {
   before(async () => {
     try {
-      const loginUser = await chai.request(app).post('/api/users/login').set('Content-Type', 'application/json').send(login1);
-      const loginUser2 = await chai.request(app).post('/api/users/login').set('Content-Type', 'application/json').send(testMailer);
+      // const loginUser = await chai.request(app).post('/api/users/login')
+      // .set('Content-Type', 'application/json').send(login1);
+      // const loginUser2 = await chai.request(app).post('/api/users/login')
+      // .set('Content-Type', 'application/json').send(testMailer);
+      const loginUser = await chai.request(app).post('/api/users/login').set('Content-Type', 'application/json')
+        .send({ email: testMailer.email, password: testMailer.password });
       token = `Bearer ${loginUser.body.token}`;
-      token2 = `Bearer ${loginUser2.body.token}`;
+      // token2 = `Bearer ${loginUser2.body.token}`;
       userId = loginUser.body.id;
 
       const givenArticle = {
@@ -41,21 +41,10 @@ describe('Comment', () => {
 
       const postArticle = await chai.request(app).post('/api/articles').set('Authorization', token).send(givenArticle);
       idArticle = postArticle.body.article.article_id;
-      await chai.request(app).post(`/api/articles/${idArticle}/comments`).set('Authorization', token2).send(givenComment);
+      await chai.request(app).post(`/api/articles/${idArticle}/comments`).set('Authorization', token).send(givenComment);
     } catch (error) {
       throw error;
     }
-  });
-
-  after((done) => {
-    Comment.destroy({
-      where: {},
-      truncate: true,
-    }).then((deletedComment) => {
-      done();
-    }).catch((error) => {
-      throw error;
-    });
   });
 
   it('Should not let the user comment an article without a token', (done) => {
@@ -204,6 +193,18 @@ describe('Comment', () => {
         done();
       });
   }).timeout(100000);
+  it('Should  let the user get all comments', (done) => {
+    chai.request(app)
+      .get(`/api/articles/${idArticle}/comments`)
+      .set('Authorization', token)
+      .end((err, res) => {
+        if (err) {
+          done(err);
+        }
+        res.should.have.status(200);
+        done();
+      });
+  });
   it('Should  let the user delete a comment', (done) => {
     validComment = {
       content: 'What makes you special',
@@ -214,18 +215,6 @@ describe('Comment', () => {
       .delete(`/api/articles/${idArticle}/comments/${idComment}`)
       .set('Authorization', token)
       .send(validComment)
-      .end((err, res) => {
-        if (err) {
-          done(err);
-        }
-        res.should.have.status(200);
-        done();
-      });
-  });
-  it('Should  let the user get all comments', (done) => {
-    chai.request(app)
-      .get(`/api/articles/${idArticle}/comments`)
-      .set('Authorization', token)
       .end((err, res) => {
         if (err) {
           done(err);

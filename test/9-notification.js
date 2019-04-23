@@ -3,7 +3,7 @@ import chaiHttp from 'chai-http';
 import app from '../index';
 import models from '../models/index';
 import NotificationController from '../controllers/notification';
-import { login1, testMailer } from '../testingdata/user.json';
+import { login4, testMailer } from '../testingdata/user.json';
 
 chai.use(chaiHttp);
 chai.should();
@@ -20,7 +20,7 @@ let notifier;
 describe('Notification', () => {
   before(async () => {
     try {
-      const loginUser = await chai.request(app).post('/api/users/login').set('Content-Type', 'application/json').send(login1);
+      const loginUser = await chai.request(app).post('/api/users/login').set('Content-Type', 'application/json').send(login4);
       const loginUser2 = await chai.request(app).post('/api/users/login').set('Content-Type', 'application/json').send(testMailer);
       token = `Bearer ${loginUser.body.token}`;
       token2 = `Bearer ${loginUser2.body.token}`;

@@ -34,10 +34,10 @@ describe('Email Verification Link', () => {
         .send(testMailer)
         .end((err, res) => {
           if (err) done(err);
-          verifyLinkToken = res.body.token;
+          verifyLinkToken = res.body.registeredUser.token;
           res.should.have.status(201);
-          res.body.should.have.property('token');
-          res.body.should.have.property('username');
+          res.body.registeredUser.should.have.property('token');
+          res.body.registeredUser.should.have.property('username');
           done();
         });
     }).timeout(20000);
