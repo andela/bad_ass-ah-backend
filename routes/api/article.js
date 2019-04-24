@@ -3,7 +3,6 @@ import passport from 'passport';
 import Article from '../../controllers/article';
 import Comment from '../../controllers/comment';
 import multer from '../../middlewares/multerConfiguration';
-import { checkingArticle } from '../../middlewares/article';
 import validateComment from '../../helpers/validateComment';
 import checkComment from '../../middlewares/checkComment';
 import Rate from '../../controllers/rate';
@@ -13,8 +12,15 @@ import asyncHandler from '../../helpers/errors/asyncHandler';
 import shareArticle from '../../helpers/shareArticles';
 import reportArticle from '../../controllers/report/reportArticle';
 
+import { checkingArticle, findArticleExist } from '../../middlewares/article';
+import Votes from '../../controllers/votes';
+import checkVote from '../../middlewares/votes';
+import isAuth from '../../middlewares/isAuth';
+
 const router = express.Router();
-const auth = passport.authenticate('jwt', { session: false });
+const auth = passport.authenticate('jwt', {
+  session: false
+});
 // @Method POST
 // @Desc create article
 router.post('/', auth, multer, Article.create);
@@ -26,12 +32,14 @@ router.get('/:articleId/comments/', auth, asyncHandler(checkArticle), Comment.ge
 router.put('/:idArticle/comments/:commentId', auth, checkComment, Comment.updateComment);
 // @Mehtod delete a given comment
 router.delete('/:idArticle/comments/:commentId', auth, checkComment, Comment.deleteComment);
+router.post('/:articleId/like', auth, findArticleExist, checkVote, Votes.likes);
+router.post('/:articleId/dislike', auth, findArticleExist, checkVote, Votes.dislikes);
 // @Method GET
 // @Desc get all created article
 router.get('/', Article.getArticle);
 // @Method GET
 // @desc get single article
-router.get('/:articleId', Article.singleArticle);
+router.get('/:articleId', isAuth, Article.singleArticle);
 // @Method PUT
 // @Desc update articles
 router.put('/:articleId', auth, checkingArticle, multer, Article.updateArticle);

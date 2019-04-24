@@ -13,7 +13,7 @@ const articleModel = (Sequelize, DataTypes) => {
         key: 'id'
       }
     },
-    image: { type: DataTypes.STRING, allowNull: true }
+    image: { type: DataTypes.STRING, allowNull: true },
   }, {});
   Article.associate = (models) => {
     Article.belongsTo(models.user, { as: 'authorfkey', foreignKey: 'author', onDelete: 'CASCADE' });

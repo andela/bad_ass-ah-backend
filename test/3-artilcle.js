@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
@@ -5,6 +6,7 @@ import { article1 } from '../testingdata/article.json';
 import shareArticle from '../helpers/shareArticles';
 import { login1, login4 } from '../testingdata/user.json';
 import models from '../models/index';
+import tag from '../helpers/tags';
 
 chai.use(chaiHttp);
 chai.should();
@@ -12,6 +14,11 @@ const Article = models.article;
 let APItoken;
 let APItoken2;
 let articleId;
+const req = {
+  query: {
+    search: 'a'
+  }
+};
 const facebookUrl = {
   req: {
     params: {
@@ -270,5 +277,9 @@ describe('Article', () => {
         res.body.should.have.property('tags');
         done();
       });
+  });
+  it('Should test helpers', async () => {
+    const tagList = await tag(req);
+    tagList.should.be.a('array');
   });
 });
