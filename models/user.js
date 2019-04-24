@@ -9,17 +9,10 @@ const UserModel = (sequelize, DataTypes) => {
     isActivated: { type: DataTypes.BOOLEAN }
   }, {});
   User.associate = (models) => {
-    User.hasMany(models.article, {
-      foreignKey: 'author',
-      allowNull: false
-    });
-    User.hasMany(models.comments, {
-      foreignKey: 'author',
-    });
-    User.hasMany(models.rate, {
-      foreignKey: 'userId',
-      allowNull: false
-    });
+    User.hasMany(models.article, { foreignKey: 'author', allowNull: false });
+    User.hasMany(models.comments, { foreignKey: 'author', allowNull: false });
+    User.hasMany(models.rate, { foreignKey: 'userId', allowNull: false });
+    User.hasMany(models.reportArticle, { foreignKey: 'reporter', allowNull: false });
   };
   return User;
 };
