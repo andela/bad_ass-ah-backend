@@ -8,8 +8,8 @@ const followerModel = (Sequelize, DataTypes) => {
     followedBy: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'user', key: 'id' } }
   }, {});
   Follower.associate = (models) => {
-    Follower.belongsTo(models.user, { as:"userFkey",foreignKey: 'userId', onDelete: 'CASCADE' });
-    Follower.belongsTo(models.user, { as:"followedFkey", foreignKey: 'followedBy', onDelete: 'CASCADE' });
+    Follower.belongsTo(models.user, { as: 'userFkey', foreignKey: 'userId', onDelete: 'CASCADE' });
+    Follower.belongsTo(models.user, { as: 'followedFkey', foreignKey: 'followedBy', onDelete: 'CASCADE' });
   };
   return Follower;
 };

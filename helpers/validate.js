@@ -23,6 +23,10 @@ const userValidate = (req, res, next) => {
   if (!Validate.password(req.body.password)) {
     return validate('Your password should be alphanumeric and have at least 8 character long', res);
   }
+  // @check username
+  if (Validate.isEmpty(req.body.username)) {
+    return validate('Please provide username', res);
+  }
   next();
 };
 
