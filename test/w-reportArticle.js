@@ -1,7 +1,7 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
-import { testMailer, login4 } from '../testingdata/user.json';
+import { testMailer, login6 } from '../testingdata/user.json';
 import { reportArticleType } from '../testingdata/reportArticle.json';
 import { article1 } from '../testingdata/article.json';
 import models from '../models/index';
@@ -25,14 +25,14 @@ describe('Report Article', () => {
         .post('/api/users/login')
         .set('Content-Type', 'application/json')
         .send({ email: testMailer.email, password: testMailer.password });
+      await user.update({ isAdmin: true }, { where: { email: login6.email } });
       userToken = `Bearer ${userLoggedIn.body.token}`;
       await reportArticle.destroy({ where: {}, truncate: true });
       await reportType.destroy({ where: reportArticleType });
       const oneArticle = await article.findOne({ where: { title: article1.title } });
-      const notAdminLoggedIn = await chai.request(app)
-        .post('/api/users/login')
+      const notAdminLoggedIn = await chai.request(app).post('/api/users/login')
         .set('Content-Type', 'application/json')
-        .send(login4);
+        .send(login6);
       notAdminUserToken = `Bearer ${notAdminLoggedIn.body.token}`;
       articleId = oneArticle.article_id;
     } catch (error) {
@@ -83,7 +83,7 @@ describe('Report Article', () => {
         .send(reportArticleType)
         .end((err, res) => {
           if (err) done(err);
-          res.should.have.status(403);
+          res.should.have.status(400);
           res.body.should.have.property('errors');
           res.body.errors.should.have.property('body');
           done();

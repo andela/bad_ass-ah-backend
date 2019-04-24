@@ -1,15 +1,18 @@
 /* eslint-disable no-unused-vars */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
+import bcrypt from 'bcryptjs';
 import app from '../index';
 import {
   signup1,
   signup3,
   signup4,
   signup5,
+  signup7,
   login1,
   login2,
   login3,
+  login4,
   googleInValidToken,
   googleValidToken,
   expiredToken,
@@ -26,13 +29,24 @@ chai.use(chaiHttp);
 chai.should();
 const User = models.user;
 let token;
-
+let token2;
+let userId;
 describe('User ', () => {
   before(async () => {
     await User.destroy({ where: { email: signup1.email } });
     await User.destroy({ where: { email: signup5.email } });
+    await User.destroy({ where: { email: signup7.email } });
     await User.destroy({ where: { email: 'pacifiqueclement@gmail.com' } });
     await User.destroy({ where: { email: 'jeandedieuam@gmail.com' } });
+    // @create user
+    User.create({
+      username: signup7.username,
+      email: signup7.email,
+      password: bcrypt.hashSync(signup7.password, 10),
+      isAdmin: signup7.isAdmin,
+      isManager: signup7.isManager,
+      isActivated: true
+    });
   });
   it('Should create user and return status of 201', (done) => {
     chai
@@ -122,11 +136,29 @@ describe('User ', () => {
           done(err);
         }
         token = `Bearer ${res.body.token}`;
+        userId = res.body.user.id;
         res.should.have.status(200);
         res.body.should.be.a('object');
         res.body.should.have.property('status').eql(200);
         res.body.should.have.property('token');
         res.body.should.have.property('user');
+        done();
+      });
+  });
+  // user login2
+  it('POST /api/users/login Should login for second user as admin', (done) => {
+    chai
+      .request(app)
+      .post('/api/users/login')
+      .set('Content-Type', 'application/json')
+      .send(signup7)
+      .end((err, res) => {
+        if (err) {
+          done(err);
+        }
+        token2 = `Bearer ${res.body.token}`;
+        userId = res.body.user.id;
+        res.should.have.status(200);
         done();
       });
   });
@@ -259,9 +291,8 @@ describe('User ', () => {
     const result = await userController.twitterLogin(userTwitterSignup);
     result[0].dataValues.should.be.a('object');
   });
-
   // Get all users
-  it('Should get all users ', (done) => {
+  it(' Get /api/users should return status of 403 when user is not admin ', (done) => {
     chai.request(app)
       .get('/api/users')
       .set('Content-Type', 'application/json')
@@ -270,9 +301,23 @@ describe('User ', () => {
         if (error) {
           done(error);
         }
+        res.should.have.status(403);
+        res.body.should.have.property('status');
+        res.body.should.have.property('message');
+        done();
+      });
+  });
+  it(' Get /api/users should return status of 200 when user is admin ', (done) => {
+    chai.request(app)
+      .get('/api/users')
+      .set('Content-Type', 'application/json')
+      .set('Authorization', token2)
+      .end((error, res) => {
+        if (error) {
+          done(error);
+        }
         res.should.have.status(200);
         res.body.should.have.property('status');
-        res.body.should.have.property('users');
         done();
       });
   });

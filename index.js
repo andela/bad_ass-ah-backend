@@ -7,7 +7,7 @@ import router from './routes/index';
 import passportAuth from './middlewares/passport-facebook';
 
 const app = express();
-const port = process.env.PORT || process.env.LOCALHOST_PORT;
+const port = process.env.PORT || 3000;
 
 // @bodyParser configuration
 app.use(express.urlencoded({ extended: false }));
