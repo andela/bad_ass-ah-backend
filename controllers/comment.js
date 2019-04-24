@@ -1,8 +1,6 @@
-/* eslint-disable no-unused-vars */
 import models from '../models/index';
 
 const Comment = models.comments;
-const Article = models.article;
 /**
  * @param {class} --Comment controller
  */
@@ -50,6 +48,7 @@ class CommentController {
     Comment.update({ body: req.body.content },
       { where: { id: req.params.commentId }, returning: true })
       .then((comment) => {
+        // @ send to the user the edited comment
         res.status(200).json({ status: 200, comment: comment[1] });
       });
   }

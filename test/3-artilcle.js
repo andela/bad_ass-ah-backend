@@ -22,21 +22,32 @@ const req = {
 const facebookUrl = {
   req: {
     params: {
-      url: 'facebook'
+      url: 'facebook',
+      articleId: 1
     }
   }
 };
 const twitterUrl = {
   req: {
     params: {
-      url: 'twitter'
+      url: 'twitter',
+      articleId: 1
     }
   }
 };
 const linkedUrl = {
   req: {
     params: {
-      url: 'linkedin'
+      url: 'linkedin',
+      articleId: 1
+    }
+  }
+};
+const gmailUrl = {
+  req: {
+    params: {
+      url: 'gmail',
+      articleId: 1
     }
   }
 };
@@ -246,6 +257,10 @@ describe('Article', () => {
   });
   it('Should allow the user to share an articles across linkedin channel', async () => {
     const result = await shareArticle.openChannelUrl(linkedUrl.req);
+    result.should.be.a('object');
+  });
+  it('Should allow the user to share an articles across gmail channel', async () => {
+    const result = await shareArticle.openChannelUrl(gmailUrl.req);
     result.should.be.a('object');
   });
   // @search

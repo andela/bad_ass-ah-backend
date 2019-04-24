@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node --require babel-register index.js",
     "seed": "node_modules/.bin/sequelize db:seed:undo:all",
-    "migrate": "node_modules/.bin/sequelize db:migrate:undo:all && node_modules/.bin/sequelize db:migrate",
+    "migrate": "node_modules/.bin/sequelize db:migrate",
     "migrateTest": "node_modules/.bin/sequelize db:migrate:undo:all --env test && node_modules/.bin/sequelize db:migrate --env test",
     "test": "NODE_ENV=test nyc --reporter=html --reporter=text --timeout=1500 mocha --require babel-register test/* --exit",
     "dev": "NODE_ENV=development nodemon --require babel-register index.js",
