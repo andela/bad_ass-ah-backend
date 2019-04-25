@@ -8,7 +8,7 @@
     "seed": "node_modules/.bin/sequelize db:seed:undo:all",
     "migrate": "node_modules/.bin/sequelize db:migrate",
     "migrateTest": "node_modules/.bin/sequelize db:migrate --env test",
-    "test": "NODE_ENV=test nyc --reporter=html --reporter=text --timeout=1500 mocha --require babel-register test/* --exit",
+    "test": "NODE_ENV=test nyc --reporter=html --reporter=text mocha --timeout 150000 --require babel-register test/* --exit",
     "dev": "NODE_ENV=development nodemon --require babel-register index.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },

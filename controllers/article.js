@@ -1,8 +1,15 @@
 import models from '../models/index';
 import readingTime from '../helpers/readingTime';
 import httpError from '../helpers/errors/httpError';
+import Notification from './notification';
 
-const { article: Article, articleStats: ArticleStats, vote: Votes } = models;
+const {
+  article: Article,
+  articleStats: ArticleStats,
+  vote: Votes,
+  user: User
+} = models;
+
 /**
   * @param {class} --Article controller
   */
@@ -24,7 +31,11 @@ class ArticleController {
     };
     // @save articles
     Article.create(newArticle)
-      .then((article) => {
+      .then(async (article) => {
+        const user = await User.findOne({ where: { id: article.author } });
+        const message = `${user.username} published a new article`;
+        await Notification.createFollower(article.author, message);
+        await Notification.sendFollower(article.author, message);
         res.status(201).json({ status: 201, message: 'Article created successfully', article });
       })
       .catch(error => res.status(500).json({ error: `something wrong please try again. ${error}` }));
@@ -61,8 +72,12 @@ class ArticleController {
       taglist: (req.body.tag ? req.body.tag.split(',') : req.findArticle.taglist),
       image: (req.file ? req.file.url : null)
     }, { where: { article_id: req.params.articleId }, returning: true })
-      .then(article => res.status(200).json({ status: 200, message: 'article updated successfully.', article: article[1] }))
-      .catch(error => res.status(500).json({ error: `Something wrong please try again later.${error}` }));
+      .then(async (article) => {
+        const message = `Article with title "${article[1][0].title}" has been updated`;
+        await Notification.createFavorite(article[1][0].article_id, message, article[1][0].author);
+        await Notification.sendFavorite(article[1][0].article_id, message, article[1][0].author);
+        res.status(200).json({ status: 200, message: 'article updated successfully.', article: article[1] });
+      }).catch(error => res.status(500).json({ error: `Something wrong please try again later.${error}` }));
   }
 
   /**

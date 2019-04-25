@@ -1,7 +1,9 @@
 import nodemailer from 'nodemailer';
 // eslint-disable-next-line import/named
 import { email } from '../../config/config';
-import emailTemplates from './emailTemplates';
+import Templates from './emailTemplates';
+
+const { emailTemplates } = Templates;
 /**
  * Class module to send email
  * @exports

@@ -104,7 +104,6 @@ describe('User ', () => {
       .post('/api/users/login')
       .set('Content-Type', 'application/json')
       .send(login1)
-      .send(googleValidToken)
       .end((err, res) => {
         if (err) {
           done(err);

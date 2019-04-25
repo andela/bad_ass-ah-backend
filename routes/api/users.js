@@ -3,6 +3,7 @@ import passport from 'passport';
 // @controller
 import User from '../../controllers/user';
 import Follow from '../../controllers/followers';
+import Notification from '../../controllers/notification';
 // @middleware
 import check from '../../middlewares/user';
 import { checkFollowedBy, checkUserId } from '../../middlewares/followers';
@@ -55,4 +56,10 @@ router.get('/followers', auth, asyncHandler(activate.isUserAccountActivated), Fo
 // @access private
 router.get('/following', auth, asyncHandler(activate.isUserAccountActivated), Follow.following);
 router.get('/reading-stats', auth, asyncHandler(articleStats.getUserReadingStats));
+// Notifications
+router.get('/notifications/subscribe', auth, Notification.subscribe);
+router.get('/notifications', auth, Notification.getAll);
+router.get('/notifications/:id', auth, Notification.getOne);
+router.delete('/notifications/:id', auth, Notification.delete);
+
 export default router;

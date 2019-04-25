@@ -5,7 +5,7 @@ import Sequelize from 'sequelize';
 import app from '../index';
 import models from '../models/index';
 import { validateComment } from '../testingdata/comment.json';
-import { login1 } from '../testingdata/user.json';
+import { login1, testMailer } from '../testingdata/user.json';
 
 chai.use(chaiHttp);
 chai.should();
@@ -19,11 +19,14 @@ let idComment;
 
 const invalidToken = 'EAAgbksnPT5IBAI2f478gPi5HZC9iAvldAtZCKhDPXaZCt0cTEr9kuDbETW1wZCDF17alOnG7qdKZB14O4rr2zg6gtkuU6Q14G9idx1JOZAHcFgtQam72PoBzvjgyyl1BxgiFGMHOwVGVPi23QilFQ1z2hUJCYCHyBYT6qfsfCmFwZDZD';
 let token;
+let token2;
 describe('Comment', () => {
   before(async () => {
     try {
       const loginUser = await chai.request(app).post('/api/users/login').set('Content-Type', 'application/json').send(login1);
+      const loginUser2 = await chai.request(app).post('/api/users/login').set('Content-Type', 'application/json').send(testMailer);
       token = `Bearer ${loginUser.body.token}`;
+      token2 = `Bearer ${loginUser2.body.token}`;
       userId = loginUser.body.id;
 
       const givenArticle = {
@@ -32,8 +35,13 @@ describe('Comment', () => {
         author: userId
       };
 
+      const givenComment = {
+        content: 'Good article'
+      };
+
       const postArticle = await chai.request(app).post('/api/articles').set('Authorization', token).send(givenArticle);
       idArticle = postArticle.body.article.article_id;
+      await chai.request(app).post(`/api/articles/${idArticle}/comments`).set('Authorization', token2).send(givenComment);
     } catch (error) {
       throw error;
     }
@@ -123,7 +131,7 @@ describe('Comment', () => {
         res.should.have.status(201);
         done();
       });
-  });
+  }).timeout(100000);
   it('Should throw 500', (done) => {
     validComment = {
       content: ' sdfsdfsdf'
@@ -195,7 +203,7 @@ describe('Comment', () => {
         res.should.have.status(200);
         done();
       });
-  });
+  }).timeout(100000);
   it('Should  let the user delete a comment', (done) => {
     validComment = {
       content: 'What makes you special',
