@@ -10,7 +10,7 @@ chai.should();
 
 const { rate, article } = models;
 
-describe('Article ratings', () => {
+describe('Article ratings and reading stats', () => {
   let userToken;
   let unverifiedUserToken;
   let articleId;
@@ -23,7 +23,6 @@ describe('Article ratings', () => {
       userToken = `Bearer ${userLoggedIn.body.token}`;
       await rate.destroy({ where: {}, truncate: true });
       await article.destroy({ where: { title: article1.title } });
-
       const unverifiedUserLoggedIn = await chai.request(app)
         .post('/api/users/login')
         .set('Content-Type', 'application/json')
@@ -162,6 +161,43 @@ describe('Article ratings', () => {
           res.should.have.status(403);
           res.body.should.have.property('errors');
           res.body.errors.should.have.property('body');
+          done();
+        });
+    });
+  });
+  describe('GET/ reading stats', () => {
+    it('Should record user reading', (done) => {
+      chai.request(app)
+        .post(`/api/articles/${articleId}/record-reading`)
+        .set('Authorization', userToken)
+        .send()
+        .end((err, res) => {
+          if (err) done(err);
+          res.should.have.status(201);
+          res.body.should.have.property('message');
+          done();
+        });
+    });
+    it('Should update the date a user read an article ', (done) => {
+      chai.request(app)
+        .post(`/api/articles/${articleId}/record-reading`)
+        .set('Authorization', userToken)
+        .send()
+        .end((err, res) => {
+          if (err) done(err);
+          res.should.have.status(201);
+          res.body.should.have.property('message');
+          done();
+        });
+    });
+    it('Should return user reading stats', (done) => {
+      chai.request(app)
+        .get('/api/users/reading-stats')
+        .set('Authorization', userToken)
+        .end((err, res) => {
+          if (err) done(err);
+          res.should.have.status(200);
+          res.body.should.have.property('totalReading');
           done();
         });
     });

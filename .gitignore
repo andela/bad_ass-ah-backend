@@ -43,8 +43,5 @@ package-lock.json
 #nyc
 .nyc_output
 
-
-
-
-
-
+#VScode configuration
+.vscode

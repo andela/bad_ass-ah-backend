@@ -141,7 +141,7 @@ describe('Article', () => {
           done(error);
         }
         res.should.have.status(404);
-        res.body.should.have.property('error');
+        res.body.should.have.property('errors');
         done();
       });
   });

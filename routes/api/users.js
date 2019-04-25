@@ -10,6 +10,8 @@ import VerifyLink from '../../controllers/email/verifyLink';
 import validateUser from '../../helpers/validate';
 import multer from '../../middlewares/multerConfiguration';
 import { passwordValidation } from '../../middlewares/passwordValidate';
+import articleStats from '../../controllers/stats/articleStats';
+import asyncHandler from '../../helpers/errors/asyncHandler';
 
 
 const router = express.Router();
@@ -41,13 +43,15 @@ router.post('/follow/:userId', auth, checkUserId, checkFollowedBy, Follow.follow
 // @desc Unfollow user
 // @access private
 router.delete('/unfollow/:userId', auth, checkUserId, Follow.unfollow);
-//@method GET
-//@desc get followers of users
-//@access private
-router.get("/followers", auth,  Follow.followers);
-//@method GET
-//@desc get following user
-//@access private
-router.get("/following", auth,  Follow.following);
+// @method GET
+// @desc get followers of users
+// @access private
+router.get('/followers', auth, Follow.followers);
+// @method GET
+// @desc get following user
+// @access private
+router.get('/following', auth, Follow.following);
+
+router.get('/reading-stats', auth, asyncHandler(articleStats.getUserReadingStats));
 
 export default router;

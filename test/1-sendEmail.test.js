@@ -7,13 +7,16 @@ import models from '../models/index';
 
 chai.use(chaiHttp);
 chai.should();
-const { user, rate, article } = models;
+const {
+  user, rate, article, articleStats
+} = models;
 
 describe('Email Verification Link', () => {
   let verifyLinkToken;
   before(async () => {
     try {
       await rate.destroy({ where: {}, truncate: true });
+      await articleStats.destroy({ where: {}, truncate: true });
       await article.destroy({ where: { title: article1.title } });
       await user.destroy({ where: { email: testMailer.email } });
     } catch (error) {
