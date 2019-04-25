@@ -12,6 +12,7 @@ import multer from '../../middlewares/multerConfiguration';
 import { passwordValidation } from '../../middlewares/passwordValidate';
 import articleStats from '../../controllers/stats/articleStats';
 import asyncHandler from '../../helpers/errors/asyncHandler';
+import activate from '../../middlewares/userAccount';
 
 
 const router = express.Router();
@@ -38,20 +39,20 @@ router.put('/profile', auth, multer, User.updateProfile);
 // @method POST
 // @desc follow user
 // @access private
-router.post('/follow/:userId', auth, checkUserId, checkFollowedBy, Follow.follow);
+router.post('/follow/:userId', auth, asyncHandler(activate.isUserAccountActivated),
+  asyncHandler(checkUserId), checkFollowedBy, Follow.follow);
 // @method DELETE
 // @desc Unfollow user
 // @access private
-router.delete('/unfollow/:userId', auth, checkUserId, Follow.unfollow);
+router.delete('/unfollow/:userId', auth, asyncHandler(activate.isUserAccountActivated),
+  asyncHandler(checkUserId), Follow.unfollow);
 // @method GET
 // @desc get followers of users
 // @access private
-router.get('/followers', auth, Follow.followers);
+router.get('/followers', auth, asyncHandler(activate.isUserAccountActivated), Follow.followers);
 // @method GET
 // @desc get following user
 // @access private
-router.get('/following', auth, Follow.following);
-
+router.get('/following', auth, asyncHandler(activate.isUserAccountActivated), Follow.following);
 router.get('/reading-stats', auth, asyncHandler(articleStats.getUserReadingStats));
-
 export default router;

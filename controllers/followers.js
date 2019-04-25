@@ -46,12 +46,12 @@ class FollowerController {
     })
       .then((followers) => {
         const number = [];
-        for (let i = 0; i < followers.length; i++) {
+        for (let i = 0; i < followers.length; i += 1) {
           number.push(followers[i].followedFkey.length);
         }
         return res.status(200).json({ status: 200, numberOfFollowers: number.length, followers });
       })
-      .catch(error => res.status(500).json({ error }));
+      .catch(error => res.status(500).json({ error: `something wrong try again. ${error.message}` }));
   }
 
   /**
@@ -71,12 +71,12 @@ class FollowerController {
     })
       .then((following) => {
         const number = [];
-        for (let i = 0; i < following.length; i++) {
+        for (let i = 0; i < following.length; i += 1) {
           number.push(following[i].userFkey.length);
         }
         return res.status(200).json({ status: 200, numberOfFollowing: number.length, following });
       })
-      .catch(error => res.status(500).json({ error }));
+      .catch(error => res.status(500).json({ error: `something wrong try again. ${error.message}` }));
   }
 }
 export default FollowerController;
