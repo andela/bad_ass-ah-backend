@@ -37,44 +37,39 @@ class UserController {
       };
       const token = jwt.sign(payload, secretKey, expirationTime);
       const response = await sendEmail(user.email, token);
-      return res.status(201).json({
+      const registeredUser = {
         email: user.email,
-        token,
         username: user.username,
         bio: user.bio,
         image: user.image,
         emailResponse: response
-      });
-    } catch (error) {
-      return res.status(500).json({ error: error.message });
-    }
+      };
+      if (process.env.NODE_ENV === 'test') registeredUser.token = token;
+      return res.status(201).json({ registeredUser });
+    } catch (error) { return res.status(500).json({ error: error.message }); }
   }
 
   /**
    * user login
-   * @param {Object} req -requestesting from user
+   * @param {Object} req -requesting from user
    * @param {Object} res -responding from user
    * @returns {Object} Response with status of 201
    */
   login(req, res) {
-    const user = {
-      email: req.body.email,
-      password: req.body.password
-    };
+    const user = { email: req.body.email, password: req.body.password };
     return User.findOne({ where: { email: user.email } })
       .then((foundUser) => {
         if (foundUser && bcrypt.compareSync(user.password, foundUser.password)) {
+          if (foundUser.isActivated === false) {
+            return res.status(403).send({ status: 403, error: 'Verify your email account before login.' });
+          }
           const payload = {
             id: foundUser.id,
             email: foundUser.email,
             isAdmin: foundUser.isAdmin
           };
           const token = jwt.sign(payload, secretKey, expirationTime);
-          res.status(200).json({
-            status: 200,
-            token,
-            user: payload
-          });
+          res.status(200).json({ status: 200, token, user: payload });
         } else {
           res.status(400).json({ status: 400, error: 'Incorrect username or password' });
         }

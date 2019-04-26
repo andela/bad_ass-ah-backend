@@ -1,7 +1,7 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
-import { testMailer, login1 } from '../testingdata/user.json';
+import { testMailer, login4 } from '../testingdata/user.json';
 import { reportArticleType } from '../testingdata/reportArticle.json';
 import { article1 } from '../testingdata/article.json';
 import models from '../models/index';
@@ -29,11 +29,11 @@ describe('Report Article', () => {
       await reportArticle.destroy({ where: {}, truncate: true });
       await reportType.destroy({ where: reportArticleType });
       const oneArticle = await article.findOne({ where: { title: article1.title } });
-      const adminLoggedIn = await chai.request(app)
+      const notAdminLoggedIn = await chai.request(app)
         .post('/api/users/login')
         .set('Content-Type', 'application/json')
-        .send(login1);
-      notAdminUserToken = `Bearer ${adminLoggedIn.body.token}`;
+        .send(login4);
+      notAdminUserToken = `Bearer ${notAdminLoggedIn.body.token}`;
       articleId = oneArticle.article_id;
     } catch (error) {
       throw new Error(error);

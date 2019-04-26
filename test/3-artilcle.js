@@ -1,16 +1,16 @@
-/* eslint-disable no-restricted-syntax */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
 import { article1 } from '../testingdata/article.json';
 import shareArticle from '../helpers/shareArticles';
-import { login1, login4 } from '../testingdata/user.json';
+import { login4, testMailer } from '../testingdata/user.json';
 import models from '../models/index';
 import tag from '../helpers/tags';
+import generateToken from '../helpers/token';
 
 chai.use(chaiHttp);
 chai.should();
-const Article = models.article;
+const { article: Article, user } = models;
 let APItoken;
 let APItoken2;
 let articleId;
@@ -57,10 +57,19 @@ describe('Article', () => {
   before(async () => {
     try {
       await Article.destroy({ where: { title: article1.title } });
-      const tokens = await chai.request(app).post('/api/users/login').set('Content-Type', 'application/json').send(login1);
+      const tokens = await chai.request(app).post('/api/users/login').set('Content-Type', 'application/json').send({
+        email: testMailer.email, password: testMailer.password
+      });
       APItoken = `Bearer ${tokens.body.token}`;
-      const login2 = await chai.request(app).post('/api/users/login').set('Content-Type', 'application/json').send(login4);
-      APItoken2 = `Bearer ${login2.body.token}`;
+      // const login2 = await chai.request(app).
+      // .post('/api/users/login').set('Content-Type', 'application/json').send(login4);
+      const findLogin2 = await user.findOne({ where: { email: login4.email } });
+      const { generate } = generateToken({
+        id: findLogin2.id,
+        email: findLogin2.email
+      });
+      APItoken2 = `Bearer ${generate}`;
+      // APItoken2 = `Bearer ${login2.body.token}`;
     } catch (error) {
       console.log(error);
     }
@@ -121,6 +130,7 @@ describe('Article', () => {
     chai.request(app)
       .get(`/api/articles/${articleId}`)
       .set('Content-Type', 'application/json')
+      .set('Authorization', APItoken)
       .end((error, res) => {
         if (error) {
           done(error);

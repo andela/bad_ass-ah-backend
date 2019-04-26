@@ -2,6 +2,9 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
 import { testMailer, login4 } from '../testingdata/user.json';
+import models from '../models/index';
+
+const { user } = models;
 
 chai.use(chaiHttp);
 chai.should();
@@ -11,7 +14,9 @@ let userId2;
 describe('Followers', () => {
   before(async () => {
     try {
-      const login = await chai.request(app).post('/api/users/login').set('Content-Type', 'application/json').send(testMailer);
+      const login = await chai.request(app).post('/api/users/login').set('Content-Type', 'application/json')
+        .send({ email: testMailer.email, password: testMailer.password });
+      await user.update({ isActivated: true }, { where: { email: login4.email } });
       const login2 = await chai.request(app).post('/api/users/login').set('Content-Type', 'application/json').send(login4);
       token = `Bearer ${login.body.token}`;
       userId2 = login.body.user.id;
