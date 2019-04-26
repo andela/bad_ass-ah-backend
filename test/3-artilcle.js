@@ -303,8 +303,20 @@ describe('Article', () => {
         done();
       });
   });
-  it('Should test helpers', async () => {
+  it('Should test tags helpers', async () => {
     const tagList = await tag(req);
     tagList.should.be.a('array');
+  });
+  it('Should allow a given user to share an article via email', (done) => {
+    chai.request(app)
+      .get(`/api/articles/${articleId}/share/email`)
+      .set('Authorization', APItoken)
+      .end((error, res) => {
+        if (error) {
+          done();
+        }
+        res.should.have.status(200);
+        done();
+      });
   });
 });

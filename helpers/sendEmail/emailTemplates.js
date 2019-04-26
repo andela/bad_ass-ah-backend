@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -23,14 +24,18 @@ const emailTemplates = {
     subject: 'Password Reset',
     html: `<h1 style="color: #444; margin-left: 20px;">Password reset</h1>
 <p style="color: #555; margin-left: 20px; font-size: 14px">Lost your password? click on the link below to reset your password.</p><br>
-<a style="background-color: #61a46e; padding: 12px 15px 12px 15px; color: #eee; font-size: 16px; text-decoration: none; margin-left: 20px; cursor: pointer;" href="${url}/api/users/password/$token">Reset Password</a>`
-  }
+<a style="background-color: #61a46e; padding: 12px 15px 12px 15px; color: #eee; font-size: 16px; text-decoration: none; margin-left: 20px; cursor: pointer;" href="http://localhost:3000/api/users/password/$">Reset Password</a>`
+  },
+};
+const shareArticleTemplate = (articleId) => {
+  return `<h1 style="color: #444; margin-left: 20px;">Share an article</h1>
+    <p style="color: #555; margin-left: 20px; font-size: 14px">${url}/${articleId}.</p><br><br>
+<a style="background-color: #61a46e; padding: 12px 15px 12px 15px; color: #eee; font-size: 16px; text-decoration: none; margin-left: 20px; cursor: pointer;" href="${url}/${articleId}$">${url}/${articleId}</a>`;
 };
 
-// eslint-disable-next-line arrow-body-style
 const notificationTemplate = (message) => {
   return `<h1 style="color: #444; margin-left: 20px;">Updates on article you favorite</h1>
 <p style="color: #555; margin-left: 20px; font-size: 14px">${message}</p><br>`;
 };
 
-export default { emailTemplates, notificationTemplate };
+export default { emailTemplates, notificationTemplate, shareArticleTemplate };

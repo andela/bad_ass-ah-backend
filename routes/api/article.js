@@ -1,3 +1,4 @@
+/* eslint-disable import/no-named-as-default */
 import express from 'express';
 import passport from 'passport';
 import Article from '../../controllers/article';
@@ -36,6 +37,8 @@ router.put('/:idArticle/comments/:commentId', auth, checkComment, Comment.update
 router.delete('/:idArticle/comments/:commentId', auth, checkComment, Comment.deleteComment);
 router.post('/:articleId/like', auth, findArticleExist, checkVote, Votes.likes);
 router.post('/:articleId/dislike', auth, findArticleExist, checkVote, Votes.dislikes);
+// @Method get edited comment history
+router.get('/:idArticle/comments/:commentId/edited', auth, checkComment, Comment.getEditedComment);
 // @Method GET
 // @Desc get all created article
 router.get('/', Article.getArticle);
@@ -59,5 +62,6 @@ router.get('/:articleId/rate', asyncHandler(checkArticle), asyncHandler(Rate.get
 router.post('/:articleId/report/type/:reportTypeId', auth, asyncHandler(UserAccount.isUserAccountActivated), asyncHandler(checkArticle), asyncHandler(reportArticle.reportArticle));
 
 router.post('/:articleId/share/:url', auth, shareArticle.openChannelUrl);
+router.get('/:articleId/share/email', auth, Article.shareEmail);
 
 export default router;
