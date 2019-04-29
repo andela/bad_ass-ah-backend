@@ -18,7 +18,8 @@ const fbStrategy = (passport) => {
       (accessToken, refreshToken, profile, done) => {
         const info = {
           email: profile._json.email,
-          username: profile._json.name
+          username: profile._json.name,
+          isActivated: true
         }; User.findOrCreate({ where: { email: info.email }, defaults: info })
           .then(([users, created]) => {
             if (!users) {

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-named-as-default */
 import nodemailer from 'nodemailer';
 // eslint-disable-next-line import/named
 import { email } from '../../config/config';

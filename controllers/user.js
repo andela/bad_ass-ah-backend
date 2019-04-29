@@ -122,7 +122,8 @@ class UserController {
    */
   async twitterLogin(req, res) {
     const twitterUser = {
-      username: req.user.username
+      username: req.user.username,
+      isActivated: true
     };
     const result = await User.findOrCreate({
       where: {
@@ -130,7 +131,10 @@ class UserController {
       },
       defaults: twitterUser
     });
-    const { generate } = generateToken(twitterUser);
+    const payload = {
+      id: result[0].id
+    };
+    const { generate } = generateToken(payload);
     if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production') {
       return res.status(200).json({ status: 200, Welcome: twitterUser.username, token: generate });
     } return result;

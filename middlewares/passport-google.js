@@ -16,7 +16,8 @@ const google = (passport) => {
       } else {
         const newUser = await User.create({
           username: profile.emails[0].value,
-          email: profile.emails[0].value
+          email: profile.emails[0].value,
+          isActivated: true
         });
         done(null, newUser);
       }
