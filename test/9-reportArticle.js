@@ -20,15 +20,18 @@ describe('Report Article', () => {
   let reportTypeId;
   before(async () => {
     try {
+      await reportArticle.destroy({ where: {}, truncate: true });
       await user.update({ isAdmin: true }, { where: { email: testMailer.email } });
+
       const userLoggedIn = await chai.request(app)
         .post('/api/users/login')
         .set('Content-Type', 'application/json')
         .send({ email: testMailer.email, password: testMailer.password });
-      await user.update({ isAdmin: true }, { where: { email: login6.email } });
       userToken = `Bearer ${userLoggedIn.body.token}`;
-      await reportArticle.destroy({ where: {}, truncate: true });
+
+      await user.update({ isAdmin: true }, { where: { email: login6.email } });
       await reportType.destroy({ where: reportArticleType });
+
       const oneArticle = await article.findOne({ where: { title: article1.title } });
       const notAdminLoggedIn = await chai.request(app).post('/api/users/login')
         .set('Content-Type', 'application/json')

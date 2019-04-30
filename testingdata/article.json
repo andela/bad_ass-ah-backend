@@ -3,5 +3,10 @@
         "title": "why i love javascript",
         "body": " i love javascript so much?",
         "tag":"laravel,programming"
+    },
+    "articleForHighlighting": {
+        "title": "Test highlighting",
+        "body": "This for testing highlights",
+        "tag": "tag1,tag2,tag3"
     }
 }

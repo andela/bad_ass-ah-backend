@@ -59,6 +59,7 @@ describe('/api/users/password', () => {
       it('should return a message when a password was reset', (done) => {
         chai.request(app)
           .post('/api/users/password')
+          .set('Content-Type', 'application/json')
           .send({ email: 'bienaime.fabrice@andela.com' })
           .end((err, res) => {
             if (err) done(err);
