@@ -5,6 +5,7 @@ import models from '../models/index';
 import sendEmail from '../helpers/sendEmail/callMailer';
 import generateToken from '../helpers/token';
 import Validate from '../helpers/validateUser';
+import { activation, Access } from '../helpers/activation';
 
 dotenv.config();
 const User = models.user;
@@ -28,7 +29,10 @@ class UserController {
     const newUser = {
       username: req.body.username,
       email: req.body.email,
-      password: bcrypt.hashSync(req.body.password, 10)
+      password: bcrypt.hashSync(req.body.password, 10),
+      isAdmin: (req.body.isAdmin ? req.body.isAdmin : false),
+      isManager: (req.body.isManager ? req.body.isManager : false),
+      isActivated: (req.body.isAdmin === true)
     };
     try {
       const { dataValues: user } = await User.create(newUser);
@@ -276,6 +280,47 @@ class UserController {
       res.status(200).json({ status: 200, profile: newProfile });
     } catch (error) {
       res.status(500).json({ error: error.message });
+    }
+  }
+
+  /**
+   *
+   * @param {req} req
+   * @param {res} res
+   * @return {Object} ruturn object
+   */
+  async access(req, res) {
+    const find = await User.findOne({ where: { id: req.params.userId } });
+    if (find.isAdmin === true) {
+      Access(req, res, false, find.id);
+    } else {
+      Access(req, res, true, find.id);
+    }
+  }
+
+  /**
+   *
+   * @param {req} req
+   * @param {res} res
+   * @return {Object} ruturn object
+   */
+  async availability(req, res) {
+    if (req.userInfo.isAdmin === true || req.userInfo.isManager === true) {
+      return res.status(403).json({
+        status: 403,
+        message: `Permission denied, You are not allowed to unable/disable  ${req.userInfo.username}`
+      });
+    }
+    try {
+      const find = await User.findOne({ where: { id: req.params.userId } });
+      // @check user status
+      if (find.status === true) {
+        await activation(req, res, 'disabled', false, find.id);
+      } else {
+        await activation(req, res, 'enabled', true, find.id);
+      }
+    } catch (error) {
+      return res.status(500).json({ error: 'something please try again.' });
     }
   }
 }

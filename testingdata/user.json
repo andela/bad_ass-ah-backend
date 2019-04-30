@@ -23,6 +23,13 @@
     "email": "gratian@gmail.com",
     "password": "1Kig1L@20"
   },
+  "signup7":{
+    "username": "gram",
+    "email": "gram@gmail.com",
+    "password": "1Kig1L@20",
+    "isAdmin":true,
+    "isManager":true
+  },
   "testMailer": {
     "username": "badass",
     "email": "badass.andela.test@gmail.com",
@@ -48,8 +55,12 @@
     "email": "gratian@gmail.com",
     "password": "1Kig1L@20"
   },
+  "login6":{
+    "email": "gram@gmail.com",
+    "password": "1Kig1L@20"
+  },
   "googleValidToken": {
-    "access_token": "ya29.Glv6BvVUc7NwVD3-anM4i47hPQiwrZsDeRcW3qrC3URTOT9NFTJj4ljOGRA-dR7jkOb8mepHyPHTgVKZUB057dZyU2vfXAe4kAgAeTjE7hvU0KeHROmfhQciIShZ"
+    "access_token": "ya29.Glv7BvGZ650Sf16r5xDgYpUElSyln4R9KPggpeij0x-bZB9-tTENwPOBKUHWIoLlR2FmXRZnsBRxJLjGDAFjTBXDxPYco0aSCgHiC5aVdZU9FNeYyuG-KWjozgKh"
   },
   "googleInvalidToken": {
     "access_token": "ya29.Glv1Bvx5U-OTtL7Qxym4ugGyyRsxhEPoKe_Uz5cKKF_mLuGzrxHywvzLx_kgWKVfHZTKL2eg0K5oJ7RVKXwqDSG5-f5PUlo0iFz5jISJrVWsc5Ls7crApI-Uagjy"

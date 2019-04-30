@@ -15,7 +15,7 @@ class FollowerController {
   static follow(req, res) {
     const followUser = { userId: req.params.userId, followedBy: req.user.id };
     Follower.create(followUser)
-      .then(() => res.status(201).json({ status: 201, message: ` Thank you for following ${req.followedBy}.` }));
+      .then(() => res.status(201).json({ status: 201, message: ` Thank you for following ${req.userInfo.username}.` }));
   }
 
   /**

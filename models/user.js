@@ -5,7 +5,9 @@ const UserModel = (sequelize, DataTypes) => {
     password: { type: DataTypes.STRING },
     bio: { type: DataTypes.STRING },
     image: { type: DataTypes.STRING },
-    isAdmin: { type: DataTypes.BOOLEAN },
+    status: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
+    isAdmin: { type: DataTypes.BOOLEAN, defaultValue: false },
+    isManager: { type: DataTypes.BOOLEAN, defaultValue: false },
     isActivated: { type: DataTypes.BOOLEAN },
     allowNotifications: { type: DataTypes.BOOLEAN }
   }, {});

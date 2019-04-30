@@ -27,6 +27,6 @@ export const checkUserId = async (req, res, next) => {
   if (!user) {
     throw new httpError(404, 'sorry user not found');
   }
-  req.followedBy = user.username;
+  req.userInfo = user;
   next();
 };

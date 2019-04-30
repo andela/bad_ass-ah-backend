@@ -5,7 +5,10 @@ import User from '../../controllers/user';
 import Follow from '../../controllers/followers';
 import Notification from '../../controllers/notification';
 // @middleware
-import check from '../../middlewares/user';
+import {
+  check, isAdmin, isManager, isBothManager
+} from '../../middlewares/user';
+
 import { checkFollowedBy, checkUserId } from '../../middlewares/followers';
 import VerifyLink from '../../controllers/email/verifyLink';
 import validateUser from '../../helpers/validate';
@@ -22,7 +25,7 @@ const auth = passport.authenticate('jwt', { session: false });
 // @POST
 // @description creating user
 router.post('/', validateUser, check, User.signup);
-router.get('/', auth, User.getAllUsers);
+router.get('/', auth, isAdmin, User.getAllUsers);
 
 router.post('/send-verification-link', VerifyLink.sendEmail);
 router.get('/verify/:token', VerifyLink.activate);
@@ -45,8 +48,7 @@ router.post('/follow/:userId', auth, asyncHandler(activate.isUserAccountActivate
 // @method DELETE
 // @desc Unfollow user
 // @access private
-router.delete('/unfollow/:userId', auth, asyncHandler(activate.isUserAccountActivated),
-  asyncHandler(checkUserId), Follow.unfollow);
+router.delete('/unfollow/:userId', auth, asyncHandler(activate.isUserAccountActivated), asyncHandler(checkUserId), Follow.unfollow);
 // @method GET
 // @desc get followers of users
 // @access private
@@ -61,5 +63,14 @@ router.get('/notifications/subscribe', auth, Notification.subscribe);
 router.get('/notifications', auth, Notification.getAll);
 router.get('/notifications/:id', auth, Notification.getOne);
 router.delete('/notifications/:id', auth, Notification.delete);
+
+// @method PUT
+// @desc access
+// @access private only-manager
+router.put('/access/:userId', auth, asyncHandler(checkUserId), isManager, isBothManager, User.access);
+// @method PUT
+// @desc enabling or disabling user
+// @access private only-admin
+router.put('/availability/:userId', auth, asyncHandler(checkUserId), isAdmin, User.availability);
 
 export default router;
