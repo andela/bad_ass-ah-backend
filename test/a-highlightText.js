@@ -40,7 +40,7 @@ describe('Highlight Text', () => {
   after(async () => {
     try {
       await articleHighlights.destroy({ where: {}, truncate: true });
-      await article.destroy({ where: { title: articleForHighlighting.title } });
+      // await article.destroy({ where: { title: articleForHighlighting.title } });
     } catch (error) {
       throw new Error(error);
     }
