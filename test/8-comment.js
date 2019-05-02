@@ -2,7 +2,6 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
 import { validateComment } from '../testingdata/comment.json';
-// import { login1, testMailer } from '../testingdata/user.json';
 import { testMailer } from '../testingdata/user.json';
 
 chai.use(chaiHttp);
@@ -15,18 +14,14 @@ let idComment;
 
 const invalidToken = 'EAAgbksnPT5IBAI2f478gPi5HZC9iAvldAtZCKhDPXaZCt0cTEr9kuDbETW1wZCDF17alOnG7qdKZB14O4rr2zg6gtkuU6Q14G9idx1JOZAHcFgtQam72PoBzvjgyyl1BxgiFGMHOwVGVPi23QilFQ1z2hUJCYCHyBYT6qfsfCmFwZDZD';
 let token;
-// let token2;
+
 describe('Comment', () => {
   before(async () => {
     try {
-      // const loginUser = await chai.request(app).post('/api/users/login')
-      // .set('Content-Type', 'application/json').send(login1);
-      // const loginUser2 = await chai.request(app).post('/api/users/login')
-      // .set('Content-Type', 'application/json').send(testMailer);
       const loginUser = await chai.request(app).post('/api/users/login').set('Content-Type', 'application/json')
         .send({ email: testMailer.email, password: testMailer.password });
       token = `Bearer ${loginUser.body.token}`;
-      // token2 = `Bearer ${loginUser2.body.token}`;
+
       userId = loginUser.body.id;
 
       const givenArticle = {

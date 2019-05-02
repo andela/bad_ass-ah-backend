@@ -17,6 +17,9 @@ import { checkingArticle, findArticleExist } from '../../middlewares/article';
 import checkVote from '../../middlewares/votes';
 import isAuth from '../../middlewares/isAuth';
 import articleStats from '../../controllers/stats/articleStats';
+import highlightText from '../../controllers/highlightText';
+import checkArticleAuthor from '../../middlewares/checkArticleAuthor';
+import validateHighlights from '../../middlewares/validateHighlights';
 
 import Votes from '../../controllers/votes';
 
@@ -63,5 +66,10 @@ router.post('/:articleId/report/type/:reportTypeId', auth, asyncHandler(UserAcco
 
 router.post('/:articleId/share/:url', auth, shareArticle.openChannelUrl);
 router.get('/:articleId/share/email', auth, Article.shareEmail);
+
+router.post('/:articleId/highlights', auth, asyncHandler(checkArticle), asyncHandler(validateHighlights), asyncHandler(highlightText.create));
+router.get('/:articleId/user-highlights', auth, asyncHandler(checkArticle), asyncHandler(highlightText.getUserHighlightedTexts));
+router.get('/:articleId/highlights', auth, asyncHandler(checkArticle), asyncHandler(checkArticleAuthor), asyncHandler(highlightText.getArticleHighlightTexts));
+router.put('/:articleId/highlights/:highlightId', auth, asyncHandler(checkArticle), asyncHandler(validateHighlights), asyncHandler(highlightText.updateHighlightText));
 
 export default router;

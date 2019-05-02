@@ -7,11 +7,7 @@ const articleModel = (Sequelize, DataTypes) => {
     body: { type: DataTypes.TEXT },
     taglist: { type: DataTypes.ARRAY(DataTypes.STRING) },
     author: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'user',
-        key: 'id'
-      }
+      type: DataTypes.INTEGER, references: { model: 'user', key: 'id' }
     },
     image: { type: DataTypes.STRING, allowNull: true },
   }, {});
@@ -22,6 +18,7 @@ const articleModel = (Sequelize, DataTypes) => {
     Article.hasMany(models.rate, { foreignKey: 'articleId', onDelete: 'CASCADE' });
     Article.hasMany(models.articleStats, { foreignKey: 'articleId', allowNull: false });
     Article.hasMany(models.vote, { foreignKey: 'article', allowNull: false });
+    Article.hasMany(models.articleHighlights, { foreignKey: 'articleId', allowNull: false });
   };
   return Article;
 };

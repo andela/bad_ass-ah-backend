@@ -61,7 +61,7 @@ describe('User ', () => {
         res.body.registeredUser.should.have.property('username');
         done();
       });
-  }).timeout(20000);
+  }).timeout(50000);
   // @second user
   it('Should create user and return status of 201', (done) => {
     chai
