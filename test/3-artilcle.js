@@ -146,6 +146,7 @@ describe('Article', () => {
     chai.request(app)
       .get('/api/articles/5000')
       .set('Content-Type', 'application/json')
+      .set('Authorization', APItoken)
       .end((error, res) => {
         if (error) {
           done(error);

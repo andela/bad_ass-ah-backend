@@ -168,6 +168,7 @@ class ArticleController {
    */
   static async singleArticle(req, res) {
     const user = req.user.id;
+    const { hasBookmarked } = req;
     const {
       articleId
     } = req.params;
@@ -186,7 +187,7 @@ class ArticleController {
       where: { articleId: req.params.articleId }
     });
     // eslint-disable-next-line object-curly-newline
-    res.status(200).json({ status: 200, article, totalReading, votes });
+    res.status(200).json({ status: 200, article, totalReading, hasBookmarked, votes });
   }
 }
 

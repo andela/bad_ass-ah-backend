@@ -19,6 +19,7 @@ const articleModel = (Sequelize, DataTypes) => {
     Article.hasMany(models.articleStats, { foreignKey: 'articleId', allowNull: false });
     Article.hasMany(models.vote, { foreignKey: 'article', allowNull: false });
     Article.hasMany(models.articleHighlights, { foreignKey: 'articleId', allowNull: false });
+    Article.hasMany(models.bookmark, { foreignKey: 'articleId', allowNull: false });
   };
   return Article;
 };

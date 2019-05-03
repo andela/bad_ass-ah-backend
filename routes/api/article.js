@@ -13,20 +13,29 @@ import asyncHandler from '../../helpers/errors/asyncHandler';
 import shareArticle from '../../helpers/shareArticles';
 import reportArticle from '../../controllers/report/reportArticle';
 
-import { checkingArticle, findArticleExist } from '../../middlewares/article';
+import {
+  checkingArticle,
+  findArticleExist
+} from '../../middlewares/article';
 import checkVote from '../../middlewares/votes';
 import isAuth from '../../middlewares/isAuth';
 import articleStats from '../../controllers/stats/articleStats';
 import highlightText from '../../controllers/highlightText';
 import checkArticleAuthor from '../../middlewares/checkArticleAuthor';
 import validateHighlights from '../../middlewares/validateHighlights';
+import bookmark from '../../controllers/bookmark';
 
 import Votes from '../../controllers/votes';
+import hasBookmarked from '../../middlewares/hasBookmarked';
 
 const router = express.Router();
 const auth = passport.authenticate('jwt', {
   session: false
 });
+// @GET all bookmarks
+router.get('/bookmark', auth, bookmark.allBookmark);
+// @POST a bookmark
+router.post('/:articleId/bookmark', auth, asyncHandler(checkArticle), bookmark.createBookmark);
 // @Method POST
 // @Desc create article
 router.post('/', auth, multer, Article.create);
@@ -48,7 +57,7 @@ router.get('/', Article.getArticle);
 // @Method GET
 // @desc get single article
 // router.get('/:articleId', isAuth, Article.singleArticle);
-router.get('/:articleId', isAuth, asyncHandler(Article.singleArticle));
+router.get('/:articleId', isAuth, asyncHandler(hasBookmarked), asyncHandler(Article.singleArticle));
 // @Method PUT
 // @Desc update articles
 router.put('/:articleId', auth, checkingArticle, multer, Article.updateArticle);
