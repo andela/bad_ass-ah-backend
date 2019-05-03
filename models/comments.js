@@ -18,6 +18,7 @@ const commentModel = (sequelize, DataTypes) => {
     Comments.hasMany(models.editedcommentshistory, {
       foreignKey: 'commentId'
     });
+    Comments.hasMany(models.votecomment, { foreignKey: 'commentId', allowNull: false });
   };
   return Comments;
 };

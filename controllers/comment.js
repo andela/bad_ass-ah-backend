@@ -1,19 +1,21 @@
 import models from '../models/index';
 import Notification from './notification';
 
+
 const Comment = models.comments;
 const User = models.user;
+const Votes = models.votecomment;
 const EditedCommentHistory = models.editedcommentshistory;
 /**
  * @param {class} --Comment controller
  */
 class CommentController {
   /**
-     *
-     * @param {Object} req
-     * @param {Object} res
-     * @returns {Object} will create a comment
-     */
+   *
+   * @param {Object} req
+   * @param {Object} res
+   * @returns {Object} will create a comment
+   */
   static create(req, res) {
     // @comment
     const newComment = {
@@ -41,11 +43,11 @@ class CommentController {
   }
 
   /**
- *
- * @param {Object} req
- * @param {Object} res
- * @returns {Object} - will return all comment related to an article
- */
+   *
+   * @param {Object} req
+   * @param {Object} res
+   * @returns {Object} - will return all comment related to an article
+   */
   static getAllComment(req, res) {
     Comment.findAll({ where: { articleId: req.params.articleId } })
       .then((comment) => {
@@ -57,15 +59,20 @@ class CommentController {
   }
 
   /**
- *
- * @param {object} req
- * @param {object} res
- * @returns {object} return a json object
- */
+   *
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} return a json object
+   */
   static getEditedComment(req, res) {
-    EditedCommentHistory.findAll({ where: { commentId: req.params.commentId } })
+    EditedCommentHistory.findAll({
+      where: { commentId: req.params.commentId }
+    })
       .then((editedComment) => {
-        res.status(200).json({ status: 200, editedComment });
+        res.status(200).json({
+          status: 200,
+          editedComment
+        });
       });
   }
 
@@ -101,16 +108,50 @@ class CommentController {
   }
 
   /**
- *
- * @param {Object} req
- * @param {Object} res
- * @returns {Object} -will delte a given comment
- */
+   *
+   * @param {Object} req
+   * @param {Object} res
+   * @returns {Object} -will delte a given comment
+   */
   static deleteComment(req, res) {
-    Comment.destroy({ where: { id: req.params.commentId }, returning: true })
+    Comment.destroy({
+      where: { id: req.params.commentId },
+      returning: true
+    })
       .then(() => {
         res.status(200).json({ status: 200, message: 'Comment deleted successfully' });
       });
+  }
+
+  /**
+   *
+   * @param {Object} req
+   * @param {Object} res  view single comment
+   * @returns {Object} return a comment
+   */
+  static async singleComment(req, res) {
+    const { user } = req;
+    const { commentId } = req.params;
+    const comment = await Comment.findByPk(commentId);
+    const likes = await Votes.count({ where: { commentId, like: true } });
+    const dislikes = await Votes.count({ where: { commentId, dislike: true } });
+    const votes = {
+      likes,
+      dislikes,
+      hasLiked: false,
+      hasDisliked: false
+    };
+    if (user !== undefined) {
+      const userVotes = await Votes.findOne({
+        where: { commentId, userId: user.id },
+        attributes: ['like', 'dislike']
+      });
+      if (userVotes) {
+        votes.hasLiked = userVotes.like || false;
+        votes.hasDisliked = userVotes.dislike || false;
+      }
+    }
+    res.status(200).json({ status: 200, comment: comment.get(), votes });
   }
 }
 

@@ -173,7 +173,9 @@ class ArticleController {
       articleId
     } = req.params;
     const article = await Article.findByPk(articleId);
-    if (!article) throw new httpError(404, 'Sorry the requested resource could not be found.');
+    if (!article) {
+      throw new httpError(404, 'Sorry the requested resource could not be found.');
+    }
     article.dataValues.readingTime = readingTime(article.title + article.body);
     const likes = await Votes.count({ where: { article: articleId, like: true } });
     const dislikes = await Votes.count({ where: { article: articleId, dislike: true } });
