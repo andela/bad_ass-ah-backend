@@ -7,7 +7,7 @@ import shareTemplate from '../helpers/sendEmail/emailTemplates';
 import Mailer from '../helpers/sendEmail/mailer';
 
 const { shareArticleTemplate } = shareTemplate;
-
+const notification = new Notification();
 
 const {
   article: Article,
@@ -36,7 +36,7 @@ class ArticleController {
    * @param {Object} res
    * @returns {Object} this will return created articles
    */
-  static create(req, res) {
+  create(req, res) {
     // @initial article
     const newArticle = {
       title: req.body.title,
@@ -54,8 +54,8 @@ class ArticleController {
           }
         });
         const message = `${user.username} published a new article`;
-        await Notification.createFollower(article.author, message);
-        await Notification.sendFollower(article.author, message);
+        await notification.createNotificationForFavorite(article.author, message);
+        await notification.sendNotificationToFollower(article.author, message);
         res.status(201).json({ status: 201, message: 'Article created successfully', article });
       })
       .catch(error => res.status(500).json({ error: `something wrong please try again. ${error}` }));
@@ -67,7 +67,7 @@ class ArticleController {
    * @param {Object} res  get all created article
    * @returns {Object} return all created article
    */
-  static getArticle(req, res) {
+  getArticle(req, res) {
     const {
       page = 1
     } = req.query;
@@ -98,7 +98,7 @@ class ArticleController {
    * @param {*} res
    * @returns {*} - will return an object
    */
-  static shareEmail(req, res) {
+  shareArticle(req, res) {
     mailOptions.to = SHARE_WITH;
     mailOptions.html = shareArticleTemplate(req.params.articleId);
     const mailer = new Mailer();
@@ -112,7 +112,7 @@ class ArticleController {
    * @param {Object} res  updated article
    * @returns {Object} return updated article
    */
-  static updateArticle(req, res) {
+  updateArticle(req, res) {
     // @updating articles
     Article.update({
       title: req.body.title,
@@ -127,8 +127,10 @@ class ArticleController {
     })
       .then(async (article) => {
         const message = `Article with title "${article[1][0].title}" has been updated`;
-        await Notification.createFavorite(article[1][0].article_id, message, article[1][0].author);
-        await Notification.sendFavorite(article[1][0].article_id, message, article[1][0].author);
+        await notification.createNotificationForFavorite(article[1][0].article_id,
+          message, article[1][0].author);
+        await notification.sendNotificationToFavorites(article[1][0].article_id,
+          message, article[1][0].author);
         res.status(200).json({
           status: 200,
           message: 'article updated successfully.',
@@ -145,7 +147,7 @@ class ArticleController {
    * @param {Object} res  delete article
    * @returns {Object} return message and status
    */
-  static async deleteArticle(req, res) {
+  async deleteArticle(req, res) {
     Article.destroy({
       where: {
         article_id: req.params.articleId
@@ -166,7 +168,7 @@ class ArticleController {
    * @param {Object} res - view single article
    * @returns {Object} return article
    */
-  static async singleArticle(req, res) {
+  async getSingleArticle(req, res) {
     const user = req.user.id;
     const { hasBookmarked } = req;
     const {

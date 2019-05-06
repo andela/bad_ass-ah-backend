@@ -7,6 +7,8 @@ import { login4, testMailer } from '../testingdata/user.json';
 
 chai.use(chaiHttp);
 chai.should();
+
+const notificationController = new NotificationController();
 const Comment = models.comments;
 const User = models.user;
 const Notification = models.notification;
@@ -79,7 +81,7 @@ describe('Notification', () => {
   });
 
   it('should create favorites notifications', (done) => {
-    NotificationController.createFavorite(idArticle, 'Article updated', notifier)
+    notificationController.createNotificationForFavorite(idArticle, 'Article updated', notifier)
       .then((data) => {
         data.should.be.a('array');
         done();
@@ -90,7 +92,7 @@ describe('Notification', () => {
   });
 
   it('should create followers notifications', (done) => {
-    NotificationController.createFollower(userId, 'New Article created')
+    notificationController.createNotificationForFollower(userId, 'New Article created')
       .then((data) => {
         data.should.be.a('array');
         done();
@@ -101,7 +103,7 @@ describe('Notification', () => {
   });
 
   it('should send followers notifications', (done) => {
-    NotificationController.sendFollower(userId, 'New Article created')
+    notificationController.sendNotificationToFollower(userId, 'New Article created')
       .then((data) => {
         data.should.be.a('string');
         done();

@@ -14,7 +14,7 @@ class CommentVotesController {
    * @param {response} res response
    * @returns {message} message
    */
-  static async commentLikes(req, res) {
+  async likeComment(req, res) {
     try {
       const likeData = {
         userId: req.user.id,
@@ -44,7 +44,7 @@ class CommentVotesController {
    */
 
   // eslint-disable-next-line require-jsdoc
-  static async commentDislikes(req, res) {
+  async dislikeComment(req, res) {
     try {
       const dislikeData = {
         userId: req.user.id,

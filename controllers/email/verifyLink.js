@@ -11,14 +11,14 @@ const User = models.user;
  * @exports
  * @class
  */
-class VerifyLink {
+class LinkVerification {
   /**
    * Send the verification email to a user
    * @param {Object} req - Requests from user
    * @param {Object} res - Response to the user
    * @returns {Object} Response
    */
-  static async sendEmail(req, res) {
+  async sendEmail(req, res) {
     const { token, template } = req.body;
     const decoded = jwt.decode(token, secretOrkey);
     try {
@@ -45,7 +45,7 @@ class VerifyLink {
    * @param {Object} res - Response to the user
    * @returns {Object} Response
    */
-  static async activate(req, res) {
+  async activateAccount(req, res) {
     try {
       const { token } = req.params;
       const decoded = jwt.decode(token, secretOrkey);
@@ -74,4 +74,4 @@ class VerifyLink {
   }
 }
 
-export default VerifyLink;
+export default LinkVerification;

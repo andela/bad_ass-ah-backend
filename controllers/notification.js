@@ -31,7 +31,7 @@ class NotificationController {
    * @param {Integer} notifier -notifier id
    * @returns {Object} Create notifications
    */
-  async createFavorite(articleId, message, notifier) {
+  async createNotificationForFavorite(articleId, message, notifier) {
     try {
       let notifications = [];
       const usersWhoFavoritedArticle = await Check.checkWhoFavoritesArticle(articleId);
@@ -64,7 +64,7 @@ class NotificationController {
    * @param {Integer} notifier -notifier id
    * @returns {Object} Create notifications
    */
-  async createFollower(folloewerId, message) {
+  async createNotificationForFollower(folloewerId, message) {
     try {
       const notifications = [];
       const notification = { userId: '', message: '' };
@@ -94,7 +94,7 @@ class NotificationController {
    * @param {Integer} notifier -notifier id
    * @returns {Object} send notifications
    */
-  async sendFavorite(articleId, message, notifier) {
+  async sendNotificationToFavorites(articleId, message, notifier) {
     const emails = new Set();
     const usersWhoFavoritedArticle = await Check.checkWhoFavoritesArticle(articleId);
     if (usersWhoFavoritedArticle.length > 0) {
@@ -123,7 +123,7 @@ class NotificationController {
    * @param {Integer} notifier -notifier id
    * @returns {Object} send notifications
    */
-  async sendFollower(followerId, message) {
+  async sendNotificationToFollower(followerId, message) {
     const emails = new Set();
     const followers = await Check.checkFollowers(followerId);
     if (followers.length > 0) {
@@ -150,7 +150,7 @@ class NotificationController {
    * @param {Object} res response object
    * @returns {Object} result
    */
-  async getAll(req, res) {
+  async getAllNotifications(req, res) {
     try {
       const notifications = await Notification.findAll({
         where: { userId: req.user.id, status: 'unread' },
@@ -168,7 +168,7 @@ class NotificationController {
    * @param {Object} res response object
    * @returns {Object} result
    */
-  async getOne(req, res) {
+  async getSingleNotification(req, res) {
     try {
       const id = parseInt(req.params.id, 10);
       const notification = await Notification.findOne({
@@ -193,7 +193,7 @@ class NotificationController {
    * @param {Object} res response object
    * @returns {Object} result
    */
-  async delete(req, res) {
+  async deleteNotification(req, res) {
     try {
       const id = parseInt(req.params.id, 10);
       const notification = await Notification.destroy({
@@ -239,4 +239,4 @@ class NotificationController {
   }
 }
 
-export default new NotificationController();
+export default NotificationController;

@@ -1,9 +1,10 @@
 import passport from 'passport';
 import express from 'express';
-import user from '../../../controllers/user';
+import User from '../../../controllers/user';
 
+const user = new User();
 const router = express.Router();
 
-router.post('/facebook', passport.authenticate('facebookToken', { session: false }), user.socialLogin);
+router.post('/facebook', passport.authenticate('facebookToken', { session: false }), user.loginViaFacebook);
 
 export default router;

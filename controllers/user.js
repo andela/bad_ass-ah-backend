@@ -88,7 +88,7 @@ class UserController {
    * @param {Object} res The response object.
    * @returns {Object} The response after registering the user.
    */
-  googleLogin(req, res) {
+  loginViaGoogle(req, res) {
     const user = {
       username: req.user.username,
       email: req.user.email,
@@ -107,7 +107,7 @@ class UserController {
    * @param {Object} res - responding from user
    * @returns {Object} Response with json data
    */
-  socialLogin(req, res) {
+  loginViaFacebook(req, res) {
     const payload = {
       id: req.user.id,
       email: req.user.email
@@ -124,7 +124,7 @@ class UserController {
    * @param {*} res
    * @returns {Object} Json data
    */
-  async twitterLogin(req, res) {
+  async loginViaTwitter(req, res) {
     const twitterUser = {
       username: req.user.username,
       isActivated: true
@@ -227,7 +227,7 @@ class UserController {
  * @param {Object} res The response object.
  * @returns {Object} The response object.
  */
-  getProfile(req, res) {
+  getUserProfile(req, res) {
     if (!Number.isInteger(Number(req.params.id))) {
       return res.status(400).json({ status: 400, error: 'The User ID must be an integer' });
     }
@@ -257,7 +257,7 @@ class UserController {
  * @param {Object} res The response object.
  * @returns {Object} The response object.
  */
-  async updateProfile(req, res) {
+  async updateUserProfile(req, res) {
     try {
       const { id } = req.user;
       if (Validate.isEmpty(req.body.username)) {
@@ -289,7 +289,7 @@ class UserController {
    * @param {res} res
    * @return {Object} ruturn object
    */
-  async access(req, res) {
+  async givePermission(req, res) {
     const find = await User.findOne({ where: { id: req.params.userId } });
     if (find.isAdmin === true) {
       Access(req, res, false, find.id);
@@ -304,7 +304,7 @@ class UserController {
    * @param {res} res
    * @return {Object} ruturn object
    */
-  async availability(req, res) {
+  async enableOrDisableUser(req, res) {
     if (req.userInfo.isAdmin === true || req.userInfo.isManager === true) {
       return res.status(403).json({
         status: 403,
@@ -325,4 +325,4 @@ class UserController {
   }
 }
 
-export default new UserController();
+export default UserController;

@@ -14,7 +14,7 @@ class ArticleStats {
    * @param {object} res - response
    * @return {object} response
    */
-  static async recordReading(req, res) {
+  async recordReading(req, res) {
     const userId = req.user.id;
     const { articleId } = req.params;
     const [result, created] = await articleStats.findOrCreate({
@@ -41,7 +41,7 @@ class ArticleStats {
    * @param {object} res - response
    * @return {object} response
    */
-  static async getUserReadingStats(req, res) {
+  async getUserReadingStats(req, res) {
     const totalUserReadingStats = await articleStats.count({ where: { userId: req.user.id } });
     res.status(200).send({
       totalReading: totalUserReadingStats

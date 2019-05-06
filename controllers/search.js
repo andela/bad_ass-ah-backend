@@ -16,7 +16,7 @@ class searchController {
  * @param {Object} res
  * @returns {Object} all item related to item
  */
-  static async searchItem(req, res) {
+  async searchItem(req, res) {
     // item from req.query
     const { search } = req.query;
     try {

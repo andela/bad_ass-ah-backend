@@ -13,7 +13,7 @@ class Bookmark {
    * @param  {object} res - The response object
    * @returns {object} It returns the request's response object
    */
-  static async createBookmark(req, res) {
+  async createBookmark(req, res) {
     const userId = req.user.id;
     const { articleId } = req.params;
     try {
@@ -34,7 +34,7 @@ class Bookmark {
    * @param  {object} res - The response object
    * @returns {object} It returns the request's response object
    */
-  static async allBookmark(req, res) {
+  async allBookmark(req, res) {
     const userId = req.user.id;
     try {
       const allBookmarks = await bookmark.findAll({ where: { userId } });
