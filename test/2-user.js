@@ -25,6 +25,8 @@ import {
 import models from '../models/index';
 import userController from '../controllers/user';
 
+const user = new userController();
+
 chai.use(chaiHttp);
 chai.should();
 const User = models.user;
@@ -288,7 +290,7 @@ describe('User ', () => {
       });
   });
   it('Should let the user signup with twitter', async () => {
-    const result = await userController.twitterLogin(userTwitterSignup);
+    const result = await user.loginViaTwitter(userTwitterSignup);
     result[0].dataValues.should.be.a('object');
   });
   // Get all users

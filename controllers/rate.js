@@ -16,7 +16,7 @@ class Rate {
    * @param {object} res - response
    * @return {object} response
    */
-  static async rateArticle(req, res) {
+  async rateArticle(req, res) {
     const userId = req.user.id;
     const { articleId } = req.params;
     const rating = parseInt(req.body.rating, 10);
@@ -41,7 +41,7 @@ class Rate {
  * @param {object} res - response
  * @return {object} response
  */
-  static async getArticleRate(req, res) {
+  async getArticleRatings(req, res) {
     let page, limit;
     if (Object.keys(req.query).length === 0) {
       page = 1; limit = 20;

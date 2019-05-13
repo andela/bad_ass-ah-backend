@@ -2,21 +2,27 @@ import express from 'express';
 import passport from 'passport';
 // @controller
 import User from '../../controllers/user';
-import Follow from '../../controllers/followers';
+import Follower from '../../controllers/followers';
 import Notification from '../../controllers/notification';
 // @middleware
 import {
-  check, isAdmin, isManager, isBothManager
+  check, checkAdmin, checkManager, checkIfBothAreManagers
 } from '../../middlewares/user';
 
 import { checkFollowedBy, checkUserId } from '../../middlewares/followers';
-import VerifyLink from '../../controllers/email/verifyLink';
+import LinkVerification from '../../controllers/email/verifyLink';
 import validateUser from '../../helpers/validate';
-import multer from '../../middlewares/multerConfiguration';
+import uploadImage from '../../middlewares/multerConfiguration';
 import { passwordValidation } from '../../middlewares/passwordValidate';
-import articleStats from '../../controllers/stats/articleStats';
+import ArticleStats from '../../controllers/stats/articleStats';
 import asyncHandler from '../../helpers/errors/asyncHandler';
 import activate from '../../middlewares/userAccount';
+
+const follower = new Follower();
+const notification = new Notification();
+const user = new User();
+const linkVerification = new LinkVerification();
+const articleStats = new ArticleStats();
 
 
 const router = express.Router();
@@ -24,53 +30,53 @@ const auth = passport.authenticate('jwt', { session: false });
 
 // @POST
 // @description creating user
-router.post('/', validateUser, check, User.signup);
-router.get('/', auth, isAdmin, User.getAllUsers);
+router.post('/', validateUser, check, user.signup);
+router.get('/', auth, checkAdmin, user.getAllUsers);
 
-router.post('/send-verification-link', VerifyLink.sendEmail);
-router.get('/verify/:token', VerifyLink.activate);
-router.post('/login', User.login);
+router.post('/send-verification-link', linkVerification.sendEmail);
+router.get('/verify/:token', linkVerification.activateAccount);
+router.post('/login', user.login);
 
-router.post('/password', User.checkEmail);
-router.put('/password', passwordValidation, User.resetPassword);
+router.post('/password', user.checkEmail);
+router.put('/password', passwordValidation, user.resetPassword);
 
-router.post('/login/google', passport.authenticate('googleToken', { session: false }), User.googleLogin);
+router.post('/login/google', passport.authenticate('googleToken', { session: false }), user.loginViaGoogle);
 
-router.get('/:id/profile', auth, User.getProfile);
-router.put('/profile', auth, multer, User.updateProfile);
+router.get('/:id/profile', auth, user.getUserProfile);
+router.put('/profile', auth, uploadImage, user.updateUserProfile);
 
 // @followers
 // @method POST
 // @desc follow user
 // @access private
 router.post('/follow/:userId', auth, asyncHandler(activate.isUserAccountActivated),
-  asyncHandler(checkUserId), checkFollowedBy, Follow.follow);
+  asyncHandler(checkUserId), checkFollowedBy, follower.followUser);
 // @method DELETE
 // @desc Unfollow user
 // @access private
-router.delete('/unfollow/:userId', auth, asyncHandler(activate.isUserAccountActivated), asyncHandler(checkUserId), Follow.unfollow);
+router.delete('/unfollow/:userId', auth, asyncHandler(activate.isUserAccountActivated), asyncHandler(checkUserId), follower.unfollowUser);
 // @method GET
 // @desc get followers of users
 // @access private
-router.get('/followers', auth, asyncHandler(activate.isUserAccountActivated), Follow.followers);
+router.get('/followers', auth, asyncHandler(activate.isUserAccountActivated), follower.getFollowers);
 // @method GET
 // @desc get following user
 // @access private
-router.get('/following', auth, asyncHandler(activate.isUserAccountActivated), Follow.following);
+router.get('/following', auth, asyncHandler(activate.isUserAccountActivated), follower.getFollowing);
 router.get('/reading-stats', auth, asyncHandler(articleStats.getUserReadingStats));
 // Notifications
-router.get('/notifications/subscribe', auth, Notification.subscribe);
-router.get('/notifications', auth, Notification.getAll);
-router.get('/notifications/:id', auth, Notification.getOne);
-router.delete('/notifications/:id', auth, Notification.delete);
+router.get('/notifications/subscribe', auth, notification.subscribe);
+router.get('/notifications', auth, notification.getAllNotifications);
+router.get('/notifications/:id', auth, notification.getSingleNotification);
+router.delete('/notifications/:id', auth, notification.deleteNotification);
 
 // @method PUT
 // @desc access
 // @access private only-manager
-router.put('/access/:userId', auth, asyncHandler(checkUserId), isManager, isBothManager, User.access);
+router.put('/access/:userId', auth, asyncHandler(checkUserId), checkManager, checkIfBothAreManagers, user.givePermission);
 // @method PUT
 // @desc enabling or disabling user
 // @access private only-admin
-router.put('/availability/:userId', auth, asyncHandler(checkUserId), isAdmin, User.availability);
+router.put('/availability/:userId', auth, asyncHandler(checkUserId), checkAdmin, user.enableOrDisableUser);
 
 export default router;

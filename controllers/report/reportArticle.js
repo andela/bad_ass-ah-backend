@@ -8,14 +8,14 @@ const { reportType, reportArticle } = models;
  * @exports
  * @class
  */
-class ReportArticle {
+class ArticleReport {
 /**
 * Create a new report type
 * @param {object} req - Requests from user
 * @param {object} res - Object that capture response
 * @returns {object} Response
 */
-  static async createReportType(req, res) {
+  async createReportType(req, res) {
     const { type } = req.body;
     const validateType = validate.isEmpty(type);
     if (validateType) throw new httpError(400, 'Report type is required and should not be empty.');
@@ -35,7 +35,7 @@ class ReportArticle {
  * @param {object} res - Object that capture response
  * @returns {object} Response
  */
-  static async getReportTypes(req, res) {
+  async getReportTypes(req, res) {
     const reportTypes = await reportType.findAll();
     if (reportTypes.length === 0) throw new httpError(404, 'Report types are not found.');
     res.status(200).send(reportTypes);
@@ -47,7 +47,7 @@ class ReportArticle {
  * @param {object} res - Object that capture response
  * @returns {object} Response
  */
-  static async reportArticle(req, res) {
+  async reportArticle(req, res) {
     const { articleId, reportTypeId } = req.params;
     let comment = req.body.comment.trim();
     if (validate.isEmpty(comment)) {
@@ -75,7 +75,7 @@ class ReportArticle {
    * @param {object} res - Object that capture response
    * @returns {object} Response
    */
-  static async getReportedArticles(req, res) {
+  async getReportedArticles(req, res) {
     const reportedArticles = await reportArticle.findAll({
       attributes: ['id', 'articleId', 'reporter', 'comment'],
       include: [{ model: reportType, attributes: ['id', 'type'] }]
@@ -85,4 +85,4 @@ class ReportArticle {
   }
 }
 
-export default ReportArticle;
+export default ArticleReport;

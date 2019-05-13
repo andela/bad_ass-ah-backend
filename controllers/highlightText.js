@@ -8,7 +8,7 @@ const { articleHighlights, user, article } = models;
  * @exports
  * @class
  */
-class HighlightText {
+class Highlights {
   /**
    * create a highlighted article section
    * @param {object} req - User's request
@@ -42,7 +42,7 @@ class HighlightText {
    * @param {object} res - Response's holder
    * @returns {object} Response
    */
-  async getArticleHighlightTexts(req, res) {
+  async getArticleHighlightedTexts(req, res) {
     const { articleId } = req.params;
     const userId = req.user.id;
     const highlightedTexts = await articleHighlights.findAll({
@@ -63,7 +63,7 @@ class HighlightText {
    * @param {object} res - Response's holder
    * @returns {object} Response
    */
-  async updateHighlightText(req, res) {
+  async updateHighlightedText(req, res) {
     const userId = req.user.id;
     const { articleId, highlightId } = req.params;
     const {
@@ -100,4 +100,4 @@ class HighlightText {
   }
 }
 
-export default new HighlightText();
+export default Highlights;

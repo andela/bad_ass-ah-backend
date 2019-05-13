@@ -1,7 +1,7 @@
 import models from '../models/index';
 import Notification from './notification';
 
-
+const notification = new Notification();
 const Comment = models.comments;
 const User = models.user;
 const Votes = models.votecomment;
@@ -16,7 +16,7 @@ class CommentController {
    * @param {Object} res
    * @returns {Object} will create a comment
    */
-  static create(req, res) {
+  create(req, res) {
     // @comment
     const newComment = {
       body: req.body.content,
@@ -35,8 +35,10 @@ class CommentController {
         User.findOne({ where: { id: comment.author } })
           .then(async (user) => {
             const message = `${user.username} commented on an article you favorite`;
-            await Notification.createFavorite(comment.articleId, message, comment.author);
-            await Notification.sendFavorite(comment.articleId, message, comment.author);
+            await notification.createNotificationForFavorite(comment.articleId,
+              message, comment.author);
+            await notification.sendNotificationToFavorites(comment.articleId,
+              message, comment.author);
             res.status(201).json({ status: 201, comment });
           });
       });
@@ -48,7 +50,7 @@ class CommentController {
    * @param {Object} res
    * @returns {Object} - will return all comment related to an article
    */
-  static getAllComment(req, res) {
+  getAllComment(req, res) {
     Comment.findAll({ where: { articleId: req.params.articleId } })
       .then((comment) => {
         if (comment.length === 0) {
@@ -64,7 +66,7 @@ class CommentController {
    * @param {object} res
    * @returns {object} return a json object
    */
-  static getEditedComment(req, res) {
+  getEditedComment(req, res) {
     EditedCommentHistory.findAll({
       where: { commentId: req.params.commentId }
     })
@@ -82,16 +84,17 @@ class CommentController {
    * @param {Object} res
    * @returns {Object} -will return an updated Comment
    */
-  static updateComment(req, res) {
+  updateComment(req, res) {
     Comment.update({ body: req.body.content },
       { where: { id: req.params.commentId }, returning: true })
       .then((comment) => {
         User.findOne({ where: { id: comment[1][0].author } })
           .then(async (user) => {
             const message = `${user.username} updated his comment on an article you favorite`;
-            await Notification.createFavorite(comment[1][0].articleId,
+            await notification.createNotificationForFavorite(comment[1][0].articleId,
               message, comment[1][0].author);
-            await Notification.sendFavorite(comment[1][0].articleId, message, comment[1][0].author);
+            await notification.sendNotificationToFavorites(comment[1][0].articleId,
+              message, comment[1][0].author);
             const edited = {
               commentId: req.params.commentId,
               userId: req.user.id,
@@ -113,7 +116,7 @@ class CommentController {
    * @param {Object} res
    * @returns {Object} -will delte a given comment
    */
-  static deleteComment(req, res) {
+  deleteComment(req, res) {
     Comment.destroy({
       where: { id: req.params.commentId },
       returning: true
@@ -129,7 +132,7 @@ class CommentController {
    * @param {Object} res  view single comment
    * @returns {Object} return a comment
    */
-  static async singleComment(req, res) {
+  async getSingleComment(req, res) {
     const { user } = req;
     const { commentId } = req.params;
     const comment = await Comment.findByPk(commentId);

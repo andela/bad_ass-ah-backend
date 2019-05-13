@@ -1,6 +1,6 @@
 import models from '../models/index';
 
-const Votes = models.vote;
+const Vote = models.vote;
 
 /** *
  * @param {request } req request
@@ -14,7 +14,7 @@ class VotesController {
  * @param {response} res response
  * @returns {message} message
  */
-  static async likes(req, res) {
+  async likeArticle(req, res) {
     try {
       const likeData = {
         user: req.user.id,
@@ -23,12 +23,12 @@ class VotesController {
         dislike: false
       };
       if (req.vote === null) {
-        await Votes.create(likeData);
+        await Vote.create(likeData);
         return res.status(200).json({ message: 'thanks for the support.' });
       } if (req.vote.like === true) {
         return res.status(400).json({ error: 'sorry you have already liked this article.' });
       }
-      await Votes.update(likeData, { where: { vote_id: req.vote.vote_id } });
+      await Vote.update(likeData, { where: { vote_id: req.vote.vote_id } });
       return res.status(200).json({
         message: 'thanks for the support.',
         userId: req.user.id,
@@ -46,7 +46,7 @@ class VotesController {
 */
 
   // eslint-disable-next-line require-jsdoc
-  static async dislikes(req, res) {
+  async dislikeArticle(req, res) {
     try {
       const dislikeData = {
         user: req.user.id,
@@ -55,12 +55,12 @@ class VotesController {
         dislike: true
       };
       if (req.vote === null) {
-        await Votes.create(dislikeData);
+        await Vote.create(dislikeData);
         return res.status(200).json({ message: 'thank for support.' });
       } if (req.vote.dislike === true) {
         return res.status(400).json({ error: 'sorry you have already disliked this article.' });
       }
-      await Votes.update(dislikeData, { where: { vote_id: req.vote.vote_id } });
+      await Vote.update(dislikeData, { where: { vote_id: req.vote.vote_id } });
       return res.status(200).json({
         message: 'You have disliked this article.',
         userId: req.user.id,

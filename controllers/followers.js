@@ -12,7 +12,7 @@ class FollowerController {
      * @param {Object} res
      * @return {Object} message
      */
-  static follow(req, res) {
+  followUser(req, res) {
     const followUser = { userId: req.params.userId, followedBy: req.user.id };
     Follower.create(followUser)
       .then(() => res.status(201).json({ status: 201, message: ` Thank you for following ${req.userInfo.username}.` }));
@@ -24,7 +24,7 @@ class FollowerController {
      * @param {Object} res
      * @return {Object} message
      */
-  static unfollow(req, res) {
+  unfollowUser(req, res) {
     Follower.destroy({ where: { userId: req.params.userId, followedBy: req.user.id } })
       .then(() => res.status(200).json({ status: 200, message: ' unfollowed successfully.' }));
   }
@@ -35,7 +35,7 @@ class FollowerController {
    * @param {Object} res getting followers
    * @returns {Object} followers and number of followers
    */
-  static followers(req, res) {
+  getFollowers(req, res) {
     Follower.findAll({
       where: { userId: req.user.id },
       include: [{
@@ -60,7 +60,7 @@ class FollowerController {
  * @param {Object} res
  *  @return {Object} following people and number of following
  */
-  static following(req, res) {
+  getFollowing(req, res) {
     Follower.findAll({
       where: { followedBy: req.user.id },
       include: [{

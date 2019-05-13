@@ -13,7 +13,7 @@ const check = async (req, res, next) => {
 };
 
 // @check if user is Admin
-const isAdmin = (req, res, next) => {
+const checkAdmin = (req, res, next) => {
   User.findByPk(req.user.id)
     .then((user) => {
       if (user.isAdmin !== true) {
@@ -37,7 +37,7 @@ const accountActivation = async (req, res, next) => {
   }
 };
 // @this middleware check  whether user is manager or not
-const isManager = async (req, res, next) => {
+const checkManager = async (req, res, next) => {
   const find = await User.findOne({ where: { id: req.user.id } });
   if (find.isAdmin !== true || find.isManager !== true) {
     return res.status(403).json({
@@ -49,7 +49,7 @@ const isManager = async (req, res, next) => {
 };
 // @this stop manager to change access of Another manager
 // @ we will take id from params and use it to check if user is manager
-const isBothManager = async (req, res, next) => {
+const checkIfBothAreManagers = async (req, res, next) => {
   const user = await User.findOne({ where: { id: req.params.userId } });
   if (user.isManager === true) {
     return res.status(403).json({
@@ -61,8 +61,8 @@ const isBothManager = async (req, res, next) => {
 };
 export {
   check,
-  isAdmin,
+  checkAdmin,
   accountActivation,
-  isManager,
-  isBothManager
+  checkManager,
+  checkIfBothAreManagers
 };
