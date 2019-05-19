@@ -1,12 +1,12 @@
-const twitterUser = (passport, user) => {
-  passport.serializeUser((userTwitwer, done) => {
-    done(null, userTwitwer.username);
+const socialMediaSerialize = (passport, user) => {
+  passport.serializeUser((userSocialMedia, done) => {
+    done(null, userSocialMedia.username);
   });
   passport.deserializeUser((username, done) => {
-    user.findByPk(username).then((userTwitwer) => {
-      done(null, userTwitwer);
+    user.findByPk(username).then((userSocialMedia) => {
+      done(null, userSocialMedia);
     })
       .catch(err => done(err, false));
   });
 };
-export default twitterUser;
+export default socialMediaSerialize;

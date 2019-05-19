@@ -9,6 +9,7 @@ import { activation, Access } from '../helpers/activation';
 
 dotenv.config();
 const User = models.user;
+const { FRONT_END_URL } = process.env;
 const secretKey = process.env.secretOrKey;
 const expirationTime = {
   expiresIn: '50day'
@@ -30,14 +31,17 @@ class UserController {
       username: req.body.username,
       email: req.body.email,
       password: bcrypt.hashSync(req.body.password, 10),
-      isAdmin: (req.body.isAdmin ? req.body.isAdmin : false),
-      isManager: (req.body.isManager ? req.body.isManager : false),
-      isActivated: (req.body.isAdmin === true)
+      isAdmin: req.body.isAdmin ? req.body.isAdmin : false,
+      isManager: req.body.isManager ? req.body.isManager : false,
+      isActivated: req.body.isAdmin === true
     };
     try {
       const { dataValues: user } = await User.create(newUser);
       const payload = {
-        id: user.id, username: user.username, email: user.email, isAdmin: user.isAdmin
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        isAdmin: user.isAdmin
       };
       const token = jwt.sign(payload, secretKey, expirationTime);
       const response = await sendEmail(user.email, token);
@@ -50,7 +54,9 @@ class UserController {
       };
       if (process.env.NODE_ENV === 'test') registeredUser.token = token;
       return res.status(201).json({ registeredUser });
-    } catch (error) { return res.status(500).json({ error: error.message }); }
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
   }
 
   /**
@@ -65,7 +71,9 @@ class UserController {
       .then((foundUser) => {
         if (foundUser && bcrypt.compareSync(user.password, foundUser.password)) {
           if (foundUser.isActivated === false) {
-            return res.status(403).send({ status: 403, error: 'Verify your email account before login.' });
+            return res
+              .status(403)
+              .send({ status: 403, error: 'Verify your email account before login.' });
           }
           const payload = {
             id: foundUser.id,
@@ -77,45 +85,10 @@ class UserController {
         } else {
           res.status(400).json({ status: 400, error: 'Incorrect username or password' });
         }
-      }).catch((error) => {
+      })
+      .catch((error) => {
         res.status(500).json({ error: error.message });
       });
-  }
-
-  /**
-   * Login User via google.
-   * @param {Object} req The request object.
-   * @param {Object} res The response object.
-   * @returns {Object} The response after registering the user.
-   */
-  loginViaGoogle(req, res) {
-    const user = {
-      username: req.user.username,
-      email: req.user.email,
-    };
-    const payload = {
-      id: req.user.id,
-      email: req.user.email
-    };
-    // @creating jwt token
-    const token = jwt.sign(payload, secretKey, expirationTime);
-    return res.status(200).json({ status: 200, token: `${token}`, user });
-  }
-
-  /**
-   * @param {Object} req -requesting from user
-   * @param {Object} res - responding from user
-   * @returns {Object} Response with json data
-   */
-  loginViaFacebook(req, res) {
-    const payload = {
-      id: req.user.id,
-      email: req.user.email
-    };
-    const {
-      generate
-    } = generateToken(payload);
-    return res.status(200).json({ status: 200, user: `welcome: ${req.user.username}`, token: generate });
   }
 
   /**
@@ -124,24 +97,25 @@ class UserController {
    * @param {*} res
    * @returns {Object} Json data
    */
-  async loginViaTwitter(req, res) {
-    const twitterUser = {
+  async loginViaSocialMedia(req, res) {
+    const socialMediaUser = {
       username: req.user.username,
       isActivated: true
     };
     const result = await User.findOrCreate({
       where: {
-        username: twitterUser.username
+        username: socialMediaUser.username
       },
-      defaults: twitterUser
+      defaults: socialMediaUser
     });
     const payload = {
       id: result[0].id
     };
     const { generate } = generateToken(payload);
     if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production') {
-      return res.status(200).json({ status: 200, Welcome: twitterUser.username, token: generate });
-    } return result;
+      return res.redirect(`${FRONT_END_URL}/login?token=${generate}&status=ok&username=${socialMediaUser.username}$`);
+    }
+    return result;
   }
 
   /**
@@ -152,7 +126,7 @@ class UserController {
    */
   checkEmail(req, res) {
     const user = {
-      email: req.body.email,
+      email: req.body.email
     };
     return User.findOne({
       where: {
@@ -162,7 +136,7 @@ class UserController {
       .then(async (foundUser) => {
         if (foundUser) {
           const payload = {
-            email: foundUser.email,
+            email: foundUser.email
           };
           const token = jwt.sign(payload, secretKey, expirationTime);
           req.body.token = token;
@@ -172,7 +146,10 @@ class UserController {
         } else {
           res.status(404).json({ status: 404, error: 'This email is not in our database' });
         }
-      }).catch((error) => { res.status(500).json({ error }); });
+      })
+      .catch((error) => {
+        res.status(500).json({ error });
+      });
   }
 
   /**
@@ -183,21 +160,22 @@ class UserController {
    */
   async resetPassword(req, res) {
     const password = bcrypt.hashSync(req.body.password, 10);
-    const {
-      token
-    } = req.body;
+    const { token } = req.body;
     const decoded = jwt.decode(token, secretKey);
     try {
       if (decoded) {
-        const checkUpdate = await User.update({
-          password,
-        }, {
-          where: {
-            email: decoded.email
+        const checkUpdate = await User.update(
+          {
+            password
+          },
+          {
+            where: {
+              email: decoded.email
+            }
           }
-        });
+        );
         if (checkUpdate.length >= 1) {
-          return res.status(200).json({ message: 'Congratulations! Your password was reset', });
+          return res.status(200).json({ message: 'Congratulations! Your password was reset' });
         }
       }
       return res.status(401).json({ error: 'Invalid token' });
@@ -207,26 +185,27 @@ class UserController {
   }
 
   /**
- * Get all users.
- * @param {Object} req The request object.
- * @param {Object} res The response object.
- * @returns {Object} The response.
- */
+   * Get all users.
+   * @param {Object} req The request object.
+   * @param {Object} res The response object.
+   * @returns {Object} The response.
+   */
   getAllUsers(req, res) {
     User.findAll({ attributes: ['username', 'email', 'bio', 'image'] })
       .then((users) => {
         res.status(200).json({ status: 200, users });
-      }).catch((error) => {
+      })
+      .catch((error) => {
         res.status(500).json({ error: error.message });
       });
   }
 
   /**
- * Get User Profile.
- * @param {Object} req The request object.
- * @param {Object} res The response object.
- * @returns {Object} The response object.
- */
+   * Get User Profile.
+   * @param {Object} req The request object.
+   * @param {Object} res The response object.
+   * @returns {Object} The response object.
+   */
   getUserProfile(req, res) {
     if (!Number.isInteger(Number(req.params.id))) {
       return res.status(400).json({ status: 400, error: 'The User ID must be an integer' });
@@ -246,17 +225,18 @@ class UserController {
 
           res.status(200).json({ status: 200, profile });
         }
-      }).catch((error) => {
+      })
+      .catch((error) => {
         res.status(500).json({ error: error.message });
       });
   }
 
   /**
- * Update User Profile.
- * @param {Object} req The request object.
- * @param {Object} res The response object.
- * @returns {Object} The response object.
- */
+   * Update User Profile.
+   * @param {Object} req The request object.
+   * @param {Object} res The response object.
+   * @returns {Object} The response object.
+   */
   async updateUserProfile(req, res) {
     try {
       const { id } = req.user;
@@ -308,7 +288,9 @@ class UserController {
     if (req.userInfo.isAdmin === true || req.userInfo.isManager === true) {
       return res.status(403).json({
         status: 403,
-        message: `Permission denied, You are not allowed to unable/disable  ${req.userInfo.username}`
+        message: `Permission denied, You are not allowed to unable/disable  ${
+          req.userInfo.username
+        }`
       });
     }
     try {

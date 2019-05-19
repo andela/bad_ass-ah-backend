@@ -1,30 +1,24 @@
-import GoogleStrategy from 'passport-google-plus-token';
+import GoogleStrategy from 'passport-google-oauth20';
 import dotenv from 'dotenv';
-import models from '../models/index';
 
 dotenv.config();
-const User = models.user;
-const google = (passport) => {
-  passport.use('googleToken', new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET
-  }, async (accessToken, refreshToken, profile, done) => {
-    try {
-      const currentUser = await User.findOne({ where: { email: profile.emails[0].value } });
-      if (currentUser) {
-        done(null, currentUser);
-      } else {
-        const newUser = await User.create({
-          username: profile.emails[0].value,
-          email: profile.emails[0].value,
-          isActivated: true
-        });
-        done(null, newUser);
-      }
-    } catch (error) {
-      done(null, false, error);
-    }
-  }));
-};
 
-export default google;
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, APP_URL } = process.env;
+
+const googleStrategy = new GoogleStrategy(
+  {
+    clientID: GOOGLE_CLIENT_ID,
+    clientSecret: GOOGLE_CLIENT_SECRET,
+    callbackURL: `${APP_URL}/api/users/login/google/redirect`,
+    profileFields: ['id', 'displayName', 'photos', 'email']
+  }, (accessToken, refreshToken, profile, done) => {
+    const userGoogle = {
+      username: profile.displayName,
+      isActivated: true
+    };
+
+    done(null, userGoogle);
+  }
+);
+
+export default googleStrategy;

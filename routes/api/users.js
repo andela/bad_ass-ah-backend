@@ -40,7 +40,6 @@ router.post('/login', user.login);
 router.post('/password', user.checkEmail);
 router.put('/password', passwordValidation, user.resetPassword);
 
-router.post('/login/google', passport.authenticate('googleToken', { session: false }), user.loginViaGoogle);
 
 router.get('/:id/profile', auth, user.getUserProfile);
 router.put('/profile', auth, uploadImage, user.updateUserProfile);

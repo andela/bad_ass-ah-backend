@@ -1,15 +1,16 @@
 import express from 'express';
 import session from 'express-session';
 import passport from 'passport';
-import googlePassport from './middlewares/passport-google';
+import cors from 'cors';
 import passportJwt from './middlewares/passport-jwt';
 import router from './routes/index';
-import passportAuth from './middlewares/passport-facebook';
 
 const app = express();
+app.use(cors());
 const port = process.env.PORT || 5000;
 
 // @bodyParser configuration
+
 app.use(
   express.urlencoded({
     extended: false
@@ -27,8 +28,8 @@ app.use(
 );
 // @passport
 app.use(passport.initialize());
-googlePassport(passport);
-passportAuth(passport);
+// googlePassport(passport);
+// facebookPassport(passport);
 passportJwt(passport);
 
 // @router configuration --gracian
@@ -39,7 +40,6 @@ app.use((req, res) => {
     error: 'resource not found'
   });
 });
-
 app.listen(port, () => {
   console.log(`Server started successfully on ${port}`);
 });
