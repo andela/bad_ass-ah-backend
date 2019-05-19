@@ -4,15 +4,11 @@ import dotenv from 'dotenv';
 
 // @dotenv configuration
 dotenv.config();
-const {
-  FACEBOOK_APP_ID,
-  FACEBOOK_APP_SECRET,
-  APP_URL
-} = process.env;
+const { FACEBOOK_APP_ID, FACEBOOK_APP_SECRET, APP_URL } = process.env;
 
 const fbStrategy = new FacebookTokenStrategy(
   {
-    callbackURL: `${APP_URL}/api/users/login/facebook/redirect`,
+    callbackURL: `${APP_URL}api/users/login/facebook/redirect`,
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
     profileFields: ['id', 'displayName', 'photos', 'email']
