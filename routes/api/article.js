@@ -54,7 +54,7 @@ router.post('/', auth, uploadImage, article.create);
 // @Method a given user can comment an article
 router.post('/:articleId/comments/', auth, asyncHandler(checkArticle), validateComment, comment.create);
 // @Method get all comments related to a signle article
-router.get('/:articleId/comments/', auth, asyncHandler(checkArticle), comment.getAllComment);
+router.get('/:articleId/comments/', asyncHandler(checkArticle), comment.getAllComment);
 // @Method update a given comment
 router.put('/:idArticle/comments/:commentId', auth, checkComment, comment.updateComment);
 // @Mehtod delete a given comment
