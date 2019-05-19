@@ -18,11 +18,14 @@ let token;
 describe('Comment', () => {
   before(async () => {
     try {
-      const loginUser = await chai.request(app).post('/api/users/login').set('Content-Type', 'application/json')
+      const loginUser = await chai
+        .request(app)
+        .post('/api/users/login')
+        .set('Content-Type', 'application/json')
         .send({ email: testMailer.email, password: testMailer.password });
       token = `Bearer ${loginUser.body.token}`;
 
-      userId = loginUser.body.id;
+      userId = loginUser.body.user.id;
 
       const givenArticle = {
         title: 'new article',
@@ -31,19 +34,28 @@ describe('Comment', () => {
       };
 
       const givenComment = {
-        content: 'Good article'
+        text: 'Good article'
       };
 
-      const postArticle = await chai.request(app).post('/api/articles').set('Authorization', token).send(givenArticle);
+      const postArticle = await chai
+        .request(app)
+        .post('/api/articles')
+        .set('Authorization', token)
+        .send(givenArticle);
       idArticle = postArticle.body.article.article_id;
-      await chai.request(app).post(`/api/articles/${idArticle}/comments`).set('Authorization', token).send(givenComment);
+      await chai
+        .request(app)
+        .post(`/api/articles/${idArticle}/comments`)
+        .set('Authorization', token)
+        .send(givenComment);
     } catch (error) {
       throw error;
     }
   });
 
   it('Should not let the user comment an article without a token', (done) => {
-    chai.request(app)
+    chai
+      .request(app)
       .post(`/api/articles/${idArticle}/comments`)
       .set('Content-Type', 'application/json')
       .send(validComment)
@@ -54,7 +66,8 @@ describe('Comment', () => {
   });
 
   it('Should not let the user comment an article without an invalid token', (done) => {
-    chai.request(app)
+    chai
+      .request(app)
       .post(`/api/articles/${idArticle}/comments`)
       .set('Authorization', invalidToken)
       .send(validComment)
@@ -69,7 +82,8 @@ describe('Comment', () => {
       articleId: idArticle,
       author: userId
     };
-    chai.request(app)
+    chai
+      .request(app)
       .post(`/api/articles/${idArticle}/comments`)
       .set('Authorization', token)
       .send(validateComment)
@@ -80,12 +94,13 @@ describe('Comment', () => {
   });
   it('Should not let the user comment an article with a wrong Id', (done) => {
     validComment = {
-      content: 'What makes you special',
+      text: 'What makes you special',
       articleId: idArticle,
       author: userId
     };
     const id = 187698;
-    chai.request(app)
+    chai
+      .request(app)
       .post(`/api/articles/${id}/comments`)
       .set('Authorization', token)
       .send(validComment)
@@ -99,28 +114,31 @@ describe('Comment', () => {
   });
   it('Should let the user comment an article', (done) => {
     validComment = {
-      content: 'What makes you special',
+      text: 'What makes you special',
       articleId: idArticle,
       author: userId
     };
-    chai.request(app)
+    chai
+      .request(app)
       .post(`/api/articles/${idArticle}/comments`)
       .set('Authorization', token)
       .send(validComment)
       .end((err, res) => {
         if (err) {
           done(err);
+          throw err;
         }
-        idComment = res.body.comment.id;
+        idComment = res.body.createdComment.id;
         res.should.have.status(201);
         done();
       });
   }).timeout(100000);
   it('Should throw 500', (done) => {
     validComment = {
-      content: ' sdfsdfsdf'
+      text: ' sdfsdfsdf'
     };
-    chai.request(app)
+    chai
+      .request(app)
       .post(`/api/articles/${null}/comments`)
       .set('Authorization', token)
       .send(validComment)
@@ -134,12 +152,13 @@ describe('Comment', () => {
   });
   it('Should not let the user Update a comment with a wrong Id', (done) => {
     validComment = {
-      content: 'What makes you special',
+      text: 'What makes you special',
       articleId: idArticle,
       author: userId
     };
     const wrongId = 187698;
-    chai.request(app)
+    chai
+      .request(app)
       .put(`/api/articles/${idArticle}/comments/${wrongId}`)
       .set('Authorization', token)
       .send(validComment)
@@ -153,12 +172,13 @@ describe('Comment', () => {
   });
   it('Should not let the user Delete a comment with a wrong Id', (done) => {
     validComment = {
-      content: 'What makes you special',
+      text: 'What makes you special',
       articleId: idArticle,
       author: userId
     };
     const wrongId = 187698;
-    chai.request(app)
+    chai
+      .request(app)
       .delete(`/api/articles/${idArticle}/comments/${wrongId}`)
       .set('Authorization', token)
       .send(validComment)
@@ -172,11 +192,12 @@ describe('Comment', () => {
   });
   it('Should let the user Update comment', (done) => {
     validComment = {
-      content: 'What makes you special',
+      text: 'What makes you special',
       articleId: idArticle,
       author: userId
     };
-    chai.request(app)
+    chai
+      .request(app)
       .put(`/api/articles/${idArticle}/comments/${idComment}`)
       .set('Authorization', token)
       .send(validComment)
@@ -190,7 +211,8 @@ describe('Comment', () => {
   }).timeout(100000);
   it('Should  return a status of 404 when there is not comment posted to the provided articleId', (done) => {
     const wrongArticleId = 99999;
-    chai.request(app)
+    chai
+      .request(app)
       .get(`/api/articles/${wrongArticleId}/comments`)
       .set('Authorization', token)
       .end((err, res) => {
@@ -199,7 +221,8 @@ describe('Comment', () => {
       });
   });
   it('Should  let the user get all comments', (done) => {
-    chai.request(app)
+    chai
+      .request(app)
       .get(`/api/articles/${idArticle}/comments`)
       .set('Authorization', token)
       .end((err, res) => {
@@ -208,7 +231,8 @@ describe('Comment', () => {
       });
   });
   it('Should  let the user get a single comment', (done) => {
-    chai.request(app)
+    chai
+      .request(app)
       .get(`/api/articles/${idArticle}/comments/${idComment}`)
       .set('Authorization', token)
       .end((err, res) => {
@@ -217,7 +241,8 @@ describe('Comment', () => {
       });
   });
   it('Should  let the user get edited comments', (done) => {
-    chai.request(app)
+    chai
+      .request(app)
       .get(`/api/articles/${idArticle}/comments/${idComment}/edited`)
       .set('Authorization', token)
       .end((err, res) => {
@@ -227,11 +252,12 @@ describe('Comment', () => {
   });
   it('Should  let the user delete a comment', (done) => {
     validComment = {
-      content: 'What makes you special',
+      text: 'What makes you special',
       articleId: idArticle,
       author: userId
     };
-    chai.request(app)
+    chai
+      .request(app)
       .delete(`/api/articles/${idArticle}/comments/${idComment}`)
       .set('Authorization', token)
       .send(validComment)

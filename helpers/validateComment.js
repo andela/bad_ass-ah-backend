@@ -9,7 +9,7 @@ const validate = (error, res) => res.status(400).json({ status: 400, error });
  * @returns {error} error
  */
 const commentValidate = (req, res, next) => {
-  if (Validate.isEmpty(req.body.content)) {
+  if (Validate.isEmpty(req.body.text)) {
     return validate('Please add the body of your comments', res);
   }
   next();

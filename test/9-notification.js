@@ -35,18 +35,18 @@ describe('Notification', () => {
       };
 
       const givenComment1 = {
-        content: 'Woowww! Nice article bro:)'
+        text: 'Woowww! Nice article bro:)'
       };
 
       const givenComment2 = {
-        content: 'What?????? You must be joking:)'
+        text: 'What?????? You must be joking:)'
       };
 
       const postArticle = await chai.request(app).post('/api/articles').set('Authorization', token).send(givenArticle);
       idArticle = postArticle.body.article.article_id;
       await chai.request(app).post(`/api/articles/${idArticle}/comments`).set('Authorization', token2).send(givenComment1);
       const postComment = await chai.request(app).post(`/api/articles/${idArticle}/comments`).set('Authorization', token).send(givenComment2);
-      notifier = postComment.body.comment.author;
+      notifier = postComment.body.createdComment.author;
       await chai.request(app).post(`/api/users/follow/${userId}`).set('Authorization', token2);
 
       await User.update(

@@ -1,11 +1,11 @@
 {
     "validComment": {
-    "content": "Thanos is well prepared for the fight in the comming season"
+    "text": "Thanos is well prepared for the fight in the comming season"
   },
   "validateComment": {
-    "content": " "
+    "text": " "
   },
   "comment1": {
-    "content": "this is a comment"
+    "text": "this is a comment"
   }
 }

@@ -11,7 +11,8 @@ const googleStrategy = new GoogleStrategy(
     clientSecret: GOOGLE_CLIENT_SECRET,
     callbackURL: `${APP_URL}/api/users/login/google/redirect`,
     profileFields: ['id', 'displayName', 'photos', 'email']
-  }, (accessToken, refreshToken, profile, done) => {
+  },
+  (accessToken, refreshToken, profile, done) => {
     const userGoogle = {
       username: profile.displayName,
       isActivated: true

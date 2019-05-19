@@ -19,29 +19,39 @@ class CommentController {
   create(req, res) {
     // @comment
     const newComment = {
-      body: req.body.content,
+      body: req.body.text,
       articleId: req.params.articleId,
       author: req.user.id
     };
     // @save comments and history
-    Comment.create(newComment)
-      .then((comment) => {
-        const newCommentHistory = {
-          commentId: comment.id,
-          userId: req.user.id,
-          body: req.body.content
-        };
-        EditedCommentHistory.create(newCommentHistory);
-        User.findOne({ where: { id: comment.author } })
-          .then(async (user) => {
-            const message = `${user.username} commented on an article you favorite`;
-            await notification.createNotificationForFavorite(comment.articleId,
-              message, comment.author);
-            await notification.sendNotificationToFavorites(comment.articleId,
-              message, comment.author);
-            res.status(201).json({ status: 201, comment });
-          });
+    Comment.create(newComment).then((comment) => {
+      const newCommentHistory = {
+        commentId: comment.id,
+        userId: req.user.id,
+        body: req.body.text
+      };
+      EditedCommentHistory.create(newCommentHistory);
+      User.findOne({ where: { id: comment.author } }).then(async (user) => {
+        const message = `${user.username} commented on an article you favorite`;
+        await notification.createNotificationForFavorite(
+          comment.articleId,
+          message,
+          comment.author
+        );
+        await notification.sendNotificationToFavorites(comment.articleId, message, comment.author);
+        Comment.findOne({
+          Where: { id: comment.dataValues.id },
+          order: [['id', 'DESC']],
+          include: [
+            {
+              model: User,
+              as: 'userfkey',
+              attributes: ['username', 'email', 'image', 'id', 'bio']
+            }
+          ]
+        }).then(createdComment => res.status(201).json({ status: 201, createdComment }));
       });
+    });
   }
 
   /**
@@ -51,13 +61,24 @@ class CommentController {
    * @returns {Object} - will return all comment related to an article
    */
   getAllComment(req, res) {
-    Comment.findAll({ where: { articleId: req.params.articleId } })
-      .then((comment) => {
-        if (comment.dataValues === {}) {
-          return res.status(404).json({ status: 404, error: 'No comment has been posted to that article' });
+    Comment.findAll({
+      where: { articleId: req.params.articleId },
+      order: [['createdAt', 'DESC']],
+      include: [
+        {
+          model: User,
+          as: 'userfkey',
+          attributes: ['username', 'email', 'image', 'id', 'bio']
         }
-        return res.status(200).json({ status: 200, comment });
-      });
+      ]
+    }).then((comment) => {
+      if (comment.dataValues === {}) {
+        return res
+          .status(404)
+          .json({ status: 404, error: 'No comment has been posted to that article' });
+      }
+      return res.status(200).json({ status: 200, comment });
+    });
   }
 
   /**
@@ -69,13 +90,12 @@ class CommentController {
   getEditedComment(req, res) {
     EditedCommentHistory.findAll({
       where: { commentId: req.params.commentId }
-    })
-      .then((editedComment) => {
-        res.status(200).json({
-          status: 200,
-          editedComment
-        });
+    }).then((editedComment) => {
+      res.status(200).json({
+        status: 200,
+        editedComment
       });
+    });
   }
 
   /**
@@ -85,25 +105,32 @@ class CommentController {
    * @returns {Object} -will return an updated Comment
    */
   updateComment(req, res) {
-    Comment.update({ body: req.body.content },
-      { where: { id: req.params.commentId }, returning: true })
+    Comment.update(
+      { body: req.body.text },
+      { where: { id: req.params.commentId }, returning: true }
+    )
       .then((comment) => {
-        User.findOne({ where: { id: comment[1][0].author } })
-          .then(async (user) => {
-            const message = `${user.username} updated his comment on an article you favorite`;
-            await notification.createNotificationForFavorite(comment[1][0].articleId,
-              message, comment[1][0].author);
-            await notification.sendNotificationToFavorites(comment[1][0].articleId,
-              message, comment[1][0].author);
-            const edited = {
-              commentId: req.params.commentId,
-              userId: req.user.id,
-              body: req.body.content
-            };
-            // @save the comment history
-            EditedCommentHistory.create(edited);
-            res.status(200).json({ status: 200, comment: comment[1] });
-          });
+        User.findOne({ where: { id: comment[1][0].author } }).then(async (user) => {
+          const message = `${user.username} updated his comment on an article you favorite`;
+          await notification.createNotificationForFavorite(
+            comment[1][0].articleId,
+            message,
+            comment[1][0].author
+          );
+          await notification.sendNotificationToFavorites(
+            comment[1][0].articleId,
+            message,
+            comment[1][0].author
+          );
+          const edited = {
+            commentId: req.params.commentId,
+            userId: req.user.id,
+            body: req.body.text
+          };
+          // @save the comment history
+          EditedCommentHistory.create(edited);
+          res.status(200).json({ status: 200, comment: comment[1] });
+        });
       })
       .catch((error) => {
         res.status(500).json({ status: 500, message: error.message });
@@ -120,10 +147,9 @@ class CommentController {
     Comment.destroy({
       where: { id: req.params.commentId },
       returning: true
-    })
-      .then(() => {
-        res.status(200).json({ status: 200, message: 'Comment deleted successfully' });
-      });
+    }).then(() => {
+      res.status(200).json({ status: 200, message: 'Comment deleted successfully' });
+    });
   }
 
   /**

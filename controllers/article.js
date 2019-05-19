@@ -128,7 +128,7 @@ class ArticleController {
       title: req.body.title,
       body: req.body.body,
       taglist: (req.body.tag ? req.body.tag.split(',') : req.findArticle.taglist),
-      image: (req.file ? req.file.url : null)
+      image: (req.file ? req.file.url : req.findArticle.image)
     }, {
       where: {
         article_id: req.params.articleId
