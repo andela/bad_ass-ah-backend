@@ -7,20 +7,24 @@ import router from './routes/index';
 import passportAuth from './middlewares/passport-facebook';
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 
 // @bodyParser configuration
-app.use(express.urlencoded({
-  extended: false
-}));
+app.use(
+  express.urlencoded({
+    extended: false
+  })
+);
 app.use(express.json());
 
 // @session configuration for twiitter login
-app.use(session({
-  resave: false,
-  saveUninitialized: true,
-  secret: process.env.secretOrKey
-}));
+app.use(
+  session({
+    resave: false,
+    saveUninitialized: true,
+    secret: process.env.secretOrKey
+  })
+);
 // @passport
 app.use(passport.initialize());
 googlePassport(passport);
@@ -32,10 +36,9 @@ app.use(router);
 app.use((req, res) => {
   res.status(404).send({
     status: 404,
-    error: 'resource not found',
+    error: 'resource not found'
   });
 });
-
 
 app.listen(port, () => {
   console.log(`Server started successfully on ${port}`);

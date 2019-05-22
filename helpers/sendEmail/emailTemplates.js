@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 const url = (process.env.NODE_ENV === 'production') ? 'https://badass-ah-backend-staging.herokuapp.com' : `http://127.0.0.1:${process.env.LOCALHOST_PORT}`;
+const clientUrl = (process.env.NODE_ENV === 'production') ? 'https://authorsheaven.herokuapp.com/' : 'http://127.0.0.1:3000';
 
 /**
  * An object module that holds mails' templates
@@ -24,7 +25,7 @@ const emailTemplates = {
     subject: 'Password Reset',
     html: `<h1 style="color: #444; margin-left: 20px;">Password reset</h1>
 <p style="color: #555; margin-left: 20px; font-size: 14px">Lost your password? click on the link below to reset your password.</p><br>
-<a style="background-color: #61a46e; padding: 12px 15px 12px 15px; color: #eee; font-size: 16px; text-decoration: none; margin-left: 20px; cursor: pointer;" href="http://localhost:3000/api/users/password/$">Reset Password</a>`
+<a style="background-color: #61a46e; padding: 12px 15px 12px 15px; color: #eee; font-size: 16px; text-decoration: none; margin-left: 20px; cursor: pointer;" href="${clientUrl}/reset-password/$token">Reset Password</a>`
   },
 };
 const shareArticleTemplate = (articleId) => {

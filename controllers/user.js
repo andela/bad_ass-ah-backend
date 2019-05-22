@@ -202,7 +202,7 @@ class UserController {
       }
       return res.status(401).json({ error: 'Invalid token' });
     } catch (error) {
-      res.status(400).send({ status: 400, error: error.message });
+      res.status(500).send({ status: 500, error: error.message });
     }
   }
 
