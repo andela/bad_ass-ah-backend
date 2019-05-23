@@ -20,7 +20,7 @@ import {
   validToken,
   profile1,
   testMailer,
-  userTwitterSignup
+  socialMediaUser
 } from '../testingdata/user.json';
 import models from '../models/index';
 import userController from '../controllers/user';
@@ -200,97 +200,9 @@ describe('User ', () => {
         done();
       });
   });
-
-  it('Should signup user via google', (done) => {
-    chai.request(app)
-      .post('/api/users/login/google')
-      .set('Content-Type', 'application/json')
-      .send(googleValidToken)
-      .end((err, res) => {
-        if (err) {
-          done(err);
-        }
-        res.should.have.status(200);
-        res.body.should.be.a('object');
-        res.body.should.have.property('status').eql(200);
-        res.body.should.have.property('token');
-        res.body.should.have.property('user');
-        done();
-      });
-  });
-
-  it('Should login user via google', (done) => {
-    chai.request(app)
-      .post('/api/users/login/google')
-      .set('Content-Type', 'application/json')
-      .send(googleValidToken)
-      .end((err, res) => {
-        if (err) {
-          done(err);
-        }
-        res.should.have.status(200);
-        res.body.should.be.a('object');
-        res.body.should.have.property('status').eql(200);
-        res.body.should.have.property('token');
-        res.body.should.have.property('user');
-        done();
-      });
-  });
-
-  it('Should return 401 if the token is not valid', (done) => {
-    chai.request(app)
-      .post('/api/users/login/google')
-      .set('Content-Type', 'application/json')
-      .send(googleInValidToken)
-      .end((err, res) => {
-        if (err) {
-          done(err);
-        }
-        res.should.have.status(401);
-        done();
-      });
-  });
-  // @ Should let the user signup using facebook
-  it('Should not let the user signup via facebook with a expired token', (done) => {
-    chai
-      .request(app)
-      .post('/api/users/auth/facebook')
-      .send(expiredToken)
-      .end((err, res) => {
-        if (err) done(err);
-        res.should.have.status(401);
-        // res.body.should.have.property('token');
-        // res.body.should.have.property('user');
-        done();
-      });
-  });
-  it('Should not let the user signup via facebook with an invalid token', (done) => {
-    chai
-      .request(app)
-      .post('/api/users/auth/facebook')
-      .send(invalidToken)
-      .end((err, res) => {
-        if (err) done(err);
-        res.should.have.status(500);
-        done();
-      });
-  });
-  it('Should let the user login with facebook', (done) => {
-    chai
-      .request(app)
-      .post('/api/users/auth/facebook')
-      .set('Content-Type', 'application/json')
-      .send(validToken)
-      .end((err, res) => {
-        if (err) done(err);
-        res.should.have.status(200);
-        res.body.should.have.property('user');
-        res.body.should.have.property('token');
-        done();
-      });
-  });
-  it('Should let the user signup with twitter', async () => {
-    const result = await user.loginViaTwitter(userTwitterSignup);
+  // Social media login
+  it('Should let the user signup via Social media platforms', async () => {
+    const result = await user.loginViaSocialMedia(socialMediaUser);
     result[0].dataValues.should.be.a('object');
   });
   // Get all users

@@ -4,6 +4,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../config/swagger.json';
 import facebookAuth from './api/auth/facebook';
 import twitterAuth from './api/auth/twitter';
+import googleAuth from './api/auth/google';
 
 import users from './api/users';
 import article from './api/article';
@@ -14,8 +15,9 @@ import report from './api/report';
 // @ initialize app
 const app = express();
 // @router configuration
-app.use('/api/users/auth', facebookAuth);
+app.use('/api/users', facebookAuth);
 app.use('/api/users', twitterAuth);
+app.use('/api/users', googleAuth);
 app.use('/api/users', users);
 app.use('/api/articles', article);
 app.use('/api/search', search);

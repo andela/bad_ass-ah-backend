@@ -53,7 +53,7 @@ class CommentController {
   getAllComment(req, res) {
     Comment.findAll({ where: { articleId: req.params.articleId } })
       .then((comment) => {
-        if (comment.length === 0) {
+        if (comment.dataValues === {}) {
           return res.status(404).json({ status: 404, error: 'No comment has been posted to that article' });
         }
         return res.status(200).json({ status: 200, comment });
