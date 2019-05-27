@@ -42,8 +42,7 @@ class UserController {
         username: user.username,
         email: user.email,
         isAdmin: user.isAdmin
-      };
-      const token = jwt.sign(payload, secretKey, expirationTime);
+      }; const token = jwt.sign(payload, secretKey, expirationTime); 
       const response = await sendEmail(user.email, token);
       const registeredUser = {
         email: user.email,
@@ -113,7 +112,9 @@ class UserController {
     };
     const { generate } = generateToken(payload);
     if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production') {
-      return res.redirect(`${FRONT_END_URL}/login?token=${generate}&status=ok&username=${socialMediaUser.username}$`);
+      return res.redirect(
+        `${FRONT_END_URL}/login?token=${generate}&status=ok&username=${socialMediaUser.username}`
+      );
     }
     return result;
   }
