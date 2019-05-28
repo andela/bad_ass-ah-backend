@@ -76,7 +76,14 @@ class ArticleController {
     } = req.query;
     Article.findAndCountAll({
       offset: (Number(page) - 1) * Number(limit),
-      limit
+      limit,
+      include: [
+        {
+          model: User,
+          as: 'authorfkey',
+          attributes: ['username', 'email', 'image', 'id', 'bio']
+        }
+      ]
     })
       .then(articles => res.status(200).json({
         status: 200,
@@ -89,7 +96,10 @@ class ArticleController {
           limit
         }
       }))
-      .catch(error => res.status(500).json({ error }));
+      .catch((error) => {
+        console.log(error);
+      });
+    // .catch(error => res.status(500).json({ error }));
   }
 
   /**
@@ -174,7 +184,15 @@ class ArticleController {
     const {
       articleId
     } = req.params;
-    const article = await Article.findByPk(articleId);
+    const article = await Article.findByPk(articleId, {
+      include: [
+        {
+          model: User,
+          as: 'authorfkey',
+          attributes: ['username', 'email', 'image', 'id', 'bio']
+        }
+      ]
+    });
     if (!article) {
       throw new httpError(404, 'Sorry the requested resource could not be found.');
     }
