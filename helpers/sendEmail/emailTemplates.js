@@ -3,7 +3,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 const url = (process.env.NODE_ENV === 'production') ? 'https://badass-ah-backend-staging.herokuapp.com' : `http://127.0.0.1:${process.env.LOCALHOST_PORT}`;
-const clientUrl = (process.env.NODE_ENV === 'production') ? 'https://authorsheaven.herokuapp.com' : 'http://127.0.0.1:3000';
+const clientUrl = (process.env.NODE_ENV === 'production') ? 'https://authorsheaven.herokuapp.com/' : 'http://127.0.0.1:3000';
+const clientVerifytUrl = (process.env.NODE_ENV === 'production') ? 'https://authorsheaven.herokuapp.com/' : 'http://127.0.0.1:3000';
 
 /**
  * An object module that holds mails' templates
@@ -16,7 +17,7 @@ const emailTemplates = {
     subject: 'Email Verification',
     html: `<h1 style="color: #444; margin-left: 20px;">Welcome to Author's Haven</h1>
 <p style="color: #555; margin-left: 20px; font-size: 14px">Thank you for signing to the Author's Haven. Please click on the button below to activate your account.</p><br>
-<a style="background-color: #61a46e; padding: 12px 15px 12px 15px; color: #eee; font-size: 16px; text-decoration: none; margin-left: 20px; cursor: pointer;" href="${url}/api/users/verify/$token">Activate account</a>`
+<a style="background-color: #61a46e; padding: 12px 15px 12px 15px; color: #eee; font-size: 16px; text-decoration: none; margin-left: 20px; cursor: pointer;" href="${clientVerifytUrl}/login/$token">Activate account</a>`
   },
 
   resetPassword: {

@@ -42,7 +42,7 @@ class UserController {
         username: user.username,
         email: user.email,
         isAdmin: user.isAdmin
-      }; const token = jwt.sign(payload, secretKey, expirationTime); 
+      }; const token = jwt.sign(payload, secretKey, expirationTime);
       const response = await sendEmail(user.email, token);
       const registeredUser = {
         email: user.email,
