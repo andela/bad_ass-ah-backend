@@ -77,6 +77,7 @@ class ArticleController {
     Article.findAndCountAll({
       offset: (Number(page) - 1) * Number(limit),
       limit,
+      order: [['article_id', 'DESC']],
       include: [
         {
           model: User,

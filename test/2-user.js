@@ -178,9 +178,7 @@ describe('User ', () => {
         res.should.have.status(400);
         res.body.should.be.a('object');
         res.body.should.have.property('status').eql(400);
-        res.body.should.have
-          .property('error')
-          .eql('Incorrect username or password');
+        res.body.should.have.property('error').eql('Incorrect username or password');
         done();
       });
   });
@@ -207,7 +205,8 @@ describe('User ', () => {
   });
   // Get all users
   it(' Get /api/users should return status of 403 when user is not admin ', (done) => {
-    chai.request(app)
+    chai
+      .request(app)
       .get('/api/users')
       .set('Content-Type', 'application/json')
       .set('Authorization', token)
@@ -222,7 +221,8 @@ describe('User ', () => {
       });
   });
   it(' Get /api/users should return status of 200 when user is admin ', (done) => {
-    chai.request(app)
+    chai
+      .request(app)
       .get('/api/users')
       .set('Content-Type', 'application/json')
       .set('Authorization', token2)
@@ -237,7 +237,8 @@ describe('User ', () => {
   });
   // profile
   it('Should return 400 if the user ID is not an integer', (done) => {
-    chai.request(app)
+    chai
+      .request(app)
       .get('/api/users/id/profile')
       .set('Content-Type', 'application/json')
       .set('Authorization', token)
@@ -254,7 +255,8 @@ describe('User ', () => {
 
   it('Should return 404 if the user is not found', (done) => {
     const id = 1000000;
-    chai.request(app)
+    chai
+      .request(app)
       .get(`/api/users/${id}/profile`)
       .set('Content-Type', 'application/json')
       .set('Authorization', token)
@@ -273,7 +275,8 @@ describe('User ', () => {
     User.findOne({ where: { email: testMailer.email } })
       .then((user) => {
         if (user) {
-          chai.request(app)
+          chai
+            .request(app)
             .get(`/api/users/${user.id}/profile`)
             .set('Content-Type', 'application/json')
             .set('Authorization', token)
@@ -288,11 +291,13 @@ describe('User ', () => {
               done();
             });
         }
-      }).catch(err => console.log(err));
+      })
+      .catch(err => console.log(err));
   });
 
   it('Should update User profile', (done) => {
-    chai.request(app)
+    chai
+      .request(app)
       .put('/api/users/profile')
       .set('Content-Type', 'multipart/form-data')
       .field('username', profile1.username)
@@ -312,7 +317,8 @@ describe('User ', () => {
   });
 
   it('Should return 400 if the username is empty', (done) => {
-    chai.request(app)
+    chai
+      .request(app)
       .put('/api/users/profile')
       .set('Content-Type', 'multipart/form-data')
       .field('username', '')
@@ -326,6 +332,39 @@ describe('User ', () => {
         res.should.have.status(400);
         res.body.should.have.property('status').eql(400);
         res.body.should.have.property('error').eql('Please provide a username');
+        done();
+      });
+  });
+
+  it('Should get current User profile', (done) => {
+    chai
+      .request(app)
+      .get('/api/users/profile')
+      .set('Authorization', token)
+      .end((err, res) => {
+        if (err) {
+          done(err);
+        }
+        res.should.have.status(200);
+        res.body.should.have.property('status').eql(200);
+        res.body.should.have.property('profile');
+        res.body.profile.should.be.a('object');
+        done();
+      });
+  });
+
+  it('Should get current User articles', (done) => {
+    chai
+      .request(app)
+      .get('/api/users/articles')
+      .set('Authorization', token)
+      .end((err, res) => {
+        if (err) {
+          done(err);
+        }
+        res.should.have.status(200);
+        res.body.should.have.property('status').eql(200);
+        res.body.should.have.property('articles');
         done();
       });
   });
