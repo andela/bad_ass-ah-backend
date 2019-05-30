@@ -8,7 +8,7 @@ const twStrategy = new twitterStrategy(
   {
     consumerKey: TWITTER_CONSUMER_KEY,
     consumerSecret: TWITTER_CONSUMER_SECRET,
-    callbackURL: `${APP_URL}/api/users/login/twitter/redirect`
+    callbackURL: `${APP_URL}api/users/login/twitter/redirect`
   },
   (token, tokenSecret, profile, done) => {
     const userTwitter = {
