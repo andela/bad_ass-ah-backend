@@ -5,7 +5,8 @@ const Vote = models.vote;
 // eslint-disable-next-line import/prefer-default-export
 const checkVote = async (req, res) => {
   try {
-    const search = await Vote.findOne({ where: { user: req.user.id } });
+    // eslint-disable-next-line max-len
+    const search = await Vote.findOne({ where: { user: req.user.id, article: req.params.articleId } });
     return search;
   } catch (error) {
     return res.status(500).json({ status: 500, message: `something wrong please try again.${error}` });
