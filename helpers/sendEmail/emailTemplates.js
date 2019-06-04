@@ -3,8 +3,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 const url = (process.env.NODE_ENV === 'production') ? 'https://badass-ah-backend-staging.herokuapp.com' : `http://127.0.0.1:${process.env.LOCALHOST_PORT}`;
-const clientUrl = (process.env.NODE_ENV === 'production') ? 'https://authorsheaven.herokuapp.com' : 'http://127.0.0.1:3000';
-const clientVerifytUrl = (process.env.NODE_ENV === 'production') ? 'https://authorsheaven.herokuapp.com' : 'http://127.0.0.1:3000';
+const clientUrl = (process.env.NODE_ENV === 'production') ? 'https://authorsheaven.herokuapp.com' : `http://127.0.0.1:${process.env.LOCALHOST_PORT}`;
+const clientVerifytUrl = (process.env.NODE_ENV === 'production') ? 'https://authorsheaven.herokuapp.com' : `http://127.0.0.1:${process.env.LOCALHOST_PORT}`;
 
 /**
  * An object module that holds mails' templates

@@ -68,6 +68,53 @@ class Rate {
       }
     });
   }
+
+  /**
+   * Fetch average rating on a particular article
+   * @param {object} req - user's request
+   * @param {object} res - response
+   * @return {object} response
+   */
+  async getArticleAverageRating(req, res) {
+    const { articleId } = req.params;
+    const ratings = await rate.findAll({
+      where: { articleId },
+      attributes: ['userId', 'rating'],
+    });
+
+    if (ratings.length === 0) throw new httpError(404, 'Not found: Article has not rated');
+
+    const totalRating = ratings.map(rating => rating.rating)
+      .reduce((sum, rating) => sum + rating, 0);
+
+    const average = (totalRating / ratings.length).toFixed(1);
+
+    res.status(200).send({
+      rating: {
+        average,
+        rates: totalRating,
+        raters: ratings.length
+      }
+    });
+  }
+
+  /**
+   * Fetch user rating on a particular article
+   * @param {object} req - user's request
+   * @param {object} res - response
+   * @return {object} response
+   */
+  async getUserArticleRating(req, res) {
+    const userId = req.user.id;
+    const { articleId } = req.params;
+    const rating = await rate.findOne({
+      where: { articleId, userId }
+    });
+    if (!rating) throw new httpError(404, 'Not found: You have not rated this article');
+    res.status(200).send({
+      rating,
+    });
+  }
 }
 
 export default Rate;
