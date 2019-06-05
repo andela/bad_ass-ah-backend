@@ -64,6 +64,28 @@ describe('Article ratings and reading stats', () => {
           done();
         });
     });
+    it('Should return error article has not rated', (done) => {
+      chai.request(app)
+        .get(`/api/articles/${articleId}/average-rating`)
+        .end((err, res) => {
+          if (err) done(err);
+          res.should.have.status(404);
+          res.body.should.have.property('errors');
+          res.body.errors.should.have.property('body');
+          done();
+        });
+    });
+    it('Should return error user have not rated this article rating', (done) => {
+      chai.request(app)
+        .get(`/api/articles/${articleId}/user-article-rating`)
+        .set('Authorization', userToken)
+        .end((err, res) => {
+          if (err) done(err);
+          res.should.have.status(404);
+          res.body.should.have.property('errors');
+          done();
+        });
+    });
     it('Should send article rating', (done) => {
       chai.request(app)
         .post(`/api/articles/${articleId}/rate`)
@@ -75,6 +97,18 @@ describe('Article ratings and reading stats', () => {
           res.should.have.status(201);
           res.body.should.have.property('ratings');
           res.body.ratings.should.have.property('rating');
+          done();
+        });
+    });
+    it('Should return user article rating', (done) => {
+      chai.request(app)
+        .get(`/api/articles/${articleId}/user-article-rating`)
+        .set('Authorization', userToken)
+        .end((err, res) => {
+          if (err) done(err);
+          res.should.have.status(200);
+          res.body.should.have.property('rating');
+          res.body.rating.should.have.property('rating');
           done();
         });
     });
@@ -90,7 +124,17 @@ describe('Article ratings and reading stats', () => {
           done();
         });
     });
-
+    it('Should return average rating of an article', (done) => {
+      chai.request(app)
+        .get(`/api/articles/${articleId}/average-rating`)
+        .end((err, res) => {
+          if (err) done(err);
+          res.should.have.status(200);
+          res.body.should.have.property('rating');
+          res.body.rating.should.have.property('average');
+          done();
+        });
+    });
     it('Should return all article ratings on a single page', (done) => {
       chai.request(app)
         .get(`/api/articles/${articleId}/rate?page=1`)

@@ -85,8 +85,9 @@ router.delete('/:articleId', auth, checkingArticle, article.deleteArticle);
 router.post('/:articleId/record-reading', auth, asyncHandler(UserAccount.isUserAccountActivated), asyncHandler(checkArticle), asyncHandler(articleStats.recordReading));
 
 router.post('/:articleId/rate', auth, asyncHandler(UserAccount.isUserAccountActivated), asyncHandler(checkArticle), asyncHandler(rate.rateArticle));
-
 router.get('/:articleId/rate', asyncHandler(checkArticle), asyncHandler(rate.getArticleRatings));
+router.get('/:articleId/average-rating', asyncHandler(checkArticle), asyncHandler(rate.getArticleAverageRating));
+router.get('/:articleId/user-article-rating', auth, asyncHandler(checkArticle), asyncHandler(rate.getUserArticleRating));
 
 router.post('/:articleId/report/type/:reportTypeId', auth, asyncHandler(UserAccount.isUserAccountActivated), asyncHandler(checkArticle), asyncHandler(articleReport.reportArticle));
 
