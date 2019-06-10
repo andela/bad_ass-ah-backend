@@ -9,11 +9,13 @@ const articleHighlightsMigration = {
     articleId: {
       type: Sequelize.INTEGER,
       allowNull: false,
+      onDelete: 'CASCADE',
       references: { model: 'articles', key: 'article_id', as: 'articleId' }
     },
     userId: {
       type: Sequelize.INTEGER,
       allowNull: false,
+      onDelete: 'CASCADE',
       references: { model: 'users', key: 'id', as: 'userId' }
     },
     indexStart: {

@@ -69,6 +69,9 @@ class CommentController {
           model: User,
           as: 'userfkey',
           attributes: ['username', 'email', 'image', 'id', 'bio']
+        },
+        {
+          model: Votes
         }
       ]
     }).then((comment) => {
