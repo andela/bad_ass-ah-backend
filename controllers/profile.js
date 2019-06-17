@@ -91,7 +91,8 @@ class ProfileController {
         username: user.username,
         email: user.email,
         bio: user.bio,
-        image: user.image
+        image: user.image,
+        allowNotifications: user.allowNotifications
       };
 
       res.status(200).json({ status: 200, profile });

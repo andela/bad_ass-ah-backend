@@ -5,7 +5,6 @@ import { article1 } from '../testingdata/article.json';
 import shareArticle from '../helpers/shareArticles';
 import { login4, testMailer } from '../testingdata/user.json';
 import models from '../models/index';
-import tag from '../helpers/tags';
 import generateToken from '../helpers/token';
 
 chai.use(chaiHttp);
@@ -300,13 +299,8 @@ describe('Article', () => {
         res.should.have.status(200);
         res.body.should.have.property('article');
         res.body.should.have.property('user');
-        res.body.should.have.property('tags');
         done();
       });
-  });
-  it('Should test tags helpers', async () => {
-    const tagList = await tag(req);
-    tagList.should.be.a('array');
   });
   it('Should allow a given user to share an article via email', (done) => {
     chai.request(app)

@@ -1,6 +1,7 @@
 import models from '../models/index';
 
-const { bookmark } = models;
+
+const { bookmark, article, user } = models;
 /**
    * @description Controller for Bookmarking
    * @exports
@@ -37,7 +38,10 @@ class Bookmark {
   async allBookmark(req, res) {
     const userId = req.user.id;
     try {
-      const allBookmarks = await bookmark.findAll({ where: { userId } });
+      const allBookmarks = await bookmark.findAll({
+        where: { userId },
+        include: [{ model: article, include: [{ model: user, as: 'authorfkey' }] }]
+      });
       if (allBookmarks.length === 0) return res.status(404).json({ message: 'Bookmark not found!' });
       res.status(200).json(allBookmarks);
     } catch (error) {
