@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
 import model from '../models/index';
-import TagData from '../helpers/tags';
+
 
 const { Op } = Sequelize;
 // @assign model
@@ -34,9 +34,8 @@ class searchController {
           attributes: { exclude: ['password', 'isAdmin', 'isActivated', 'createdAt', 'updatedAt'] }
         }]
       });
-      const tags = await TagData(req);
       return res.status(200).json({
-        status: 200, user, article, tags
+        status: 200, user, article
       });
     } catch (error) {
       return res.status(500).json({ error: `something wrong try again later ${error}` });
