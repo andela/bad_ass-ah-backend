@@ -62,7 +62,7 @@ router.delete('/:idArticle/comments/:commentId', auth, checkComment, comment.del
 router.post('/:articleId/like', auth, findArticleExist, checkVote, voteArticle.likeArticle);
 router.post('/:articleId/dislike', auth, findArticleExist, checkVote, voteArticle.dislikeArticle);
 // @Method get edited comment history
-router.get('/:idArticle/comments/:commentId/edited', auth, checkComment, comment.getEditedComment);
+router.get('/:idArticle/comments/:commentId/edited', comment.getEditedComment);
 // @Method GET
 // @Desc get all created article
 router.get('/', article.getArticle);
