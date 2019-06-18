@@ -54,7 +54,7 @@ class ArticleController {
           }
         });
         const message = `${user.username} published a new article`;
-        await notification.createNotificationForFavorite(article.author, message);
+        await notification.createNotificationForFollower(article.author, message);
         await notification.sendNotificationToFollower(article.author, message);
         res.status(201).json({ status: 201, message: 'Article created successfully', article });
       })
