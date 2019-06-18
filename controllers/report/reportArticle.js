@@ -2,19 +2,19 @@ import models from '../../models/index';
 import httpError from '../../helpers/errors/httpError';
 import validate from '../../helpers/validateUser';
 
-const { reportType, reportArticle } = models;
+const { reportType, reportArticle, article } = models;
 /**
  * Controller for reporting article
  * @exports
  * @class
  */
 class ArticleReport {
-/**
-* Create a new report type
-* @param {object} req - Requests from user
-* @param {object} res - Object that capture response
-* @returns {object} Response
-*/
+  /**
+  * Create a new report type
+  * @param {object} req - Requests from user
+  * @param {object} res - Object that capture response
+  * @returns {object} Response
+  */
   async createReportType(req, res) {
     const { type } = req.body;
     const validateType = validate.isEmpty(type);
@@ -78,7 +78,10 @@ class ArticleReport {
   async getReportedArticles(req, res) {
     const reportedArticles = await reportArticle.findAll({
       attributes: ['id', 'articleId', 'reporter', 'comment'],
-      include: [{ model: reportType, attributes: ['id', 'type'] }]
+      include: [
+        { model: reportType, attributes: ['id', 'type'] },
+        { model: article, attributes: ['title'] }
+      ]
     });
     if (reportedArticles.length === 0) throw new httpError(404, 'reported articles are not found.');
     res.status(200).send(reportedArticles);
