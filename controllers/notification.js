@@ -38,17 +38,19 @@ class NotificationController {
       if (usersWhoFavoritedArticle.length > 0) {
         // eslint-disable-next-line array-callback-return
         usersWhoFavoritedArticle.map((user) => {
-          const { id } = user.userfkey.dataValues;
-          if (id !== notifier) {
+          const { id, allowNotifications } = user.userfkey.dataValues;
+          if (id !== notifier && allowNotifications === true) {
             const notification = { userId: id, message };
             notifications.push(notification);
           }
         });
         if (notifications.length > 0) {
-          notifications = Object.values(notifications
-            .reduce((acc, cur) => Object.assign(acc, { [cur.userId]: cur }), {}));
-          const createdNotifications = await Notification
-            .bulkCreate(notifications, { returning: true });
+          notifications = Object
+            .values(notifications
+              .reduce((acc, cur) => Object.assign(acc, { [cur.userId]: cur }), {}));
+          const createdNotifications = await Notification.bulkCreate(notifications, {
+            returning: true
+          });
           return createdNotifications;
         }
       }
@@ -59,33 +61,35 @@ class NotificationController {
 
   /**
    * Create app notifications
-   * @param {Integer} folloewerId id of the article
+   * @param {Integer} followerId id of the article
    * @param {Text} message -body of notification
    * @param {Integer} notifier -notifier id
    * @returns {Object} Create notifications
    */
-  async createNotificationForFollower(folloewerId, message) {
+  async createNotificationForFollower(followerId, message) {
     try {
       const notifications = [];
       const notification = { userId: '', message: '' };
-      const followers = await Check.checkFollowers(folloewerId);
+      const followers = await Check.checkFollowers(followerId);
       if (followers.length > 0) {
         // eslint-disable-next-line array-callback-return
         followers.map((follower) => {
-          const { id } = follower.followedFkey.dataValues;
-          notification.userId = id;
-          notification.message = message;
-          notifications.push(notification);
+          const { id, allowNotifications } = follower.followedFkey.dataValues;
+          if (allowNotifications === true) {
+            notification.userId = id;
+            notification.message = message;
+            notifications.push(notification);
+          }
         });
-        const createdNotifications = await Notification
-          .bulkCreate(notifications, { returning: true });
+        const createdNotifications = await Notification.bulkCreate(notifications, {
+          returning: true
+        });
         return createdNotifications;
       }
     } catch (error) {
       return error;
     }
   }
-
 
   /**
    * Send email notifications
@@ -172,7 +176,7 @@ class NotificationController {
     try {
       const id = parseInt(req.params.id, 10);
       const notification = await Notification.findOne({
-        where: { id, userId: req.user.id, status: 'unread' },
+        where: { id, userId: req.user.id, status: 'unread' }
       });
       if (!notification) {
         return res.status(404).json({ status: 404, error: 'Notification not found' });
